@@ -4,11 +4,9 @@ use App\Services\TaskService;
 use App\Task;
 use App\User;
 use Carbon\Carbon;
-use Faker\Generator;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
 
 class TaskServiceTest extends TestCase
 {
@@ -37,13 +35,10 @@ class TaskServiceTest extends TestCase
      */
     public function it_scopes_queries_to_the_specified_user()
     {
-
-        $this->tasks = factory(Task::class,5)->make(['complete' => false]);
-        $this->user->tasks()->saveMany($this->tasks);
+        $this->tasks = $this->generateUserTasks();
         // create tasks that belong to another user
         $otherUser = factory(User::class)->create([]);
-        $tasks = factory(Task::class,3)->make(['complete' => false]);
-        $otherUser->tasks()->saveMany($tasks);
+        $this->generateUserTasks($otherUser, 3);
 
         $scopedUsersTasks = $this->taskService->getOpenTasks();
 
@@ -57,8 +52,7 @@ class TaskServiceTest extends TestCase
      */
     public function it_retrieves_all_open_tasks()
     {
-        $this->tasks = factory(Task::class,5)->make(['complete' => false]);
-        $this->user->tasks()->saveMany($this->tasks);
+        $this->tasks = $this->generateUserTasks();
 
         $this->tasks->last()->markComplete();
         $currentTasks = $this->taskService->getOpenTasks();
@@ -73,12 +67,12 @@ class TaskServiceTest extends TestCase
      */
     public function it_retrieves_all_tasks_due_today()
     {
-        $this->tasks = factory(Task::class,5)
-            ->make(['complete' => false, 'due_date' => Carbon::today()->addDays(1)->format('Y-m-d')]);
-        $this->user->tasks()->saveMany($this->tasks);
-        $this->tasks->first()->setDueDate(Carbon::today()->format('Y-m-d'));
+        $this->tasks = $this->generateUserTasks();
+        $this->setDueDates($this->tasks, Carbon::today()->addDays(1)->toDateString());
+
+        $this->tasks->first()->setDueDate(Carbon::today()->toDateString());
         // tasks past due should also be retrieved
-        $this->tasks->last()->setDueDate(Carbon::today()->subDays(5)->format('Y-m-d'));
+        $this->tasks->last()->setDueDate(Carbon::today()->subDays(5)->toDateString());
 
         $tasksDueToday = $this->taskService->getTasksDueToday();
 
@@ -92,10 +86,11 @@ class TaskServiceTest extends TestCase
      */
     public function it_retrieves_all_tasks_due_this_week()
     {
-        $this->tasks = factory(Task::class,5)->make(['complete' => false]);
-        $this->user->tasks()->saveMany($this->tasks);
-        $this->tasks->first()->setDueDate(Carbon::today()->startOfWeek()->format('Y-m-d'));
-        $this->tasks->last()->setDueDate(Carbon::today()->endOfWeek()->format('Y-m-d'));
+        $this->tasks = $this->generateUserTasks();
+        $this->setDueDates($this->tasks, Carbon::today()->addDays(15)->toDateString());
+
+        $this->tasks->first()->setDueDate(Carbon::today()->startOfWeek()->toDateString());
+        $this->tasks->last()->setDueDate(Carbon::today()->endOfWeek()->toDateString());
 
         $tasksDueThisWeek = $this->taskService->getTasksDueThisWeek();
 
@@ -109,10 +104,11 @@ class TaskServiceTest extends TestCase
      */
     public function it_retrieves_all_tasks_due_next_week()
     {
-        $this->tasks = factory(Task::class,5)->make(['complete' => false]);
-        $this->user->tasks()->saveMany($this->tasks);
-        $this->tasks->first()->setDueDate(Carbon::today()->startOfWeek()->addDays(7)->format('Y-m-d'));
-        $this->tasks->last()->setDueDate(Carbon::today()->endOfWeek()->addDays(7)->format('Y-m-d'));
+        $this->tasks = $this->generateUserTasks();
+        $this->setDueDates($this->tasks, Carbon::today()->toDateString());
+
+        $this->tasks->first()->setDueDate(Carbon::today()->startOfWeek()->addDays(7)->toDateString());
+        $this->tasks->last()->setDueDate(Carbon::today()->endOfWeek()->addDays(7)->toDateString());
         $tasksDueNextWeek = $this->taskService->getTasksDueNextWeek();
 
         $this->assertCount(2, $tasksDueNextWeek);
@@ -125,18 +121,12 @@ class TaskServiceTest extends TestCase
      */
     public function it_retrieves_all_tasks_due_later_than_next_week()
     {
-        $this->tasks = factory(Task::class,5)->make(['complete' => false]);
-        $this->user->tasks()->saveMany($this->tasks);
-        // first 3 tasks should not be retrieved
-        $this->tasks[0]->setDueDate(Carbon::today()->format('Y-m-d'));
-        $this->tasks[0]->save();
-        $this->tasks[1]->setDueDate(Carbon::today()->format('Y-m-d'));
-        $this->tasks[1]->save();
-        $this->tasks[2]->setDueDate(Carbon::today()->format('Y-m-d'));
-        $this->tasks[2]->save();
+        $this->tasks = $this->generateUserTasks();
+        $this->setDueDates($this->tasks, Carbon::today()->toDateString());
+
         // task due past end of next week should be retrieved
-        $this->tasks[3]->setDueDate(Carbon::today()->addDays(35)->format('Y-m-d'));
-        $this->tasks[3]->save();
+        $this->tasks->first()->setDueDate(Carbon::today()->addDays(35)->toDateString());
+        $this->tasks->first()->save();
         // task with no due date should be retrieved
         $this->tasks->last()->due_date = null;
         $this->tasks->last()->save();
@@ -144,6 +134,38 @@ class TaskServiceTest extends TestCase
         $tasksDueInFuture = $this->taskService->getTasksDueAfterNextWeek();
 
         $this->assertCount(2, $tasksDueInFuture);
+    }
+
+
+    /**
+     * @param User  $user
+     * @param int   $amount
+     * @param bool  $complete
+     * @param array $overrides
+     *
+     * @return mixed
+     */
+    protected function generateUserTasks(User $user = null, $amount = 5, $complete = false, $overrides = [])
+    {
+        $user = $user ?: $this->user;
+        $overrides['complete'] = $complete;
+        $tasks = factory(Task::class, $amount)->make($overrides);
+        $user->tasks()->saveMany($tasks);
+
+        return $tasks;
+    }
+
+
+    /**
+     * @param $tasks
+     * @param $date
+     */
+    protected function setDueDates($tasks, $date)
+    {
+        foreach ($tasks as $task) {
+            $task->setDueDate($date);
+            $task->save();
+        }
     }
 
 }
