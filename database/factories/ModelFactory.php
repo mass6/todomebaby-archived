@@ -28,6 +28,6 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence,
         'complete' => $faker->boolean(),
-        'due_date' => Carbon::createFromFormat('Y-m-d', $faker->dateTimeThisYear->format('Y-m-d')),
+        'due_date' => $faker->dateTimeThisYear->format('Y-m-d'),
     ];
 });
