@@ -11,6 +11,8 @@
 |
 */
 
+use Carbon\Carbon;
+
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -19,5 +21,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+$factory->define(App\Task::class, function (Faker\Generator $faker) {
+
+    return [
+        'title' => $faker->sentence,
+        'complete' => $faker->boolean(),
+        'due_date' => Carbon::createFromFormat('Y-m-d', $faker->dateTimeThisYear->format('Y-m-d')),
     ];
 });
