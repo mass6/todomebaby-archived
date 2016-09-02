@@ -1,4 +1,4 @@
-<h1>All Tasks</h1>
+<h1>Today</h1>
 <ul>
     @foreach($tasks as $task)
         <li>{{ $task->title }}</li>

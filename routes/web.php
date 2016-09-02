@@ -11,4 +11,22 @@
 |
 */
 
-Route::get('/web/lists/all', 'TasksController@all');
+Route::get('test', function () {
+    return view('welcome');
+});
+
+use App\Services\TaskService;
+
+Auth::routes();
+
+
+Route::get('/', function () {
+    return redirect('/web');
+});
+
+Route::get('/web', ['middleware' => 'auth', function () {
+    return view('webapp');
+}]);
+
+
+Route::get('/home', 'HomeController@index');
