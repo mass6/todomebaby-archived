@@ -1,0 +1,128 @@
+<template>
+
+    <!-- Simple panel -->
+    <div class="panel panel-flat">
+
+        <div class="panel-body">
+
+            <taskform :task="selectedTask"></taskform>
+            <br/>
+
+            <section id="task-list-container" v-show="displayTaskList">
+                <h2 class="list-heading text-light">{{ sharedState.taskList.listName }}<small v-if="sharedState.taskList.listType == 'project'">
+                    <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
+                <div id="context-tasks" class="table-responsive">
+                    <table class="table tasks-list table-lg">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th style="width: 40%;"></th>
+                            <th>Priority</th>
+                            <th>Due Date</th>
+                            <th>Next</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-if="taskListEmpty"><td>You have no tasks in this list.</td></tr>
+                        <tr class="task-item" v-for="task in sharedState.taskList.tasks" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
+                            <!-- Complete Box -->
+                            <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
+                            <!-- /complete box -->
+
+                            <!-- Task Title -->
+                            <td class="task-title" id="task-title-selection-{{ task.id }}">
+                                <div>
+                                    <span class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </span>
+                                    <span class="project-link" data-project="{{task.project_id}}" @click="selectProject(task.project)">{{ task.project ? '(' + task.project.name + ')' : '' }}</span><br/>
+                                    <!-- Tags Block -->
+                                    <div class="tag-block">
+                                        <span v-for="context in task.contexts" class="task-selectable text-blue-tdm" @click.stop.prevent="selectContext(context)"> @{{ context.name }} </span>
+                                        <span v-for="tag in task.tags" class="task-selectable text-teal-700" @click.stop.prevent="selectTag(tag)"> #{{ tag.name }} </span>
+                                    </div>
+                                    <!-- /tags block -->
+                                </div>
+                            </td>
+                            <!-- / task title-->
+
+                            <td>
+                                <div class="btn-group">
+                                    <a href="#" class="label dropdown-toggle"
+                                       :class="{ 'label-danger': task.priority == 'high', 'label-primary': task.priority == 'medium', 'label-success': task.priority == 'low' }"
+                                       data-toggle="dropdown">
+                                        {{ task.priority ? task.priority.toUpperCase(): ''}}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li :class="{ 'active': task.priority == 'high'}"><a href="#" @click.prevent="setPriority(task, 'high')"><span class="status-mark position-left bg-danger"></span> High</a></li>
+                                        <li :class="{ 'active': task.priority == 'medium'}"><a href="#" @click.prevent="setPriority(task, 'medium')"><span class="status-mark position-left bg-primary"></span> Medium</a></li>
+                                        <li :class="{ 'active': task.priority == 'low'}"><a href="#" @click.prevent="setPriority(task, 'low')"><span class="status-mark position-left bg-success"></span> Low</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>{{ task.due_date ? task.due_date : '' }}</td>
+                            <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}" @click="toggleNext(task)"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+
+
+
+        </div>
+    </div>
+
+
+
+</template>
+<script>
+
+    import { store } from '../store'
+    import TaskForm from './TaskForm.vue'
+    export default{
+        data(){
+            return {
+                sharedState: store.state,
+                store: store,
+                displayTaskList: false,
+                selectedTask: {id: null, title: ''},
+            }
+        },
+        computed: {
+            taskListEmpty: function() {
+                return ! this.sharedState.taskList.tasks.length;
+            }
+        },
+        components: {
+            'taskform': TaskForm
+        },
+        route: {
+            data: function (transition) {
+                var thisTaskList = this;
+                this.fetchTaskList(function() {
+                    thisTaskList.displayTaskList = true;
+                });
+            }
+        },
+        methods: {
+            fetchTaskList: function(callback) {
+                this.store.fetchTaskList(this.$route.params.listName, callback);
+            },
+            selectTask: function(task) {
+                this.selectedTask = Object.assign({}, task);
+                this.$broadcast('taskSelected', task);
+            },
+            setPriority: function(task) {
+
+            }
+        },
+        events: {
+            taskFormDeactivated: function() {
+                this.selectedTask = {title: ''};
+            }
+        }
+
+    }
+</script>

@@ -7,14 +7,34 @@
 
 require('./bootstrap');
 
+
+var VueRouter = require('vue-router');
+Vue.use(VueRouter);
+
+
+var router = new VueRouter({
+    hashbang: false
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the body of the page. From here, you may begin adding components to
  * the application, or feel free to tweak this setup for your needs.
  */
 
-//Vue.component('example', require('./components/Example.vue'));
+var App = Vue.component('app', require('./components/App.vue'));
+var TaskList = Vue.component('tasklist', require('./components/TaskList.vue'));
 
-//const app = new Vue({
-//    el: 'body'
-//});
+router.map({
+    '/lists/:listName': {
+        name: 'taskList',
+        component: TaskList
+    }
+});
+// Any invalid route will redirect to home
+router.redirect({
+    '*': '/lists/today'
+});
+window.onload = function () {
+    router.start(App, '#app');
+}

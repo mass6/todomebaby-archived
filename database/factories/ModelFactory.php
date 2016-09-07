@@ -27,7 +27,15 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
 
     return [
         'title' => $faker->sentence,
-        'complete' => $faker->boolean(),
-        'due_date' => $faker->dateTimeThisYear->format('Y-m-d'),
+        'complete' => false,
+        'next' => $faker->boolean(),
+        'priority' => ['LOW','MED','HGH'][rand(0,2)],
+        'details' => $faker->paragraph(2),
+    ];
+});
+$factory->define(App\Project::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->sentence,
     ];
 });

@@ -1,5 +1,7 @@
 <?php
 
+use App\Project;
+use App\Services\ProjectService;
 use App\Services\TaskService;
 use App\Task;
 use App\User;
@@ -13,11 +15,22 @@ class TaskServiceTest extends TestCase
 
     use DatabaseMigrations;
 
+    /**
+     * @var User
+     */
     public $user;
-    public $tasks;
+
+    /**
+     * @var TaskService
+     */
     protected $taskService;
 
+    public $tasks;
 
+
+    /**
+     *
+     */
     public function setUp()
     {
         parent::setUp();
@@ -27,6 +40,8 @@ class TaskServiceTest extends TestCase
         $this->actingAs($this->user);
         $this->taskService = new TaskService();
     }
+
+    // Query Service Tests
 
     /**
      * Service scopes queries to specified user
@@ -41,7 +56,6 @@ class TaskServiceTest extends TestCase
         $this->generateUserTasks($otherUser, 3);
 
         $scopedUsersTasks = $this->taskService->getOpenTasks();
-
         $this->assertCount(5, $scopedUsersTasks);
     }
 
@@ -54,7 +68,7 @@ class TaskServiceTest extends TestCase
     {
         $this->tasks = $this->generateUserTasks();
 
-        $this->tasks->last()->markComplete();
+        $this->tasks->last()->toggleComplete();
         $currentTasks = $this->taskService->getOpenTasks();
 
         $this->assertCount(4, $currentTasks);
@@ -68,15 +82,40 @@ class TaskServiceTest extends TestCase
     public function it_retrieves_all_tasks_due_today()
     {
         $this->tasks = $this->generateUserTasks();
-        $this->setDueDates($this->tasks, Carbon::today()->addDays(1)->toDateString());
 
+        // User, amount, project, overrides
+        $project = factory(Project::class)->create(['name' => 'My New Project', 'user_id' => $this->user->id]);
+        $this->tasks->first()->associateToProject($project->id);
+
+        $this->setDueDates($this->tasks, Carbon::today()->addDays(1)->toDateString());
         $this->tasks->first()->setDueDate(Carbon::today()->toDateString());
         // tasks past due should also be retrieved
         $this->tasks->last()->setDueDate(Carbon::today()->subDays(5)->toDateString());
 
         $tasksDueToday = $this->taskService->getTasksDueToday();
-
         $this->assertCount(2, $tasksDueToday);
+        $this->assertArrayHasKey('project', $tasksDueToday->first()->toArray());
+    }
+
+
+    /**
+     * Service retrieves all tasks due tomorrow
+     *
+     * @test
+     */
+    public function it_retrieves_all_tasks_due_tomorrow()
+    {
+        $this->tasks = $this->generateUserTasks();
+        $project = factory(Project::class)->create(['name' => 'My New Project', 'user_id' => $this->user->id]);
+        $this->tasks->first()->associateToProject($project->id);
+
+        $this->tasks->first()->setDueDate(Carbon::tomorrow()->toDateString());
+        $this->tasks->last()->setDueDate(Carbon::tomorrow()->toDateString());
+
+        $tasksDueTomorrow = $this->taskService->getTasksDueTomorrow();
+
+        $this->assertCount(2, $tasksDueTomorrow);
+        $this->assertArrayHasKey('project', $tasksDueTomorrow->first()->toArray());
     }
 
     /**
@@ -87,6 +126,9 @@ class TaskServiceTest extends TestCase
     public function it_retrieves_all_tasks_due_this_week()
     {
         $this->tasks = $this->generateUserTasks();
+        $project = factory(Project::class)->create(['name' => 'My New Project', 'user_id' => $this->user->id]);
+        $this->tasks->first()->associateToProject($project->id);
+
         $this->setDueDates($this->tasks, Carbon::today()->addDays(15)->toDateString());
 
         $this->tasks->first()->setDueDate(Carbon::today()->startOfWeek()->toDateString());
@@ -95,6 +137,7 @@ class TaskServiceTest extends TestCase
         $tasksDueThisWeek = $this->taskService->getTasksDueThisWeek();
 
         $this->assertCount(2, $tasksDueThisWeek);
+        $this->assertArrayHasKey('project', $tasksDueThisWeek->first()->toArray());
     }
 
     /**
@@ -105,6 +148,9 @@ class TaskServiceTest extends TestCase
     public function it_retrieves_all_tasks_due_next_week()
     {
         $this->tasks = $this->generateUserTasks();
+        $project = factory(Project::class)->create(['name' => 'My New Project', 'user_id' => $this->user->id]);
+        $this->tasks->first()->associateToProject($project->id);
+
         $this->setDueDates($this->tasks, Carbon::today()->toDateString());
 
         $this->tasks->first()->setDueDate(Carbon::today()->startOfWeek()->addDays(7)->toDateString());
@@ -112,6 +158,7 @@ class TaskServiceTest extends TestCase
         $tasksDueNextWeek = $this->taskService->getTasksDueNextWeek();
 
         $this->assertCount(2, $tasksDueNextWeek);
+        $this->assertArrayHasKey('project', $tasksDueNextWeek->first()->toArray());
     }
 
     /**
@@ -119,9 +166,12 @@ class TaskServiceTest extends TestCase
      *
      * @test
      */
-    public function it_retrieves_all_tasks_due_later_than_next_week()
+    public function it_retrieves_all_tasks_due_in_future()
     {
         $this->tasks = $this->generateUserTasks();
+        $project = factory(Project::class)->create(['name' => 'My New Project', 'user_id' => $this->user->id]);
+        $this->tasks->first()->associateToProject($project->id);
+
         $this->setDueDates($this->tasks, Carbon::today()->toDateString());
 
         // task due past end of next week should be retrieved
@@ -131,11 +181,132 @@ class TaskServiceTest extends TestCase
         $this->tasks->last()->due_date = null;
         $this->tasks->last()->save();
 
-        $tasksDueInFuture = $this->taskService->getTasksDueAfterNextWeek();
+        $tasksDueInFuture = $this->taskService->getTasksDueInFuture();
 
         $this->assertCount(2, $tasksDueInFuture);
+        $this->assertArrayHasKey('project', $tasksDueInFuture->first()->toArray());
     }
 
+    // Command Service Tests
+
+    /**
+     * Service adds a new task
+     *
+     * @test
+     */
+    public function it_adds_a_new_task()
+    {
+        $taskFormData = [
+            'title' => 'Task 1',
+            'complete' => false,
+            'next' => true,
+            'due_date' => Carbon::tomorrow()->toDateString(),
+            'project_id' => 1,
+            'priority' => 'MED',
+            'details' => 'Details about this task',
+        ];
+        $this->user->projects()->create(factory(Project::class)->make([])->toArray());
+        $task = factory(Task::class)->make($taskFormData);
+        $this->taskService->addTask($task->toArray());
+        $this->assertCount(1, $this->user->tasks);
+
+        $savedTask = collect($this->user->tasks->first());
+        $this->assertEquals(
+            $task->toArray(),
+            $savedTask->only(['title', 'complete', 'next', 'due_date', 'project_id', 'priority', 'details'])->toArray()
+        );
+    }
+
+
+    /**
+     * Service updates a task
+     *
+     * @test
+     * @group current
+     */
+    public function it_updates_a_task()
+    {
+        $date = Carbon::tomorrow()->toDateString();
+        $taskData = [
+            'title' => 'Task 1',
+            'complete' => false,
+            'next' => true,
+            'due_date' => $date,
+            'priority' => 'medium',
+            'details' => 'Details about this task',
+            'user_id' => $this->user->id,
+        ];
+        $task = factory(Task::class)->create($taskData);
+
+        $newData = [
+            'title' => 'Task Changed',
+            'next' => false
+        ];
+
+        $this->taskService->updateTask($task, $newData);
+
+        $this->assertEquals('Task Changed', $task->title);
+        $this->assertEquals(false, $task->next);
+        $this->assertEquals($date, $task->due_date);
+    }
+    /**
+     * Service sets default fields values
+     *
+     * @test
+     */
+    public function it_sets_default_field_values_for_new_tasks_when_no_input_is_given()
+    {
+        $taskData = ['title' => 'Task 1'];
+        $task = $this->taskService->addTask($taskData);
+
+        $this->assertFalse($task->complete);
+        $this->assertNull($task->complete_at);
+        $this->assertFalse($task->next);
+        $this->assertNull($task->due_date);
+        $this->assertNull($task->details);
+    }
+
+    /**
+     * Service creates a new task
+     *
+     * @test
+     */
+    public function it_toggles_the_next_flag_on_a_task()
+    {
+        $taskData = ['title' => 'Task 1'];
+        $task = $this->taskService->addTask($taskData);
+
+        $this->taskService->toggleNextFlag($task);
+        $this->assertTrue($task->next);
+
+        $this->taskService->toggleNextFlag($task);
+        $this->assertFalse($task->next);
+    }
+    /**
+     * Service toggles a task complete and sets or nulls the completed_at date.
+     *
+     * @test
+     */
+    public function it_toggles_the_completed_flag_on_a_task_and_sets_or_nulls_the_completed_at_date()
+    {
+        $taskData = ['title' => 'Task 1'];
+        $task = $this->taskService->addTask($taskData);
+
+        $this->taskService->toggleComplete($task);
+        $this->assertTrue($task->complete);
+        $this->assertNotNull($task->completed_at);
+
+        $this->taskService->toggleComplete($task);
+        $this->assertFalse($task->complete);
+        $this->assertNull($task->completed_at);
+    }
+
+
+
+
+
+
+    // Helper Methods
 
     /**
      * @param User  $user
@@ -150,7 +321,7 @@ class TaskServiceTest extends TestCase
         $user = $user ?: $this->user;
         $overrides['complete'] = $complete;
         $tasks = factory(Task::class, $amount)->make($overrides);
-        $user->tasks()->saveMany($tasks);
+        $amount > 1 ? $user->tasks()->saveMany($tasks) : $user->tasks()->save($tasks);
 
         return $tasks;
     }

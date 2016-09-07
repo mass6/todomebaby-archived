@@ -59,7 +59,7 @@
             <div class="content">
 
                 <!-- Simple login form -->
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+                <form class="form-horizontal" id="loginForm" role="form" method="POST" action="{{ url('/login') }}">
                     {!! csrf_field() !!}
                     <div class="panel panel-body login-form">
                         <div class="text-center">

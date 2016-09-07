@@ -15,7 +15,7 @@ require('laravel-elixir-vue');
 
 elixir(mix => {
     mix.styles(['core.css', 'components.css', 'colors.css', 'custom.css'], 'public/css/theme.css')
-       .webpack(['app.js', 'limitless-app.js'], 'public/js/app.js')
-       .scripts(['plugins/loaders/pace.min.js', 'plugins/loaders/blockui.min.js'], 'public/js/pages/login.js')
+       .webpack('app.js')
+       //.scripts(['plugins/loaders/pace.min.js', 'plugins/loaders/blockui.min.js'], 'public/js/pages/login.js')
         .phpUnit();
 });
