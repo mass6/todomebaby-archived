@@ -9,11 +9,11 @@
             <taskform :task="selectedTask"></taskform>
             <br/>
 
-            <section id="task-list-container" v-show="displayTaskList">
+            <section id="task-list-container">
                 <h2 class="list-heading text-light">{{ sharedState.taskList.listName }}<small v-if="sharedState.taskList.listType == 'project'">
                     <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
                 <div id="context-tasks" class="table-responsive">
-                    <table class="table tasks-list table-lg">
+                    <table class="table tasks-list table-lg" v-show="displayTaskList">
                         <thead>
                         <tr>
                             <th></th>
@@ -84,7 +84,7 @@
                 sharedState: store.state,
                 store: store,
                 displayTaskList: false,
-                selectedTask: {id: null, title: ''},
+                selectedTask: {id: null, title: ''}
             }
         },
         components: {
@@ -93,13 +93,16 @@
         },
         route: {
             data: function (transition) {
-                if (this.$route.name == 'tasks.list') {
+                if (this.$route.name == 'tasks.list' && (this.$route.path !== this.sharedState.previousRoute.path || this.sharedState.taskList.listName == '')) {
+                    this.$broadcast('taskListUpdated');
+                    this.store.setListName(this.$route.params.listName);
                     this.fetchTaskList();
                 }
             }
         },
         methods: {
             fetchTaskList: function() {
+                this.displayTaskList = false;
                 var that = this;
                 this.store.fetchTaskList(this.$route.params.listName, function() {
                     that.displayTaskList = true;

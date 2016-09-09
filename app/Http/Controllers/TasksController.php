@@ -49,7 +49,7 @@ class TasksController extends Controller
 
     protected function getTaskListResponse($listName, $tasks)
     {
-        return response()->json(['listName' => 'Due ' . ucwords($listName), 'tasks' => $tasks]);
+        return response()->json($tasks);
     }
 
 }

@@ -109,7 +109,7 @@
 
             <div>
                 <button type="submit" id="save-task-button" class="btn btn-primary" v-bind:class="{ 'disabled': !task.title.length }" @click="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
-                <button class="btn btn-grey" @click="deactivateForm">Cancel </button>
+                <button class="btn btn-grey" @click="cancelForm">Cancel </button>
             </div>
         </section>
 
@@ -148,8 +148,7 @@
                 store: store,
                 filter: {filterType: '', filterValue: ''},
                 defaultTags: null,
-                editMode: false,
-                basePath: '/api/tasks/'
+                editMode: false
             }
         },
         computed: {
@@ -185,12 +184,15 @@
 
 //                this.setDefaultTags();
             },
+            cancelForm: function() {
+                this.deactivateForm();
+                if (this.$route.name == 'tasks.edit') {
+                    this.redirect(this.getRedirectPath());
+                }
+            },
             deactivateForm: function() {
                 this.clearForm();
                 this.editMode = false;
-                if (this.$route.name == 'tasks.edit') {
-                    this.$route.router.go(this.sharedState.previousRoute.path)
-                }
                 this.$dispatch('taskFormDeactivated');
             },
             clearForm: function() {
@@ -198,6 +200,15 @@
                     title: '',
                     next: false
                 }
+            },
+            getRedirectPath: function() {
+                if (this.sharedState.previousRoute.path) {
+                    return this.sharedState.previousRoute.path;
+                }
+                return this.sharedState.defaultRoute.path;
+            },
+            redirect: function(path) {
+                this.$route.router.go(path);
             },
             saveTask: function() {
                 var that = this;
@@ -216,6 +227,9 @@
         events: {
             taskSelected: function(task) {
                 this.editMode = true;
+            },
+            taskListUpdated: function() {
+                this.deactivateForm();
             }
         }
     }

@@ -13,6 +13,11 @@
         },
         ready: function(){
             this.store.initialize();
+        },
+        events: {
+            listChanged: function() {
+                this.$broadcast('listWasChanged');
+            }
         }
     }
 </script>

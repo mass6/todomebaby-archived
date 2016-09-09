@@ -28743,7 +28743,7 @@ label.display-block {
 	font-weight: 400;
 }
 .navigation li a:focus {
-	background-color: none;
+	background-color: unset;
 }
 .sidebar-active { background-color: #4CAF50;}
 
@@ -28850,7 +28850,10 @@ span.project-edit.clickable {
 	font-size: .65em;
 	vertical-align: super;
 }
-#context-tasks.table-responsive {border:none;}
+#context-tasks.table-responsive {
+	min-height: 101px;
+	border:none;
+}
 .table-striped>tbody>tr.task-item, .table>tbody>tr.task-item {
 	border-left: 6px solid white;
 }

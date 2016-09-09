@@ -66,8 +66,7 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueToday($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('Due Today', $response->getData()->listName);
-        $this->assertEquals(['tasks'], $response->getData()->tasks);
+        $this->assertEquals(['tasks'], $response->getData());
     }
     /**
      * @test
@@ -80,8 +79,7 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueTomorrow($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('Due Tomorrow', $response->getData()->listName);
-        $this->assertEquals(['tasks'], $response->getData()->tasks);
+        $this->assertEquals(['tasks'], $response->getData());
     }
     /**
      * @test
@@ -94,8 +92,7 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueThisWeek($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('Due This Week', $response->getData()->listName);
-        $this->assertEquals(['tasks'], $response->getData()->tasks);
+        $this->assertEquals(['tasks'], $response->getData());
     }
     /**
      * @test
@@ -108,8 +105,7 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueNextWeek($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('Due Next Week', $response->getData()->listName);
-        $this->assertEquals(['tasks'], $response->getData()->tasks);
+        $this->assertEquals(['tasks'], $response->getData());
     }
     /**
      * @test
@@ -122,8 +118,7 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueInFuture($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('Due In Future', $response->getData()->listName);
-        $this->assertEquals(['tasks'], $response->getData()->tasks);
+        $this->assertEquals(['tasks'], $response->getData());
     }
 
 }

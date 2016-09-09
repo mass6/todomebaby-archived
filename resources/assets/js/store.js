@@ -5,8 +5,12 @@ export let store = {
             listName: '',
             tasks: []
         },
-        task: null,
-        previousRoute: {path: '/lists/today'}
+        previousRoute: {},
+        defaultRoute: {
+            name: 'tasks.list',
+            params: {'listName': 'today'},
+            path: '/lists/today'
+        }
     },
     initialize: function() {
         // fetch projects
@@ -16,15 +20,22 @@ export let store = {
         // fetch project counts
         // fetch context counts
     },
+    setListName: function(name) {
+        store.state.taskList.listName =  this.toTitleCase(this.hyphensToSpaces(name));
+    },
+    hyphensToSpaces: function(string) {
+        return string.replace(/-/g, " ");
+    },
+    toTitleCase: function(string){
+        return string.replace(/\b[a-z]/g, function(letter) {
+            return letter.toUpperCase();
+        });
+    },
     fetchTaskList: function(listName, callback) {
         $.ajax({
             url: "/tasklists/" + listName,
             success: function(result){
-                store.state.taskList = {
-                    listName: result.listName,
-                    listId: listName,
-                    tasks: result.tasks
-                };
+                store.state.taskList.tasks = result;
                 if (callback) {
                     callback();
                 }
