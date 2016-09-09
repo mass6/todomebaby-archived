@@ -10,7 +10,7 @@
             <br/>
 
             <section id="task-list-container">
-                <h2 class="list-heading text-light">{{ sharedState.taskList.listName }}<small v-if="sharedState.taskList.listType == 'project'">
+                <h2 class="list-heading text-light">{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
                     <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
                 <div id="context-tasks" class="table-responsive">
                     <table class="table tasks-list table-lg" v-show="displayTaskList">
@@ -24,8 +24,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-if="! this.sharedState.taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in sharedState.taskList.tasks" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
+                        <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
+                        <tr class="task-item" v-for="task in taskList.tasks" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -83,6 +83,10 @@
             return {
                 sharedState: store.state,
                 store: store,
+                taskList: {
+                    listName: '',
+                    tasks: []
+                },
                 displayTaskList: false,
                 selectedTask: {id: null, title: ''}
             }
@@ -93,9 +97,9 @@
         },
         route: {
             data: function (transition) {
-                if (this.$route.name == 'tasks.list' && (this.$route.path !== this.sharedState.previousRoute.path || this.sharedState.taskList.listName == '')) {
+                if (this.$route.name == 'tasks.list' && (this.$route.path !== this.sharedState.previousRoute.path || this.taskList.listName == '')) {
                     this.$broadcast('taskListUpdated');
-                    this.store.setListName(this.$route.params.listName);
+                    this.setListName(this.$route.params.listName);
                     this.fetchTaskList();
                 }
             }
@@ -104,7 +108,8 @@
             fetchTaskList: function() {
                 this.displayTaskList = false;
                 var that = this;
-                this.store.fetchTaskList(this.$route.params.listName, function() {
+                this.store.fetchTaskList(this.$route.params.listName, function(result) {
+                    that.taskList.tasks = result;
                     that.displayTaskList = true;
                 });
             },
@@ -115,7 +120,18 @@
             },
             setPriority: function(task) {
 
-            }
+            },
+            setListName: function(name) {
+                this.taskList.listName =  this.toTitleCase(this.hyphensToSpaces(name));
+            },
+            hyphensToSpaces: function(string) {
+                return string.replace(/-/g, " ");
+            },
+            toTitleCase: function(string){
+                return string.replace(/\b[a-z]/g, function(letter) {
+                    return letter.toUpperCase();
+                });
+            },
         },
         events: {
             taskFormDeactivated: function() {
