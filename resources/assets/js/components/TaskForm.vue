@@ -188,7 +188,9 @@
             deactivateForm: function() {
                 this.clearForm();
                 this.editMode = false;
-                this.$route.router.go(this.sharedState.previousRoute.path)
+                if (this.$route.name == 'tasks.edit') {
+                    this.$route.router.go(this.sharedState.previousRoute.path)
+                }
                 this.$dispatch('taskFormDeactivated');
             },
             clearForm: function() {

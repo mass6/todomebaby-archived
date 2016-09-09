@@ -50,7 +50,9 @@ router.redirect({
     '*': '/lists/today'
 });
 router.beforeEach(function ({ to, next }) {
-    store.state.previousRoute = router.app.$route;
+    if (router.app.$route.name == 'tasks.list') {
+        store.state.previousRoute = router.app.$route;
+    }
     next();
 })
 window.onload = function () {

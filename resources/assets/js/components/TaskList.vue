@@ -84,7 +84,7 @@
                 sharedState: store.state,
                 store: store,
                 displayTaskList: false,
-                selectedTask: {id: null, title: '', project_id: null},
+                selectedTask: {id: null, title: ''},
             }
         },
         components: {

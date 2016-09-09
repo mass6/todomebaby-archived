@@ -6,7 +6,7 @@ export let store = {
             tasks: []
         },
         task: null,
-        previousRoute: null
+        previousRoute: {path: '/lists/today'}
     },
     initialize: function() {
         // fetch projects
