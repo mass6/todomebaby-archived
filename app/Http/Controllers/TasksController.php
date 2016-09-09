@@ -17,6 +17,11 @@ class TasksController extends Controller
         return response()->json($task);
     }
 
+    public function show($id, TaskService $taskService)
+    {
+        return response()->json($taskService->findById($id));
+    }
+
     public function getTasksDueToday(TaskService $taskService)
     {
         return $this->getTaskListResponse('today', $taskService->getTasksDueToday());

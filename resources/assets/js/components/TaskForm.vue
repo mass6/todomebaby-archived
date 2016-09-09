@@ -1,7 +1,7 @@
 <template>
     <div id="task-form-container">
         <!-- Grid -->
-        <p id="instructions" class="text text-bold" v-if="!task.id">Add a Task</p>
+        <p id="instructions" class="text text-bold" v-if="$route.name == 'tasks.list'">Add a Task</p>
 
         <div class="form-group form-control input-group-facade" :class="{'margin-left-45': task.id }">
             <div class="col-sm-12">
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <section v-show="editMode" transition="expand">
+        <section v-if="editMode" transition="expand">
 
             <div class="form-group" v-if="task.id">
 
@@ -67,7 +67,6 @@
                             </option>
                         </select>
                     </div>
-
                 </div>
             </div>
             <br/>
@@ -161,6 +160,15 @@
                 }
             }
         },
+        created: function() {
+            if (!this.task.id && this.$route.name == 'tasks.edit') {
+                var that = this;
+                this.store.fetchTask(this.$route.params.taskId, function(result) {
+                    that.activateForm();
+                    that.task = result;
+                });
+            }
+        },
         methods: {
             activateForm: function() {
                 if (this.editMode == false) {
@@ -180,6 +188,7 @@
             deactivateForm: function() {
                 this.clearForm();
                 this.editMode = false;
+                this.$route.router.go(this.sharedState.previousRoute.path)
                 this.$dispatch('taskFormDeactivated');
             },
             clearForm: function() {

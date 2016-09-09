@@ -28784,7 +28784,11 @@ a.add-project {
  *  # Task Form
  *
  * ---------------------------------------------------------------------------- */
-
+i#task-complete {
+	color: #055D92;
+	font-size: 2.5em;
+	margin-left: -55px;
+}
 
 i.icon-star-empty3, i.icon-star-full2 {
 	color:green;
@@ -28793,6 +28797,7 @@ i.icon-star-empty3, i.icon-star-full2 {
 }
 .form-control.input-group-facade {
 	padding:0;
+	width:auto;
 }
 .transparent-input {
 	border:none;
@@ -28840,8 +28845,6 @@ td.check-complete > .icon-checkbox-unchecked2 {
 	padding: 12px 2px;
 	width: 20px;
 }
-
-
 span.project-edit.clickable {
 	margin-left: 6px;
 	font-size: .65em;
@@ -28887,6 +28890,14 @@ span.project-link:hover {
 	cursor: pointer;
 }
 
+/* ------------------------------------------------------------------------------
+ *
+ *  # Helpers
+ *
+ * ---------------------------------------------------------------------------- */
+.margin-left-45 {
+	margin-left: 45px;
+}
 
 
 /*# sourceMappingURL=theme.css.map */

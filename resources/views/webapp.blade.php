@@ -28,7 +28,7 @@
 </head>
 
 <body class="navbar-top">
-    <div id="app">
+    <div id="app" v-cloak>
         <!-- Main navbar -->
         <div class="navbar navbar-default navbar-fixed-top header-highlight">
             <div class="navbar-header bg-blue-tdm">

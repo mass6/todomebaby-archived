@@ -60,6 +60,21 @@ class TaskServiceTest extends TestCase
     }
 
     /**
+     * Service retrieves a task by ID
+     *
+     * @test
+     */
+    public function it_retrieves_a_task_by_id()
+    {
+        $createdTask = $this->generateUserTasks($this->user, 1);
+        $foundTask = $this->taskService->findById($createdTask->id);
+
+        $this->assertInstanceOf(Task::class, $foundTask);
+        $this->assertEquals($createdTask->id, $foundTask->id);
+        $this->assertEquals($createdTask->title, $foundTask->title);
+    }
+
+    /**
      * Service retrieves all pending tasks
      *
      * @test

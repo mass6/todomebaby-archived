@@ -24,17 +24,35 @@ var router = new VueRouter({
 
 var App = Vue.component('app', require('./components/App.vue'));
 var TaskList = Vue.component('tasklist', require('./components/TaskList.vue'));
+var ProjectForm = Vue.component('projectform', require('./components/ProjectForm.vue'));
+import { store } from './store'
 
 router.map({
     '/lists/:listName': {
-        name: 'taskList',
+        name: 'tasks.list',
         component: TaskList
+    },
+    '/tasks/:taskId/edit': {
+        name: 'tasks.edit',
+        component: TaskList
+    },
+    '/projects/create': {
+        name: 'projects.create',
+        component: ProjectForm
+    },
+    '/projects/:projectId/edit': {
+        name: 'projects.edit',
+        component: ProjectForm
     }
 });
 // Any invalid route will redirect to home
 router.redirect({
     '*': '/lists/today'
 });
+router.beforeEach(function ({ to, next }) {
+    store.state.previousRoute = router.app.$route;
+    next();
+})
 window.onload = function () {
     router.start(App, '#app');
 }

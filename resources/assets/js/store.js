@@ -4,7 +4,9 @@ export let store = {
         taskList: {
             listName: '',
             tasks: []
-        }
+        },
+        task: null,
+        previousRoute: null
     },
     initialize: function() {
         // fetch projects
@@ -29,6 +31,14 @@ export let store = {
             },
             error: function(xhr,status,error) {
                 console.log(error);
+            }
+        });
+    },
+    fetchTask: function(taskId, callback) {
+        Vue.http.get('/tasks/' + taskId).then(function (response) {
+            store.state.task = response.data;
+            if (callback) {
+                callback(response.data);
             }
         });
     },

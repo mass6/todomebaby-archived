@@ -45,6 +45,20 @@ class TasksControllerTest extends TestCase
      * @test
      * @group isolated
      */
+    public function testShow()
+    {
+        $this->service->shouldReceive('findById')->with(1)->andReturn(collect(['task']));
+        $controller = new TasksController;
+        $response = $controller->show(1, $this->service);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(['task'], $response->getData());
+    }
+
+    /**
+     * @test
+     * @group isolated
+     */
     public function testGetTasksDueToday()
     {
         $this->service->shouldReceive('getTasksDueToday')->once()->andReturn(collect(['tasks']));

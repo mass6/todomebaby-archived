@@ -5,6 +5,7 @@
 
         <div class="panel-body">
 
+            <!--<newform :task="selectedTask"></newform>-->
             <taskform :task="selectedTask"></taskform>
             <br/>
 
@@ -23,7 +24,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-if="taskListEmpty"><td>You have no tasks in this list.</td></tr>
+                        <tr v-if="! this.sharedState.taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
                         <tr class="task-item" v-for="task in sharedState.taskList.tasks" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
@@ -65,12 +66,7 @@
                         </tbody>
                     </table>
                 </div>
-
             </section>
-
-
-
-
         </div>
     </div>
 
@@ -81,38 +77,38 @@
 
     import { store } from '../store'
     import TaskForm from './TaskForm.vue'
+    import NewForm from './NewForm.vue'
     export default{
         data(){
             return {
                 sharedState: store.state,
                 store: store,
                 displayTaskList: false,
-                selectedTask: {id: null, title: ''},
-            }
-        },
-        computed: {
-            taskListEmpty: function() {
-                return ! this.sharedState.taskList.tasks.length;
+                selectedTask: {id: null, title: '', project_id: null},
             }
         },
         components: {
-            'taskform': TaskForm
+            'taskform': TaskForm,
+            'newform': NewForm
         },
         route: {
             data: function (transition) {
-                var thisTaskList = this;
-                this.fetchTaskList(function() {
-                    thisTaskList.displayTaskList = true;
-                });
+                if (this.$route.name == 'tasks.list') {
+                    this.fetchTaskList();
+                }
             }
         },
         methods: {
-            fetchTaskList: function(callback) {
-                this.store.fetchTaskList(this.$route.params.listName, callback);
+            fetchTaskList: function() {
+                var that = this;
+                this.store.fetchTaskList(this.$route.params.listName, function() {
+                    that.displayTaskList = true;
+                });
             },
             selectTask: function(task) {
                 this.selectedTask = Object.assign({}, task);
                 this.$broadcast('taskSelected', task);
+                this.$route.router.go('/tasks/' + task.id + '/edit');
             },
             setPriority: function(task) {
 

@@ -54,8 +54,12 @@ class TaskService
         $this->user = $user;
     }
 
-
     // Query Services
+
+    public function findById($id)
+    {
+        return Task::find($id);
+    }
 
     /**
      * @return mixed
