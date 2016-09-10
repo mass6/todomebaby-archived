@@ -46,7 +46,6 @@ export let store = {
     },
     addTask: function(task, callback) {
         Vue.http.post('/tasks', task).then(function (response) {
-            store.fetchTaskList(store.state.taskList.listId);
             if (callback) {
                 callback();
             }

@@ -136,6 +136,9 @@
         events: {
             taskFormDeactivated: function() {
                 this.selectedTask = {title: ''};
+            },
+            taskSaved: function() {
+                this.fetchTaskList();
             }
         }
 
