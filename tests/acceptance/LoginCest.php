@@ -51,6 +51,6 @@ class LoginCest
         $I->wantToTest('users are redirected to todays tasklist after login');
         $I->amLoggedInAsARegisteredUser();
 
-        $I->waitForText('Due Today', 4);
+        $I->waitForText('Today', 4);
     }
 }

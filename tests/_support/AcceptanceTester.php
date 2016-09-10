@@ -34,12 +34,17 @@ class AcceptanceTester extends \Codeception\Actor
     {
         $I = $this;
         $I->amOnPage('/login');
+        $I->submitLoginForm($email, $password);
+    }
+
+    public function submitLoginForm($email, $password)
+    {
+        $I = $this;
         $I->submitForm('#loginForm', [
             'email' => $email,
             'password' => $password
         ]);
     }
-
     public function loginAsARegisteredUser($email = 'johndoe@test.com', $name = 'John Doe')
     {
         $I = $this;

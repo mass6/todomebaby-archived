@@ -34,8 +34,8 @@ class TaskListCest
         $task = Task::with('project')->withoutGlobalScopes()->first();
 
         $I->click('Future');
-        $I->waitForText('Due In Future',4);
-        $I->see($task->title);
+        $I->waitForText('Future',4, '.list-heading');
+        $I->waitForText($task->title, 4);
         $I->see('Project One', '.project-link');
         $I->see($task->priority, 'a.dropdown-toggle');
     }
@@ -72,8 +72,8 @@ class TaskListCest
         $tasks1[1]->save();
 
         $I->click('Today');
-        $I->waitForText('Due Today',4);
-        $I->see($tasks1[0]->title);
+        $I->waitForText('Today',4, '.list-heading');
+        $I->waitForText($tasks1[0]->title, 4);
         $I->see('Project One', '.project-link');
 
         $I->see($tasks2[0]->title);
@@ -111,8 +111,8 @@ class TaskListCest
         $tasks[3]->save();
 
         $I->click('Tomorrow');
-        $I->waitForText('Due Tomorrow',4);
-        $I->see($tasks[0]->title);
+        $I->waitForText('Tomorrow',4, '.list-heading');
+        $I->waitForText($tasks[0]->title);
         $I->see($tasks[1]->title);
         $I->dontSee($tasks[2]->title);
         $I->dontSee($tasks[3]->title);
@@ -133,7 +133,7 @@ class TaskListCest
 
         // set 2 tasks due this week
         $tasks[0]->due_date = Carbon::today()->startOfWeek()->toDateString();
-        $tasks[1]->due_date = Carbon::today()->startOfWeek()->addDays(6)->toDateString();
+        $tasks[1]->due_date = Carbon::today()->endOfWeek()->toDateString();
         // set 1 task due next week
         $tasks[2]->due_date = Carbon::today()->addDays(7)->toDateString();
 
@@ -142,9 +142,9 @@ class TaskListCest
         $tasks[2]->save();
 
         $I->click('This Week');
-        $I->waitForText('Due This Week',4);
-        $I->see($tasks[0]->title);
-        $I->see($tasks[1]->title);
+        $I->waitForText('This Week',4, '.list-heading');
+        $I->waitForText($tasks[0]->title, 4);
+        $I->waitForText($tasks[1]->title, 4);
         $I->dontSee($tasks[2]->title);
     }
     /**
@@ -161,9 +161,8 @@ class TaskListCest
         $user->tasks()->saveMany($tasks);
 
         // set 2 tasks due next week
-        $tasks[0]->due_date = Carbon::today()->startOfWeek()->addDays(7)->toDateString();
+        $tasks[0]->due_date = Carbon::today()->endOfWeek()->addDays(1)->toDateString();
         $tasks[1]->due_date = Carbon::today()->endOfWeek()->addDays(7)->toDateString();
-
         // set 2 tasks due this week
         $tasks[2]->due_date = Carbon::today()->startOfWeek()->toDateString();
         $tasks[3]->due_date = Carbon::today()->endOfWeek()->toDateString();
@@ -178,8 +177,8 @@ class TaskListCest
         $tasks[4]->save();
 
         $I->click('Next Week');
-        $I->waitForText('Due Next Week',4);
-        $I->see($tasks[0]->title);
+        $I->waitForText('Next Week',4, '.list-heading');
+        $I->waitForText($tasks[0]->title, 4);
         $I->see($tasks[1]->title);
         $I->dontSee($tasks[2]->title);
         $I->dontSee($tasks[3]->title);
@@ -199,7 +198,7 @@ class TaskListCest
         $user->tasks()->saveMany($tasks);
 
         // set 1 task due in future (> next week)
-        $tasks[0]->due_date = Carbon::today()->addDays(14)->toDateString();
+        $tasks[0]->due_date = Carbon::today()->addDays(15)->toDateString();
 
         // set 1 task without a no due date
         $tasks[1]->due_date = null;
@@ -214,8 +213,8 @@ class TaskListCest
         $tasks[3]->save();
 
         $I->click('Future');
-        $I->waitForText('Due In Future',4);
-        $I->see($tasks[0]->title);
+        $I->waitForText('Future',4, '.list-heading');
+        $I->waitForText($tasks[0]->title, 4);
         $I->see($tasks[1]->title);
         $I->dontSee($tasks[2]->title);
         $I->dontSee($tasks[3]->title);
