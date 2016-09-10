@@ -13,6 +13,10 @@ extensions:
     enabled:
         - Codeception\Extension\RunFailed
         - Codeception\Extension\Phantoman
+        - Codeception\Extension\Recorder
+    config:
+        Codeception\Extension\Recorder:
+            delete_successful: true
 modules:
     config:
         Db:
