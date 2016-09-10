@@ -33,7 +33,7 @@
                             <!-- Task Title -->
                             <td class="task-title" id="task-title-selection-{{ task.id }}">
                                 <div>
-                                    <span class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </span>
+                                    <a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </a>
                                     <span class="project-link" data-project="{{task.project_id}}" @click="selectProject(task.project)">{{ task.project ? '(' + task.project.name + ')' : '' }}</span><br/>
                                     <!-- Tags Block -->
                                     <div class="tag-block">
@@ -102,13 +102,15 @@
                     this.setListName(this.$route.params.listName);
                     this.fetchTaskList();
                 }
+                window.scrollTo(0, 0);
             }
         },
         methods: {
             fetchTaskList: function() {
                 this.displayTaskList = false;
                 var that = this;
-                this.store.fetchTaskList(this.$route.params.listName, function(result) {
+                let listName = this.$route.params.listName ? this.$route.params.listName : this.sharedState.defaultRoute.params.listName;
+                this.store.fetchTaskList(listName, function(result) {
                     that.taskList.tasks = result;
                     that.displayTaskList = true;
                 });

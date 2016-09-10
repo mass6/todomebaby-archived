@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Task;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
 use Illuminate\Support\Facades\Response;
@@ -15,6 +16,13 @@ class TasksController extends Controller
         $task = $taskService->addTask($request->all());
 
         return response()->json($task);
+    }
+
+    public function update(Task $task, Request $request, TaskService $taskService)
+    {
+        $updatedTask = $taskService->updateTask($task, $request->all());
+
+        return response()->json($updatedTask);
     }
 
     public function show($id, TaskService $taskService)

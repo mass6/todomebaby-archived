@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label for="task-project">Project</label>
                         <select v-model="task.project_id" id="task-project" name="task-project" class="form-control">
-                            <option selected>None</option>
+                            <option value> -- None -- </option>
                             <option v-for="project in sharedState.projects" :value="project.id">
                                 {{ project.name }}
                             </option>

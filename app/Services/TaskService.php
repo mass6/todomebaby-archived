@@ -166,6 +166,9 @@ class TaskService
 
     public function updateTask(Task $task, Array $data)
     {
+        if (! isset($data['project_id']) || $data['project_id'] === '' ) {
+            $data['project_id'] = null;
+        }
         $task->update($data);
 
         return $task;

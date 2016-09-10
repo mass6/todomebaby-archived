@@ -36,6 +36,7 @@ Route::get('tasklists/future', 'TasksController@getTasksDueInFuture');
 Route::group(['middleware' => ['auth','web']], function () {
     Route::post('tasks', 'TasksController@store');
     Route::get('tasks/{task}', 'TasksController@show');
+    Route::patch('tasks/{task}', 'TasksController@update');
     Route::get('projects', 'ProjectsController@getActive');
 });
 

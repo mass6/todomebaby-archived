@@ -41,17 +41,29 @@ class TaskFormCest
         $I->dontSee('Save Task');
     }
 
-    //public function it_updates_a_task(AcceptanceTester $I)
-    //{
-    //    $I->wantTo('Update a task');
-    //    $I->am('Registered User');
-    //    $task = $I->haveTasks($I->haveAnAccount('johndoe@test.com'), 1)->first();
-    //    //$I->loginAsARegisteredUser();
-    //    $I->amOnPage('/web#/tasks/1/edit');
-    //    $I->submitLoginForm('johndoe@test.com', 'secret');
-    //    //$I->click('Today');
-    //    $I->waitForText($task->title, 4);
-    //}
+    public function it_updates_a_task(AcceptanceTester $I)
+    {
+        $I->wantTo('Update a task');
+        $I->am('Registered User');
+        $I->haveTasks($I->loginAsARegisteredUser(), 1, null, ['due_date' => Carbon::today()->toDateString()]);
+        putenv('DISABLE_GLOBAL_SCOPES=true');
+        $task = Task::with('project')->withoutGlobalScopes()->first();
+        $I->click('Today');
+        $I->waitForText($task->title, 4);
+        $I->click($task->title);
+
+        // Edit task data
+        $I->fillField('task-title', 'Updated title');
+        $I->selectOption('Project', '-- None --');
+        $I->selectOption('Priority', 'High');
+        $I->fillField('task-details', 'Updated details');
+        $I->click('Save Task');
+
+        // Verify Changes
+        $I->waitForText('Updated title', 4);
+        $I->wait(1);
+        $I->dontSee('Save Task');
+    }
 
     public function it_resets_the_task_form(AcceptanceTester $I)
     {

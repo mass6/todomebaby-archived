@@ -264,6 +264,35 @@ class TaskServiceTest extends TestCase
         $this->assertEquals(false, $task->next);
         $this->assertEquals($date, $task->due_date);
     }
+
+    /**
+     * Service updates a task
+     *
+     * @test
+     * @group current
+     */
+    public function it_unsets_a_project()
+    {
+        $date = Carbon::tomorrow()->toDateString();
+        $taskData = [
+            'title' => 'Task 1',
+            'complete' => false,
+            'next' => true,
+            'due_date' => $date,
+            'priority' => 'medium',
+            'details' => 'Details about this task',
+            'user_id' => $this->user->id,
+        ];
+        $task = factory(Task::class)->create($taskData);
+
+        $newData = [
+            'project' => '',
+        ];
+
+        $this->taskService->updateTask($task, $newData);
+
+        $this->assertEquals(null, $task->project_id);
+    }
     /**
      * Service sets default fields values
      *
