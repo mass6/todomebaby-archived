@@ -25,7 +25,7 @@
                         </thead>
                         <tbody>
                         <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
+                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -104,6 +104,7 @@
         methods: {
             updateTaskList: function() {
                 this.$broadcast('taskListUpdated');
+                this.displayTaskList = false; // hide task list while data is being fetched
                 this.taskList.listName = '';
                 this.fetchTasks(this.getListType(), this.getListId());
             },
@@ -120,7 +121,6 @@
                 return this.$route.params.id ? this.$route.params.id : this.sharedState.defaultRoute.params.id;
             },
             fetchTasks: function(listType, listId) {
-                this.displayTaskList = false; // hide task list while data is being fetched
                 var that = this;
                 this.store.fetchTaskList(listId, listType, function(result) {
                     that.taskList = result;
@@ -134,6 +134,21 @@
                 this.selectedTask = Object.assign({}, task);
                 this.$broadcast('taskSelected', task);
                 this.$route.router.go('/tasks/' + task.id + '/edit');
+            },
+            toggleNext: function(task) {
+                task.next = ! task.next;
+                var that = this;
+                this.store.saveTask(task, function(){
+                    that.refreshTaskList();
+                });
+//                var data = {
+//                    _token: store._token,
+//                    field: 'next',
+//                    value: task.next
+//                }
+//                this.$http.patch('/api/tasks/' + task.id + '/update-field', data).then(function (response) {
+//                    this.$dispatch('taskStoreUpdated', true);
+//                });
             },
             setPriority: function(task) {
 
