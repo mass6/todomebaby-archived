@@ -5,7 +5,6 @@
 
         <div class="panel-body">
 
-            <!--<newform :task="selectedTask"></newform>-->
             <taskform :task="selectedTask"></taskform>
             <br/>
 
@@ -60,7 +59,12 @@
                                     </ul>
                                 </div>
                             </td>
-                            <td>{{ task.due_date ? task.due_date : '' }}</td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="icon-calendar5"></i></span>
+                                    <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task-id="{{task.id}}" type="text" class="form-control pickadate-due-date">
+                                </div>
+                            </td>
                             <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}" @click="toggleNext(task)"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i></td>
                         </tr>
                         </tbody>
@@ -141,11 +145,28 @@
                     that.taskList.listPath = that.$route.path;
                     that.showListName = true;
                     that.displayTaskList = true;
+                    that.$nextTick(function(){
+                        that.initializeDueDatePickers();
+                    });
                 });
             },
             refreshTaskList: function() {
                 this.fetchTasks(this.getListType('refresh'), this.getListId('refresh'));
                 this.unSelectTask();
+            },
+            getTaskById: function (taskId) {
+                return this.taskList.tasks.filter(function(task) {
+                    return task.id == taskId;
+                })[0];
+            },
+            initializeDueDatePickers: function() {
+                var that = this;
+                $('.pickadate-due-date').pickadate({
+                    format: 'yyyy-mm-dd',
+                    onSet: function(context) {
+                        that.updateTask(that.getTaskById(this.$node[0].getAttribute('data-task-id')));
+                    }
+                });
             },
             selectTask: function(task) {
                 this.selectedTask = Object.assign({}, task);

@@ -28841,6 +28841,13 @@ td.check-complete > .icon-checkbox-unchecked2 {
 	color: #0277BD;
 	cursor: pointer;
 }
+.picker--opened .picker__holder {
+	max-height: 480px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	display: block;
+	min-width: 220px;
+}
 .table>tbody>tr>td.check {
 	padding: 12px 2px;
 	width: 20px;
