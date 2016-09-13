@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Log;
-
 trait UserScopingTrait
 {
 

@@ -5,7 +5,6 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Task
@@ -13,22 +12,36 @@ use Illuminate\Support\Facades\Auth;
  */
 class Task extends Model
 {
+
     use UserScopingTrait;
 
-    const PRIORITY_LEVELS = array(
-        'low' => 'low',
-        'med' => 'med',
+    /**
+     * Task Priority level name mapping
+     */
+    const PRIORITY_LEVELS = [
+        'low'    => 'low',
+        'med'    => 'med',
         'medium' => 'med',
-        'hgh' => 'hgh',
-        'high' => 'hgh'
-    );
+        'hgh'    => 'hgh',
+        'high'   => 'hgh'
+    ];
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['title', 'user_id', 'complete', 'completed_at', 'next', 'due_date', 'project_id', 'priority', 'details',];
+    protected $fillable = [
+        'title',
+        'user_id',
+        'complete',
+        'completed_at',
+        'next',
+        'due_date',
+        'project_id',
+        'priority',
+        'details',
+    ];
 
     /**
      * The attributes that should be casted to native types.
@@ -37,8 +50,9 @@ class Task extends Model
      */
     protected $casts = [
         'complete' => 'boolean',
-        'next' => 'boolean',
+        'next'     => 'boolean',
     ];
+
 
     /**
      * Scope the query to only include open tasks.
@@ -50,6 +64,10 @@ class Task extends Model
         return $query->where('complete', false);
     }
 
+
+    /**
+     * Toggles the Next flag on/off
+     */
     public function toggleNextFlag()
     {
         if ( ! $this->attributes['next']) {
@@ -60,17 +78,22 @@ class Task extends Model
         $this->save();
     }
 
+
+    /**
+     * Toggles the complete flag on/off, and sets/un-sets the completed date
+     */
     public function toggleComplete()
     {
-        if (! $this->complete) {
-            $this->complete = true;
+        if ( ! $this->complete) {
+            $this->complete     = true;
             $this->completed_at = Carbon::now();
         } else {
-            $this->complete = false;
+            $this->complete     = false;
             $this->completed_at = null;
         }
         $this->save();
     }
+
 
     /**
      * Sets the due date on the task
@@ -83,10 +106,12 @@ class Task extends Model
         $this->save();
     }
 
+
     /**
      * Get the priority name.
      *
-     * @param  string  $value
+     * @param  string $value
+     *
      * @return string
      */
     public function getPriorityAttribute($value)
@@ -100,10 +125,12 @@ class Task extends Model
         return $humanReadable[$value];
     }
 
+
     /**
      * Proxy to setPriority method.
      *
-     * @param  string  $value
+     * @param  string $value
+     *
      * @return void
      */
     public function setPriorityAttribute($value)
@@ -112,19 +139,31 @@ class Task extends Model
         $this->attributes['priority'] = STATIC::PRIORITY_LEVELS[strtolower($value)];
     }
 
+
+    /**
+     * @param $value
+     */
     protected function validatePriority($value)
     {
-        if (! key_exists(strtolower($value), STATIC::PRIORITY_LEVELS)) {
+        if ( ! key_exists(strtolower($value), STATIC::PRIORITY_LEVELS)) {
             throw new \InvalidArgumentException($value . ' is not one of the allowed priority values (low, med, medium, hgh, high)');
         }
     }
 
+
+    /**
+     * @param $priority
+     */
     public function setPriority($priority)
     {
         $this->priority = $priority;
         $this->save();
     }
 
+
+    /**
+     * @param $projectId
+     */
     public function associateToProject($projectId)
     {
         $this->project()->associate(Project::find($projectId))->save();
@@ -133,6 +172,9 @@ class Task extends Model
 
     // Model Relations
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function project()
     {
         return $this->belongsTo(Project::class);

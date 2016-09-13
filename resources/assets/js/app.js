@@ -28,11 +28,13 @@ var ProjectForm = Vue.component('projectform', require('./components/ProjectForm
 import { store } from './store'
 
 router.map({
-    '/lists/:listName': {
+    '/lists/:id': {
         name: 'tasks.list',
+        listType: 'scheduled',
+        canRedirectTo: true,
         component: TaskList
     },
-    '/tasks/:taskId/edit': {
+    '/tasks/:id/edit': {
         name: 'tasks.edit',
         component: TaskList
     },
@@ -40,21 +42,30 @@ router.map({
         name: 'projects.create',
         component: ProjectForm
     },
-    '/projects/:projectId/edit': {
+    '/projects/:id/edit': {
         name: 'projects.edit',
         component: ProjectForm
+    },
+    '/projects/:id': {
+        name: 'projects.show',
+        listType: 'project',
+        canRedirectTo: true,
+        component: TaskList
     }
 });
 // Any invalid route will redirect to home
 router.redirect({
     '*': '/lists/today'
 });
+
+// save previous route for rerouting back to previous viewed task list
 router.beforeEach(function ({ to, next }) {
-    if (router.app.$route.name == 'tasks.list') {
+    if (router.app.$route.canRedirectTo == true) {
         store.state.previousRoute = router.app.$route;
     }
     next();
 })
+// Start router
 window.onload = function () {
     router.start(App, '#app');
 }

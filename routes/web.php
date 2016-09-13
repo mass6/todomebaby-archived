@@ -26,17 +26,20 @@ Route::get('/web/{vue?}', ['middleware' => 'auth', function () {
     return view('webapp');
 }])->where('vue', '[\/\w\.-]*');
 
-Route::get('tasklists/today', 'TasksController@getTasksDueToday');
-Route::get('tasklists/tomorrow', 'TasksController@getTasksDueTomorrow');
-Route::get('tasklists/this-week', 'TasksController@getTasksDueThisWeek');
-Route::get('tasklists/next-week', 'TasksController@getTasksDueNextWeek');
-Route::get('tasklists/future', 'TasksController@getTasksDueInFuture');
-
-
 Route::group(['middleware' => ['auth','web']], function () {
+
     Route::post('tasks', 'TasksController@store');
+    Route::get('tasks/scheduled', 'TasksController@getScheduledTaskCounts');
     Route::get('tasks/{task}', 'TasksController@show');
     Route::patch('tasks/{task}', 'TasksController@update');
+
+    Route::get('tasklists/today', 'TasksController@getTasksDueToday');
+    Route::get('tasklists/tomorrow', 'TasksController@getTasksDueTomorrow');
+    Route::get('tasklists/this-week', 'TasksController@getTasksDueThisWeek');
+    Route::get('tasklists/next-week', 'TasksController@getTasksDueNextWeek');
+    Route::get('tasklists/future', 'TasksController@getTasksDueInFuture');
+
     Route::get('projects', 'ProjectsController@getActive');
+    Route::get('projects/{project}', 'TasksController@getTasksByProject');
 });
 

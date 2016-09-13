@@ -43,7 +43,6 @@ class TasksControllerTest extends TestCase
 
     /**
      * @test
-     * @group isolated
      */
     public function testShow()
     {
@@ -57,7 +56,6 @@ class TasksControllerTest extends TestCase
 
     /**
      * @test
-     * @group isolated
      */
     public function testGetTasksDueToday()
     {
@@ -66,11 +64,12 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueToday($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['tasks'], $response->getData());
+        $this->assertEquals('Today', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
     }
+
     /**
      * @test
-     * @group isolated
      */
     public function testGetTasksDueTomorrow()
     {
@@ -79,11 +78,11 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueTomorrow($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['tasks'], $response->getData());
+        $this->assertEquals('Tomorrow', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
     }
     /**
      * @test
-     * @group isolated
      */
     public function testGetTasksDueThisWeek()
     {
@@ -92,11 +91,11 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueThisWeek($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['tasks'], $response->getData());
+        $this->assertEquals('This Week', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
     }
     /**
      * @test
-     * @group isolated
      */
     public function testGetTasksDueNextWeek()
     {
@@ -105,11 +104,11 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueNextWeek($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['tasks'], $response->getData());
+        $this->assertEquals('Next Week', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
     }
     /**
      * @test
-     * @group isolated
      */
     public function testGetTasksDueInFuture()
     {
@@ -118,7 +117,47 @@ class TasksControllerTest extends TestCase
         $response = $controller->getTasksDueInFuture($this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['tasks'], $response->getData());
+        $this->assertEquals('Future', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
+    }
+    /**
+     * @test
+     */
+    public function testGetTasksByProject()
+    {
+        $project = m::mock('App\Project');
+        $project->shouldReceive('getAttribute')->with('id')->andReturn(1);
+        $project->shouldReceive('getAttribute')->with('name')->andReturn('Project One');
+        $this->service->shouldReceive('getTasksByProjectId')->with($project->id)->andReturn(collect(['tasks']));
+
+        $controller = new TasksController();
+        $response = $controller->getTasksByProject($project, $this->service);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals($project->name, $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
+    }
+    /**
+     * @test
+     * @group counts
+     */
+    public function testScheduledTaskCounts()
+    {
+        $this->service->shouldReceive('tasksDueTodayCount')->once()->andReturn(2);
+        $this->service->shouldReceive('tasksDueTomorrowCount')->once()->andReturn(2);
+        $this->service->shouldReceive('tasksDueThisWeekCount')->once()->andReturn(2);
+        $this->service->shouldReceive('tasksDueNextWeekCount')->once()->andReturn(2);
+        $this->service->shouldReceive('tasksDueInFutureCount')->once()->andReturn(2);
+
+        $controller = new TasksController;
+        $response = $controller->getScheduledTaskCounts($this->service);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(2, $response->getData()->today);
+        $this->assertEquals(2, $response->getData()->tomorrow);
+        $this->assertEquals(2, $response->getData()->thisWeek);
+        $this->assertEquals(2, $response->getData()->nextWeek);
+        $this->assertEquals(2, $response->getData()->future);
     }
 
 }

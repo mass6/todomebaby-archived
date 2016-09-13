@@ -70,8 +70,6 @@
         </div>
     </div>
 
-
-
 </template>
 <script>
 
@@ -97,23 +95,40 @@
         },
         route: {
             data: function (transition) {
-                if (this.$route.name == 'tasks.list' && (this.$route.path !== this.sharedState.previousRoute.path || this.taskList.listName == '')) {
-                    this.$broadcast('taskListUpdated');
-                    this.setListName(this.$route.params.listName);
-                    this.fetchTaskList();
+                if (this.isNotAnEditRequest() && this.isRequestingADifferentList()) {
+                    this.updateTaskList();
                 }
                 window.scrollTo(0, 0);
             }
         },
         methods: {
-            fetchTaskList: function() {
-                this.displayTaskList = false;
+            updateTaskList: function() {
+                this.$broadcast('taskListUpdated');
+                this.taskList.listName = '';
+                this.fetchTasks(this.getListType(), this.getListId());
+            },
+            getListType: function(action) {
+                if (action == 'refresh') {
+                    return this.sharedState.previousRoute ? this.sharedState.previousRoute.listType : this.sharedState.defaultRoute.listType;
+                }
+                return this.$route.listType;
+            },
+            getListId: function(action) {
+                if (action == 'refresh') {
+                    return this.sharedState.previousRoute.params ? this.sharedState.previousRoute.params.id : this.sharedState.defaultRoute.params.id;
+                }
+                return this.$route.params.id ? this.$route.params.id : this.sharedState.defaultRoute.params.id;
+            },
+            fetchTasks: function(listType, listId) {
+                this.displayTaskList = false; // hide task list while data is being fetched
                 var that = this;
-                let listName = this.$route.params.listName ? this.$route.params.listName : this.sharedState.defaultRoute.params.listName;
-                this.store.fetchTaskList(listName, function(result) {
-                    that.taskList.tasks = result;
+                this.store.fetchTaskList(listId, listType, function(result) {
+                    that.taskList = result;
                     that.displayTaskList = true;
                 });
+            },
+            refreshTaskList: function() {
+                this.fetchTasks(this.getListType('refresh'), this.getListId('refresh'));
             },
             selectTask: function(task) {
                 this.selectedTask = Object.assign({}, task);
@@ -125,6 +140,12 @@
             },
             setListName: function(name) {
                 this.taskList.listName =  this.toTitleCase(this.hyphensToSpaces(name));
+            },
+            isNotAnEditRequest: function() {
+                return this.$route.name !== 'tasks.edit';
+            },
+            isRequestingADifferentList: function () {
+                return this.$route.path !== this.sharedState.previousRoute.path || this.taskList.listName == '';
             },
             hyphensToSpaces: function(string) {
                 return string.replace(/-/g, " ");
@@ -140,7 +161,7 @@
                 this.selectedTask = {title: ''};
             },
             taskSaved: function() {
-                this.fetchTaskList();
+                this.refreshTaskList();
             }
         }
 

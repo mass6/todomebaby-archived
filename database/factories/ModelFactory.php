@@ -36,6 +36,7 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
 $factory->define(App\Project::class, function (Faker\Generator $faker) {
 
     return [
-        'name' => $faker->sentence,
+        'name' => $faker->sentence(2),
+        'active' => true,
     ];
 });

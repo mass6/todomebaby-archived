@@ -30,7 +30,7 @@ class AcceptanceTester extends \Codeception\Actor
         ]);
     }
 
-    public function login($email, $password)
+    public function login($email, $password = 'secret')
     {
         $I = $this;
         $I->amOnPage('/login');
@@ -65,6 +65,16 @@ class AcceptanceTester extends \Codeception\Actor
             'name' => $name,
             'user_id' => $user->id
         ]);
+    }
+
+    public function haveProjects($user, $amount = 3)
+    {
+        return factory(Project::class, $amount)
+            ->make()
+            ->each(function ($p) use ($user) {
+                $user->projects()->save($p);
+            });
+
     }
 
     public function haveTasks($user, $amount = 5, Project $project = null, $overrides = [])

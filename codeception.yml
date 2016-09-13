@@ -25,4 +25,4 @@ modules:
             password: ''
             dump: tests/_data/dump.sql
         Codeception\Extension\Phantoman:
-            debug: true
+            debug: false

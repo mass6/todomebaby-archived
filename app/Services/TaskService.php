@@ -8,7 +8,6 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TaskService
@@ -56,6 +55,11 @@ class TaskService
 
     // Query Services
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function findById($id)
     {
         return Task::find($id);
@@ -82,6 +86,13 @@ class TaskService
             ->get();
     }
 
+    /**
+     * @return mixed
+     */
+    public function tasksDueTodayCount()
+    {
+        return $this->getTasksDueToday()->count();
+    }
 
     /**
      * @return mixed
@@ -95,6 +106,13 @@ class TaskService
             ->get();
     }
 
+    /**
+     * @return mixed
+     */
+    public function tasksDueTomorrowCount()
+    {
+        return $this->getTasksDueTomorrow()->count();
+    }
 
     /**
      * @return mixed
@@ -107,6 +125,14 @@ class TaskService
             ->where('due_date', '>=', Carbon::today()->startOfWeek()->toDateString())
             ->where('due_date', '<=', Carbon::today()->endOfWeek()->toDateString())
             ->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function tasksDueThisWeekCount()
+    {
+        return $this->getTasksDueThisWeek()->count();
     }
 
 
@@ -126,6 +152,14 @@ class TaskService
     /**
      * @return mixed
      */
+    public function tasksDueNextWeekCount()
+    {
+        return $this->getTasksDueNextWeek()->count();
+    }
+
+    /**
+     * @return mixed
+     */
     public function getTasksDueInFuture()
     {
         return $this->task
@@ -135,6 +169,27 @@ class TaskService
                 $query->whereNull('due_date')
                       ->orWhere('due_date', '>',Carbon::today()->endOfWeek()->addDays(7)->toDateString());
             })->select([ '*', DB::raw('due_date IS NULL AS due_date_null') ])->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function tasksDueInFutureCount()
+    {
+        return $this->getTasksDueInFuture()->count();
+    }
+
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function getTasksByProjectId($id)
+    {
+        $project = Project::find($id);
+
+        return $project->openTasks();
     }
 
     // Command Services
@@ -149,13 +204,14 @@ class TaskService
     public function addTask(Array $data)
     {
         $data = collect($data);
+        $due_date = $data->get('due_date') ?: null;
 
         $task =  $this->user->tasks()->create([
             'title' => $data->get('title'),
             'complete' => $data->get('complete', false),
             'completed_at' => null,
             'next' => $data->get('next', false),
-            'due_date' => $data->get('due_date'),
+            'due_date' => $due_date,
             'priority' => $data->get('priority', 'LOW'),
             'details' => $data->get('details'),
         ]);
@@ -164,6 +220,13 @@ class TaskService
         return $task;
     }
 
+
+    /**
+     * @param Task  $task
+     * @param array $data
+     *
+     * @return Task
+     */
     public function updateTask(Task $task, Array $data)
     {
         if (! isset($data['project_id']) || $data['project_id'] === '' ) {
@@ -174,17 +237,29 @@ class TaskService
         return $task;
     }
 
+
+    /**
+     * @param Task $task
+     * @param      $project_id
+     */
     public function associateToProject(Task $task, $project_id)
     {
         $task->associateToProject($project_id);
     }
 
+
+    /**
+     * @param Task $task
+     */
     public function toggleComplete(Task $task)
     {
         $task->toggleComplete();
     }
 
 
+    /**
+     * @param Task $task
+     */
     public function toggleNextFlag(Task $task)
     {
         $task->toggleNextFlag();

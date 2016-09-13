@@ -5,11 +5,41 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class Project
+ * @package App
+ */
 class Project extends Model
 {
     use UserScopingTrait;
 
-    protected $fillable = ['name', 'user_id'];
+    /**
+     * @var array
+     */
+    protected $fillable = ['name', 'user_id', 'active'];
+
+
+    /**
+     * Returns all tasks which are open
+     *
+     * @return mixed
+     */
+    public function openTasks()
+    {
+        return $this->tasks()->with('project')->get()->filter(function($task){
+            return $task->complete == false;
+        });
+    }
+
+
+    /**
+     * Project can have many related tasks
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

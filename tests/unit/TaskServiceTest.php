@@ -112,6 +112,21 @@ class TaskServiceTest extends TestCase
         $this->assertArrayHasKey('project', $tasksDueToday->first()->toArray());
     }
 
+    /**
+     * Service retrieves count of all tasks due today
+     *
+     * @test
+     */
+    public function it_retrieves_count_of_all_tasks_due_today()
+    {
+        $this->tasks = $this->generateUserTasks();
+
+        $this->setDueDates($this->tasks, Carbon::today()->toDateString());
+        $this->tasks->first()->toggleComplete();
+
+        $this->assertEquals(4, $this->taskService->tasksDueTodayCount());
+    }
+
 
     /**
      * Service retrieves all tasks due tomorrow
@@ -131,6 +146,21 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueTomorrow);
         $this->assertArrayHasKey('project', $tasksDueTomorrow->first()->toArray());
+    }
+
+    /**
+     * Service retrieves count of all tasks due tomorrow
+     *
+     * @test
+     */
+    public function it_retrieves_count_of_all_tasks_due_tomorrow()
+    {
+        $this->tasks = $this->generateUserTasks();
+
+        $this->setDueDates($this->tasks, Carbon::tomorrow()->toDateString());
+        $this->tasks->first()->toggleComplete();
+
+        $this->assertEquals(4, $this->taskService->tasksDueTomorrowCount());
     }
 
     /**
@@ -156,6 +186,21 @@ class TaskServiceTest extends TestCase
     }
 
     /**
+     * Service retrieves count of all tasks due this week
+     *
+     * @test
+     */
+    public function it_retrieves_count_of_all_tasks_due_this_week()
+    {
+        $this->tasks = $this->generateUserTasks();
+
+        $this->setDueDates($this->tasks, Carbon::today()->startOfWeek()->toDateString());
+        $this->tasks->first()->toggleComplete();
+
+        $this->assertEquals(4, $this->taskService->tasksDueThisWeekCount());
+    }
+
+    /**
      * Service retrieves all tasks due next week
      *
      * @test
@@ -174,6 +219,21 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueNextWeek);
         $this->assertArrayHasKey('project', $tasksDueNextWeek->first()->toArray());
+    }
+
+    /**
+     * Service retrieves count of all tasks due next week
+     *
+     * @test
+     */
+    public function it_retrieves_count_of_all_tasks_due_next_week()
+    {
+        $this->tasks = $this->generateUserTasks();
+
+        $this->setDueDates($this->tasks, Carbon::today()->endOfWeek()->addDays(2)->toDateString());
+        $this->tasks->first()->toggleComplete();
+
+        $this->assertEquals(4, $this->taskService->tasksDueNextWeekCount());
     }
 
     /**
@@ -200,6 +260,42 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueInFuture);
         $this->assertArrayHasKey('project', $tasksDueInFuture->first()->toArray());
+    }
+
+
+    /**
+     * @test
+     */
+    public function it_retrieves_all_tasks_by_project()
+    {
+        // Given I have a project named Project One with two tasks
+        $this->tasks = $this->generateUserTasks();
+        $project = factory(Project::class)->create(['name' => 'Project One', 'user_id' => $this->user->id]);
+        $this->tasks->first()->associateToProject($project->id);
+        $this->tasks->last()->associateToProject($project->id);
+
+        // When I call getTasksByProjectId()
+        $tasks = $this->taskService->getTasksByProjectId($project->id);
+
+        // Then it should return 2 projects
+        $this->assertCount(2, $tasks);
+    }
+
+    /**
+     * Service retrieves count of all tasks due in future
+     *
+     * @test
+     */
+    public function it_retrieves_count_of_all_tasks_due_in_future()
+    {
+        $this->tasks = $this->generateUserTasks();
+
+        $this->setDueDates($this->tasks, Carbon::today()->addDays(20)->toDateString());
+        $this->tasks->first()->toggleComplete();
+        $this->tasks->last()->due_date = null;
+        $this->tasks->last()->save();
+
+        $this->assertEquals(4, $this->taskService->tasksDueInFutureCount());
     }
 
     // Command Service Tests

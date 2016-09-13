@@ -2,9 +2,11 @@
     <li class="">
         <a href="Javascript:void(0)"><i class="icon-stack"></i> <span>Projects</span></a>
         <ul>
-            <li><a href="Javascript:void(0)">Project Alpha</a></li>
-            <li><a href="Javascript:void(0)">Project Bravo</a></li>
-            <li><a href="Javascript:void(0)">Project Charlie</a></li>
+            <li v-for="project in sharedState.projects">
+                <a v-link="{ name: 'projects.show', params: { id: project.id }, replace: true, exact: true }" class="project-link" v-link-active>
+                    {{ project.name }}<span id="project-{{project.id}}-task-count" class="badge badge-primary bg-blue-tdm border-blue-tdm">{{ project.taskCount }}</span>
+                </a>
+            </li>
         </ul>
     </li>
 </template>
@@ -12,11 +14,12 @@
 
 </style>
 <script>
-
+    import { store } from '../store'
     export default{
         data(){
             return{
-                msg:'hello vue'
+                sharedState: store.state,
+                store: store
             }
         }
     }

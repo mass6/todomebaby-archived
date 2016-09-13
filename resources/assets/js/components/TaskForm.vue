@@ -12,7 +12,7 @@
                        @click="markComplete(task)"
                        v-if="task.id"
                     ></i>
-                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" @focus="expandForm">
+                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" @focus="activateForm">
                     <i class="pull-right task-next" :class="taskClassNext" @click="task.next = !task.next"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
                 </div>
             </div>
@@ -108,7 +108,7 @@
             <!-- /details -->
 
             <div>
-                <button type="submit" id="save-task-button" class="btn btn-primary" v-bind:class="{ 'disabled': !task.title.length }" @click="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
+                <button type="submit" id="save-task-button" class="btn btn-primary" v-bind:class="{ 'disabled': !task.title.length }" @click.stop.prevent="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
                 <button class="btn btn-grey" @click="cancelForm">Cancel </button>
             </div>
         </section>
@@ -160,34 +160,46 @@
             }
         },
         created: function() {
-            if (!this.task.id && this.$route.name == 'tasks.edit') {
+            if (this.isAnEditRequest()) {
                 var that = this;
-                this.store.fetchTask(this.$route.params.taskId, function(result) {
+                this.store.fetchTask(this.$route.params.id, function(result) {
                     that.activateForm();
                     that.task = result;
                 });
             }
         },
         methods: {
+            isAnEditRequest: function() {
+                return !this.task.id && this.$route.name == 'tasks.edit'
+            },
             activateForm: function() {
                 if (this.editMode == false) {
                     this.expandForm();
                 }
+                this.initiliazePlugins();
             },
             expandForm: function() {
                 this.editMode = true;
-                this.$nextTick(function(){
-                    $('.pickadate').pickadate({
-                        format: 'yyyy-mm-dd'
-                    });
-                })
 
-//                this.setDefaultTags();
+                //this.setDefaultTags();
             },
             cancelForm: function() {
                 this.deactivateForm();
                 if (this.$route.name == 'tasks.edit') {
                     this.redirect(this.getRedirectPath());
+                }
+            },
+            initiliazePlugins: function() {
+                var that = this;
+                this.$nextTick(function(){
+                    that.initializeDueDatePicker();
+                });
+            },
+            initializeDueDatePicker: function() {
+                let $input = $('#task-due-date').pickadate({format: 'yyyy-mm-dd'});
+                let picker = $input.pickadate('picker');
+                if (picker.get() !== '' && this.task.due_date !== 'undefined') {
+                    picker.set('select', picker.get(), { format: 'yyyy-mm-dd' });
                 }
             },
             deactivateForm: function() {
@@ -211,6 +223,9 @@
                 this.$route.router.go(path);
             },
             saveTask: function() {
+                if (! this.task.title.length) {
+                    return;
+                }
                 var that = this;
                 this.store.saveTask(this.task, function(){
                     that.$dispatch('taskSaved', that.task);
@@ -226,7 +241,7 @@
         },
         events: {
             taskSelected: function(task) {
-                this.editMode = true;
+                this.activateForm();
             },
             taskListUpdated: function() {
                 this.deactivateForm();

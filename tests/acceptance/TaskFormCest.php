@@ -27,7 +27,8 @@ class TaskFormCest
         $I->waitForElement('#task-form-container', 4);
         $I->fillField('task-title', 'New task title');
         $I->click('#task-due-date');
-        $I->click('Today');
+        $I->waitForElement('.picker__button--today', 4);
+        $I->click('.picker__button--today');
         $I->waitForElement('#task-project', 4);
         $I->selectOption('Project', 'Project One');
         $I->selectOption('Priority', 'Medium');
