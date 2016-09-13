@@ -9,7 +9,7 @@
             <taskform :task="selectedTask"></taskform>
             <br/>
 
-            <section id="task-list-container">
+            <section id="task-list-container" v-show="showListName">
                 <h2 class="list-heading text-light">{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
                     <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
                 <div id="context-tasks" class="table-responsive">
@@ -83,8 +83,12 @@
                 store: store,
                 taskList: {
                     listName: '',
-                    tasks: []
+                    tasks: [],
+                    listId: null,
+                    listType: null,
+                    listPath: null
                 },
+                showListName: false,
                 displayTaskList: false,
                 selectedTask: {id: null, title: ''}
             }
@@ -95,28 +99,35 @@
         },
         route: {
             data: function (transition) {
-                if (this.isNotAnEditRequest() && this.isRequestingADifferentList()) {
+                if (this.isNotAnEditRequest() && this.listShouldBeUpdated()) {
                     this.updateTaskList();
                 }
                 window.scrollTo(0, 0);
             }
         },
         methods: {
+            isNotAnEditRequest: function() {
+                return this.$route.name !== 'tasks.edit';
+            },
+            listShouldBeUpdated: function () {
+                return this.$route.path !== this.taskList.path || this.taskList.listName == '';
+            },
             updateTaskList: function() {
                 this.$broadcast('taskListUpdated');
+                this.showListName = false; // hide task list while data is being fetched
                 this.displayTaskList = false; // hide task list while data is being fetched
                 this.taskList.listName = '';
                 this.fetchTasks(this.getListType(), this.getListId());
             },
             getListType: function(action) {
                 if (action == 'refresh') {
-                    return this.sharedState.previousRoute ? this.sharedState.previousRoute.listType : this.sharedState.defaultRoute.listType;
+                    return this.taskList.listType ? this.taskList.listType : this.sharedState.defaultRoute.listType;
                 }
                 return this.$route.listType;
             },
             getListId: function(action) {
                 if (action == 'refresh') {
-                    return this.sharedState.previousRoute.params ? this.sharedState.previousRoute.params.id : this.sharedState.defaultRoute.params.id;
+                    return this.taskList.listId ? this.taskList.listId : this.sharedState.defaultRoute.params.id;
                 }
                 return this.$route.params.id ? this.$route.params.id : this.sharedState.defaultRoute.params.id;
             },
@@ -124,16 +135,24 @@
                 var that = this;
                 this.store.fetchTaskList(listId, listType, function(result) {
                     that.taskList = result;
+                    that.taskList.listType = listType;
+                    that.taskList.listId = listId;
+                    that.taskList.listPath = that.$route.path;
+                    that.showListName = true;
                     that.displayTaskList = true;
                 });
             },
             refreshTaskList: function() {
                 this.fetchTasks(this.getListType('refresh'), this.getListId('refresh'));
+                this.unSelectTask();
             },
             selectTask: function(task) {
                 this.selectedTask = Object.assign({}, task);
                 this.$broadcast('taskSelected', task);
                 this.$route.router.go('/tasks/' + task.id + '/edit');
+            },
+            unSelectTask: function(task) {
+                this.selectedTask = {title: '', next: false};
             },
             toggleNext: function(task) {
                 task.next = ! task.next;
@@ -141,26 +160,12 @@
                 this.store.saveTask(task, function(){
                     that.refreshTaskList();
                 });
-//                var data = {
-//                    _token: store._token,
-//                    field: 'next',
-//                    value: task.next
-//                }
-//                this.$http.patch('/api/tasks/' + task.id + '/update-field', data).then(function (response) {
-//                    this.$dispatch('taskStoreUpdated', true);
-//                });
             },
             setPriority: function(task) {
 
             },
             setListName: function(name) {
                 this.taskList.listName =  this.toTitleCase(this.hyphensToSpaces(name));
-            },
-            isNotAnEditRequest: function() {
-                return this.$route.name !== 'tasks.edit';
-            },
-            isRequestingADifferentList: function () {
-                return this.$route.path !== this.sharedState.previousRoute.path || this.taskList.listName == '';
             },
             hyphensToSpaces: function(string) {
                 return string.replace(/-/g, " ");
@@ -170,13 +175,17 @@
                     return letter.toUpperCase();
                 });
             },
+            editProject: function(project) {
+
+            },
         },
         events: {
             taskFormDeactivated: function() {
-                this.selectedTask = {title: '', next: false};
+                this.unSelectTask();
             },
             taskSaved: function() {
                 this.refreshTaskList();
+                this.$route.router.go({path: this.taskList.listPath});
             }
         }
 
