@@ -13,7 +13,7 @@
                        v-if="task.id"
                     ></i>
                     <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" @focus="activateForm">
-                    <i class="pull-right task-next" :class="taskClassNext" @click="task.next = !task.next" v-if="editMode"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
+                    <i class="pull-right task-next" :class="taskClassNext" data-popup="tooltip" title="Mark as Next" data-placement="top" @click="task.next = !task.next" v-if="editMode"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
                 </div>
             </div>
         </div>
@@ -193,6 +193,10 @@
                 var that = this;
                 this.$nextTick(function(){
                     that.initializeDueDatePicker();
+                    // Tooltips
+                    $('[data-popup="tooltip"]').tooltip({
+                        template: '<div class="tooltip"><div class="bg-teal"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div></div>'
+                    });
                 });
             },
             initializeDueDatePicker: function() {

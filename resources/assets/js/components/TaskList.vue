@@ -158,7 +158,7 @@
         },
         events: {
             taskFormDeactivated: function() {
-                this.selectedTask = {title: ''};
+                this.selectedTask = {title: '', next: false};
             },
             taskSaved: function() {
                 this.refreshTaskList();
