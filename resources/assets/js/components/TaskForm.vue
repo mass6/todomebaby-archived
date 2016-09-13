@@ -13,7 +13,7 @@
                        v-if="task.id"
                     ></i>
                     <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" @focus="activateForm">
-                    <i class="pull-right task-next" :class="taskClassNext" @click="task.next = !task.next"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
+                    <i class="pull-right task-next" :class="taskClassNext" @click="task.next = !task.next" v-if="editMode"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
                 </div>
             </div>
         </div>
