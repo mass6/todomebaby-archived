@@ -89,5 +89,8 @@ export let store = {
                 callback();
             }
         });
+    },
+    playSound: function(filename) {
+        document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="multimedia/' + filename + '.mp3" type="audio/mpeg" /><source src="multimedia/' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="multimedia/' + filename +'.mp3" /></audio>';
     }
 };

@@ -25,7 +25,7 @@
                         </thead>
                         <tbody>
                         <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete">
+                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -76,6 +76,7 @@
     import { store } from '../store'
     import TaskForm from './TaskForm.vue'
     import NewForm from './NewForm.vue'
+    var timer;
     export default{
         data(){
             return {
@@ -154,12 +155,29 @@
             unSelectTask: function(task) {
                 this.selectedTask = {title: '', next: false};
             },
+            toggleComplete: function(task) {
+                clearTimeout(timer);
+                task.complete = ! task.complete;
+                if (task.complete) {
+                    this.store.playSound('ding');
+                }
+                this.delayedUpdate(task);
+            },
             toggleNext: function(task) {
                 task.next = ! task.next;
+                this.updateTask(task);
+            },
+            updateTask: function (task) {
                 var that = this;
                 this.store.saveTask(task, function(){
                     that.refreshTaskList();
                 });
+            },
+            delayedUpdate: function(task) {
+                var that = this;
+                timer = setTimeout(function(){
+                    that.updateTask(task);
+                }, 6000);
             },
             setPriority: function(task) {
 

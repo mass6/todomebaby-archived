@@ -13,17 +13,6 @@
     <link href="/css/theme.css" rel="stylesheet" type="text/css">
     <!-- /global stylesheets -->
 
-    <!-- Core JS files -->
-    <script type="text/javascript" src="/temp/jquery.min.js"></script>
-    <script type="text/javascript" src="/temp/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/temp/limitless-app.js"></script>
-    <!-- /core JS files -->
-
-    <!-- App JS files -->
-    <script type="text/javascript" src="/js/app.js"></script>
-    <!-- /app JS files -->
-
-
 
 </head>
 
@@ -107,9 +96,22 @@
 
         </div>
         <!-- /page container -->
+
+        <!-- Sound notifications -->
+        <div id="sound"></div>
+
     </div>
-<!-- Theme JS files -->
+
+<!-- Core JS files -->
+<script type="text/javascript" src="/temp/jquery.min.js"></script>
+<script type="text/javascript" src="/temp/bootstrap.min.js"></script>
+<script type="text/javascript" src="/temp/limitless-app.js"></script>
+<!-- /core JS files -->
+
+<!-- App JS files -->
 <script type="text/javascript" src="/js/app.js"></script>
+<!-- /app JS files -->
+
 <!-- Pickadate -->
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/picker.js"></script>
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/picker.date.js"></script>
