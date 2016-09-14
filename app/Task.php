@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
 
-    use UserScopingTrait;
+    use UserScopingTrait, UuidTrait;
+
 
     /**
      * Task Priority level name mapping
@@ -53,6 +54,12 @@ class Task extends Model
         'next'     => 'boolean',
     ];
 
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
 
     /**
      * Scope the query to only include open tasks.
