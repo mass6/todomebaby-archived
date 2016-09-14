@@ -134,6 +134,9 @@ td.check-complete > .icon-checkbox-unchecked2 {
 	color: #0277BD;
 	cursor: pointer;
 }
+.due-date-picker {
+	min-width: 150px;
+}
 .picker--opened .picker__holder {
 	max-height: 480px;
 	border-top-width: 1px;
