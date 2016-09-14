@@ -188,6 +188,12 @@
                 task.next = ! task.next;
                 this.updateTask(task);
             },
+            setPriority: function(task, priority) {
+                if (task.priority != priority) {
+                    task.priority = priority;
+                    this.updateTask(task);
+                }
+            },
             updateTask: function (task) {
                 var that = this;
                 this.store.saveTask(task, function(){
@@ -199,9 +205,6 @@
                 timer[task.id] = setTimeout(function(){
                     that.updateTask(task);
                 }, 6000);
-            },
-            setPriority: function(task) {
-
             },
             setListName: function(name) {
                 this.taskList.listName =  this.toTitleCase(this.hyphensToSpaces(name));
