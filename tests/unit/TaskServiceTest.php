@@ -307,16 +307,17 @@ class TaskServiceTest extends TestCase
      */
     public function it_adds_a_new_task()
     {
+        $project = Project::create(factory(Project::class)->make(['user_id' => $this->user->id])->toArray());
         $taskFormData = [
             'title' => 'Task 1',
             'complete' => false,
             'next' => true,
             'due_date' => Carbon::tomorrow()->toDateString(),
-            'project_id' => 1,
+            'project_id' => $project->id,
             'priority' => 'MED',
             'details' => 'Details about this task',
         ];
-        $this->user->projects()->create(factory(Project::class)->make([])->toArray());
+        //$this->user->projects()->create(factory(Project::class)->make([])->toArray());
         $task = factory(Task::class)->make($taskFormData);
         $this->taskService->addTask($task->toArray());
         $this->assertCount(1, $this->user->tasks);

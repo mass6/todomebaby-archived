@@ -12,13 +12,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-    use UserScopingTrait;
+    use UserScopingTrait, UuidTrait;
 
     /**
      * @var array
      */
     protected $fillable = ['name', 'user_id', 'active'];
 
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
 
     /**
      * Returns all tasks which are open
