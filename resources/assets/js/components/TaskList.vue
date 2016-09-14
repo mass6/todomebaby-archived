@@ -80,7 +80,7 @@
     import { store } from '../store'
     import TaskForm from './TaskForm.vue'
     import NewForm from './NewForm.vue'
-    var timer;
+    var timer = [];
     export default{
         data(){
             return {
@@ -177,7 +177,7 @@
                 this.selectedTask = {title: '', next: false};
             },
             toggleComplete: function(task) {
-                clearTimeout(timer);
+                clearTimeout(timer[task.id]);
                 task.complete = ! task.complete;
                 if (task.complete) {
                     this.store.playSound('ding');
@@ -196,7 +196,7 @@
             },
             delayedUpdate: function(task) {
                 var that = this;
-                timer = setTimeout(function(){
+                timer[task.id] = setTimeout(function(){
                     that.updateTask(task);
                 }, 6000);
             },
