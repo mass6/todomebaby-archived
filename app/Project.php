@@ -29,7 +29,7 @@ class Project extends Model
     {
         return $this->tasks()->with('project')->get()->filter(function($task){
             return $task->complete == false;
-        });
+        })->values();
     }
 
 
