@@ -8,6 +8,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TaskService
@@ -229,10 +230,14 @@ class TaskService
      */
     public function updateTask(Task $task, Array $data)
     {
-        if (! isset($data['project_id']) || $data['project_id'] === '' ) {
-            $data['project_id'] = null;
+        $data = collect($data);
+        if ($data->get('due_date') === '' ) {
+            $data->put('due_date', null);
         }
-        $task->update($data);
+        if ($data->get('project_id') === '' ) {
+            $data->put('project_id', null);
+        }
+        $task->update($data->toArray());
 
         return $task;
     }
