@@ -14,11 +14,6 @@
     <link href="/css/theme.css" rel="stylesheet" type="text/css">
     <!-- /global stylesheets -->
 
-    <!-- Core JS files -->
-    <script type="text/javascript" src="/js/app.js"></script>
-    <script type="text/javascript" src="/js/pages/login.js"></script>
-    <!-- /core JS files -->
-
 </head>
 
 <body class="login-container">
@@ -120,6 +115,14 @@
 
 </div>
 <!-- /page container -->
+
+<!-- Core JS files -->
+<script type="text/javascript" src="/js/core/libraries/jquery.min.js"></script>
+<!-- /core JS files -->
+
+<!-- Page JS files -->
+<script type="text/javascript" src="/js/pages/login.js"></script>
+<!-- /page JS files -->
 
 </body>
 </html>
