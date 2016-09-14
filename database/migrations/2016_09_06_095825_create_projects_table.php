@@ -15,7 +15,7 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('user_id')->unsigned();
+            $table->uuid('user_id');
             $table->string('name');
             $table->boolean('active')->default(true);
             $table->timestamps();
