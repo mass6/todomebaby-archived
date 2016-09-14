@@ -61,7 +61,7 @@
                             </td>
                             <td>
                                 <div class="input-group due-date-picker">
-                                    <span class="input-group-addon"><i class="icon-calendar5"></i></span>
+                                    <span class="input-group-addon"><i class="icon-calendar3"></i></span>
                                     <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task-id="{{task.id}}" type="text" class="form-control pickadate-due-date">
                                 </div>
                             </td>

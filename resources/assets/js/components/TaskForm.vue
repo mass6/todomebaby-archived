@@ -31,7 +31,7 @@
                 <div class="col-md-6">
 
                     <div class="input-group">
-                        <span class="input-group-addon"><i class="icon-calendar5"></i></span>
+                        <span class="input-group-addon"><i class="icon-calendar3"></i></span>
                         <input v-model="task.due_date" id="task-due-date" name="task-due-date" type="text" class="form-control pickadate" placeholder="Date due">
                     </div>
 
