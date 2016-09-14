@@ -60,6 +60,16 @@
             'scheduled':Scheduled,
             'projects':Projects,
             'contexts':Contexts
+        },
+        methods: {
+            hideMobileSidebar: function() {
+                $('body').toggleClass('sidebar-mobile-main').removeClass('sidebar-mobile-secondary sidebar-mobile-opposite sidebar-mobile-detached');
+            }
+        },
+        events: {
+            taskListWasSelected: function () {
+                this.hideMobileSidebar();
+            }
         }
     }
 </script>
