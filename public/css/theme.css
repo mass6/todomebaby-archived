@@ -28823,7 +28823,9 @@ i.icon-star-empty3, i.icon-star-full2 {
 h2.list-heading {
 	margin-bottom: -40px;
 }
-
+table.tasks-list {
+	margin-bottom: 105px;
+}
 .table-lg > tbody > tr > td.check-complete {
 	padding: 15px 10px;
 	vertical-align: top;
@@ -28842,14 +28844,10 @@ td.check-complete > .icon-checkbox-unchecked2 {
 	cursor: pointer;
 }
 .due-date-picker {
-	min-width: 150px;
+	width: 150px;
 }
 .picker--opened .picker__holder {
-	max-height: 480px;
-	border-top-width: 1px;
-	border-bottom-width: 1px;
-	display: block;
-	min-width: 220px;
+	min-width: 250px;
 }
 .table>tbody>tr>td.check {
 	padding: 12px 2px;
