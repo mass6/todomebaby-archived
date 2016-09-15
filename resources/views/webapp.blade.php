@@ -113,7 +113,7 @@
     </div>
 
 <!-- Core JS files -->
-<script type="text/javascript" src="/temp/jquery.min.js"></script>
+<script type="text/javascript" src="/js/core/libraries/jquery.min.js"></script>
 {{--<script type="text/javascript" src="/temp/bootstrap.min.js"></script>--}}
 <script type="text/javascript" src="/js/core/app.min.js"></script>
 <!-- /core JS files -->
