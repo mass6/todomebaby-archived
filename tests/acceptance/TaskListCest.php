@@ -49,32 +49,17 @@ class TaskListCest
         $I->wantTo('View tasks due today');
         $I->am('Registered User');
         $user = $I->haveAnAccount();
-        $project1 = $I->haveAProject($user, 'Project One');
-        $tasks1 = $I->haveTasks($user, 3, $project1);
-        $project2 = $I->haveAProject($user, 'Project Two');
-        $tasks2 = $I->haveTasks($user, 2, $project2);
+        $tasks = $I->haveTasks($user, 3, null, ['due_date' => Carbon::today()->toDateString()]);
+        $tasks->last()->due_date = Carbon::tomorrow()->toDateString();
+        $tasks->last()->save();
+
         $I->login($user->email);
-
-        // create 2 tasks due today
-        $tasks1[0]->due_date = Carbon::today()->toDateString();
-        $tasks2[0]->due_date = Carbon::today()->toDateString();
-        // create 1 task due in future
-        $tasks1[1]->due_date = Carbon::today()->addDays(10)->toDateString();
-        $tasks1[0]->save();
-        $tasks2[0]->save();
-        $tasks1[1]->save();
-
-        $I->click('Today');
+        $I->click('#scheduled-today');
         $I->waitForText('Today',4, '.list-heading');
-        $I->waitForText($tasks1[0]->title, 4);
-        $I->see('Project One', '.project-link');
-
-        $I->see($tasks2[0]->title);
-        $I->see('Project Two', '.project-link');
-
-        $I->dontSee($tasks1[1]->title);
-        $I->dontSee($tasks1[2]->title);
-        $I->dontSee($tasks2[1]->title);
+        $I->waitForText($tasks->first()->title, 4);
+        $I->see($tasks[0]->title);
+        $I->see($tasks[1]->title);
+        $I->dontSee($tasks[2]->title);
     }
 
 

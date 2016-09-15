@@ -46,10 +46,13 @@ class TaskFormCest
     {
         $I->wantTo('Update a task');
         $I->am('Registered User');
-        $I->haveTasks($I->loginAsARegisteredUser(), 1, null, ['due_date' => Carbon::today()->toDateString()]);
+        $user = $I->haveAnAccount();
+        $I->haveTasks($user, 1, null, ['due_date' => Carbon::today()->toDateString()]);
         putenv('DISABLE_GLOBAL_SCOPES=true');
         $task = Task::with('project')->withoutGlobalScopes()->first();
-        $I->click('Today');
+
+        $I->login($user->email);
+        $I->click('#scheduled-today');
         $I->waitForText($task->title, 4);
         $I->click($task->title);
 
