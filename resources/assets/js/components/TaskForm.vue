@@ -62,7 +62,7 @@
                         <label for="task-project">Project</label>
                         <select v-model="task.project_id" id="task-project" name="task-project" class="form-control">
                             <option value> -- None -- </option>
-                            <option v-for="project in sharedState.projects" :value="project.id">
+                            <option v-for="project in sharedState.projects" :value="project.id" v-bind:selected="project.id == taskList.listId">
                                 {{ project.name }}
                             </option>
                         </select>
@@ -170,7 +170,8 @@
                         next: false
                     }
                 }
-            }
+            },
+            taskList: {}
         },
         data(){
             return{

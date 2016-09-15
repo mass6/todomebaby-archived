@@ -5,7 +5,7 @@
 
         <div class="panel-body">
 
-            <taskform :task="selectedTask"></taskform>
+            <taskform :task="selectedTask" v-bind:task-list="taskList"></taskform>
             <br/>
 
             <section id="task-list-container" v-show="showListName">
