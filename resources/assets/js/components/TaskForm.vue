@@ -120,13 +120,43 @@
         transition: all .6s ease;
         overflow: hidden;
     }
-
     /* .expand-enter defines the starting state for entering */
     /* .expand-leave defines the ending state for leaving */
     .expand-enter, .expand-leave {
         height: 0;
         opacity: 0;
     }
+    i#task-complete {
+        color: #055D92;
+        font-size: 2.5em;
+        margin-left: -55px;
+    }
+
+    i.icon-star-empty3, i.icon-star-full2 {
+        color:green;
+        font-size: 1.8em;
+        line-height: 36px;
+    }
+    .form-control.input-group-facade {
+        padding:0;
+        width:auto;
+    }
+    .transparent-input {
+        border:none;
+        background: none;
+        min-height: 33px;
+    }
+    #task-title {
+        width:80%;
+    }
+    .task-next {
+        cursor: pointer;
+    }
+    [v-cloak] {
+        display: none;
+    }
+
+
 </style>
 <script>
     import { store } from '../store'

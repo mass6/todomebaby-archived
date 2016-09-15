@@ -75,6 +75,88 @@
     </div>
 
 </template>
+<style>
+    h2.list-heading {
+        margin-bottom: -40px;
+    }
+    table.tasks-list {
+        margin-bottom: 360px;
+    }
+    .table-lg > tbody > tr > td.check-complete {
+        padding: 15px 10px;
+        vertical-align: top;
+        line-height: 26px;
+    }
+    td.check-complete { width:40px;}
+    .check-complete > i {font-size: 1.3em;}
+    .table-lg > tbody > tr > td.task-title {padding: 17px 5px 5px; vertical-align: top;}
+
+    td.check-complete > .icon-checkbox-unchecked2 {
+        cursor: pointer;
+        color: #025f97;
+    }
+    .icon-checkbox-checked2.blue {
+        color: #0277BD;
+        cursor: pointer;
+    }
+    .due-date-picker {
+        width: 150px;
+    }
+    .picker--opened .picker__holder {
+        min-width: 250px;
+    }
+    .table>tbody>tr>td.check {
+        padding: 12px 2px;
+        width: 20px;
+    }
+    span.project-edit.clickable {
+        margin-left: 6px;
+        font-size: .65em;
+        vertical-align: super;
+    }
+    #context-tasks.table-responsive {
+        min-height: 101px;
+        border:none;
+    }
+    .table-striped>tbody>tr.task-item, .table>tbody>tr.task-item {
+        border-left: 6px solid white;
+    }
+    .table-striped>tbody>tr.task-item.row-active, .table>tbody>tr.task-item.row-active {
+        background-color: #F9F9F9;
+        border-left: 6px solid #055D92;
+    }
+    .table-striped>tbody>tr.row-complete, .table>tbody>tr.row-complete {
+        text-decoration: line-through;
+        background-color: #E6E6E6;
+        color: #7e7e7e;
+    }
+    .row-complete span.task-selectable.task-title {
+        color: #7e7e7e;
+        opacity: .6;
+    }
+    .fade-transition {
+        transition: opacity 1s ease;
+    }
+    .fade-leave {
+        opacity: 0;
+        -webkit-transition-delay: 1s; /* Safari */
+        transition-delay: 1s;
+    }
+    .task-selectable.task-title {font-size:1.1em;color: #042a4a;}
+    .task-selectable.task-title:hover {
+        border-bottom: 1px dashed #427ef5;
+        display: inline;
+    }
+    .tag-block {margin-top: 5px;margin-left:8px;font-size: .85em;}
+    div.tag-block > span.task-selectable {margin-right: 2px;}
+    span.project-link {
+        font-size: .85em;
+        color: #9E9E9E;
+    }
+    span.project-link:hover {
+        cursor: pointer;
+    }
+</style>
 <script>
 
     import { store } from '../store'

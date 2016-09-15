@@ -28,20 +28,47 @@
     </div>
 </template>
 <style>
+    .navigation .navigation-header {
+        color:#ffffff;
+        font-size:14px;
+        font-weight: 600;
+        /*margin-bottom: 20px;*/
+    }
+    .navigation > li > ul li:first-child {
+         padding-top: 0;
+    }
     .navigation > li > a {
         color: #ffffff;
-        font-weight: 400;
+        font-weight: 300;
+    }
+    .navigation > li ul li a {
+        line-height: 12px;
+        min-height: 0;
+        padding-left: 36px;
     }
     .navigation li a:focus {
-        background-color: none;
+        background-color: #4CAF50;
     }
-    .sidebar-active { background-color: #4CAF50;}
+    .v-link-active { background-color: #4CAF50;}
     .navigation > li > a:hover {
         background: none;
         cursor: default;
     }
     .navigation > li ul {
         background-color: #0277BD;
+        /*margin-left: -24px;*/
+    }
+    span.period-link, a.project-link {
+        font-size: 12px;
+        font-weight: 300;
+        color: #ffffff !important;
+    }
+    span.task-counts {
+        margin-top: -3px;
+    }
+    a.add-project {
+        margin-top: -32px;
+        margin-right: 6px;
     }
 </style>
 <script>
