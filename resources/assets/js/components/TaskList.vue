@@ -246,7 +246,10 @@
                 $('.pickadate-due-date').pickadate({
                     format: 'yyyy-mm-dd',
                     onSet: function(context) {
-                        that.updateTask(that.getTaskById(this.$node[0].getAttribute('data-task-id')));
+                        let component = this;
+                        setTimeout(function(){
+                            that.updateTask(that.getTaskById(component.$node[0].getAttribute('data-task-id')));
+                        }, 500);
                     }
                 });
             },
