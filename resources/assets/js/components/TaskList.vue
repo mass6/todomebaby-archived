@@ -217,8 +217,8 @@
                     return letter.toUpperCase();
                 });
             },
-            editProject: function(project) {
-
+            editProject: function() {
+                this.$route.router.go({name: 'projects.edit', params: {id: this.taskList.listId}});
             },
         },
         events: {

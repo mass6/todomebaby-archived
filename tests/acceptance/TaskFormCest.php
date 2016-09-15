@@ -21,8 +21,9 @@ class TaskFormCest
     {
         $I->wantTo('Add a task');
         $I->am('Registered User');
-        $I->haveAProject($I->loginAsARegisteredUser(), 'Project One');
-
+        $user = $I->haveAnAccount();
+        $I->haveAProject($user, 'Project One');
+        $I->login($user->email);
         $I->click('Today');
         $I->waitForElement('#task-form-container', 4);
         $I->fillField('task-title', 'New task title');
@@ -35,8 +36,7 @@ class TaskFormCest
         $I->fillField('task-details', 'New task details');
         $I->click('Save Task');
 
-        $I->waitForElement('#task-title-selection-1', 4);
-        $I->see('New Task Title', '.task-selectable');
+        $I->waitForText('New task title', 4, '.task-title');
         $I->see('(Project One)', 'span.project-link');
         $I->wait(1);
         $I->dontSee('Save Task');

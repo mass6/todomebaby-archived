@@ -180,19 +180,6 @@ class TaskService
         return $this->getTasksDueInFuture()->count();
     }
 
-
-    /**
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function getTasksByProjectId($id)
-    {
-        $project = Project::find($id);
-
-        return $project->openTasks();
-    }
-
     // Command Services
 
     /**

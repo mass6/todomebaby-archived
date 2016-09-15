@@ -50,9 +50,9 @@ class SidebarCest
         $I->login($user->email);
 
         // then I should see open task counts next to each active project
-        $I->waitForText($projects[0]->name,4, 'a.project-link');
-        $I->see(2, '#project-1-task-count');
-        $I->see(3, '#project-2-task-count');
+        $I->waitForText($projects[0]->name, 4);
+        $I->see(2, '#project-' . $projects[0]->id . '-task-count');
+        $I->see(3, '#project-' . $projects[1]->id . '-task-count');
     }
 
     public function it_displays_number_of_open_tasks_due_today(AcceptanceTester $I)

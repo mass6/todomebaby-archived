@@ -17,6 +17,8 @@ class CreateProjectsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('name');
+            $table->text('description')->nullable();
+            $table->date('due_date')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

@@ -44,6 +44,23 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
+    public function testUpdate()
+    {
+        $mTask = m::mock('App\Task');
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('all')->once()->andReturn(['title' => 'foo']);
+        $this->service->shouldReceive('updateTask')->with($mTask, ['title' => 'foo'])->once()->andReturn('bar');
+
+        $controller = new TasksController;
+        $response = $controller->update($mTask, $mRequest, $this->service);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals('bar', $response->getData());
+    }
+
+    /**
+     * @test
+     */
     public function testShow()
     {
         $this->service->shouldReceive('findById')->with(1)->andReturn(collect(['task']));
@@ -120,23 +137,7 @@ class TasksControllerTest extends TestCase
         $this->assertEquals('Future', $response->getData()->listName);
         $this->assertEquals(['tasks'], $response->getData()->tasks);
     }
-    /**
-     * @test
-     */
-    public function testGetTasksByProject()
-    {
-        $project = m::mock('App\Project');
-        $project->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        $project->shouldReceive('getAttribute')->with('name')->andReturn('Project One');
-        $this->service->shouldReceive('getTasksByProjectId')->with($project->id)->andReturn(collect(['tasks']));
 
-        $controller = new TasksController();
-        $response = $controller->getTasksByProject($project, $this->service);
-
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals($project->name, $response->getData()->listName);
-        $this->assertEquals(['tasks'], $response->getData()->tasks);
-    }
     /**
      * @test
      * @group counts

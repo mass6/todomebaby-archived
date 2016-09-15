@@ -61,7 +61,7 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function haveAProject($user, $name = "My Project")
     {
-        return Project::create([
+        return factory(Project::class)->create([
             'name' => $name,
             'user_id' => $user->id
         ]);

@@ -135,18 +135,6 @@ class TasksController extends Controller
 
 
     /**
-     * @param Project     $project
-     * @param TaskService $taskService
-     *
-     * @return mixed
-     */
-    public function getTasksByProject(Project $project, TaskService $taskService)
-    {
-        return $this->getTaskListResponse($project->name, $taskService->getTasksByProjectId($project->id));
-    }
-
-
-    /**
      * @param $listName
      * @param $tasks
      *

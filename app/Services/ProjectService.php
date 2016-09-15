@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Project;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ProjectService
@@ -10,6 +12,56 @@ use App\Project;
  */
 class ProjectService
 {
+
+
+    /**
+     * @var Project
+     */
+    private $project;
+
+    /**
+     * @var User
+     */
+    private $user;
+
+
+    /**
+     * TaskService constructor.
+     */
+    public function __construct()
+    {
+        $this->user = Auth::user();
+        $this->project = new Project;
+    }
+
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    // Query Services
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function findById($id)
+    {
+        return Project::find($id);
+    }
 
     /**
      * @return mixed
@@ -22,4 +74,54 @@ class ProjectService
                 return $project;
             });
     }
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function getTasksByProjectId($id)
+    {
+        $project = Project::find($id);
+
+        return $project->openTasks();
+    }
+
+    /**
+     * Adds a new project
+     *
+     * @param array $data
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function addProject(Array $data)
+    {
+        $data = collect($data);
+        $due_date = $data->get('due_date') ?: null;
+
+        return $this->user->projects()->create([
+            'name' => $data->get('name'),
+            'description' => $data->get('description'),
+            'due_date' => $due_date,
+        ]);
+    }
+
+    /**
+     * @param Project  $project
+     * @param array $data
+     *
+     * @return Project
+     */
+    public function updateProject(Project $project, Array $data)
+    {
+        $data = collect($data);
+        if ($data->get('due_date') === '' ) {
+            $data->put('due_date', null);
+        }
+        $project->update($data->toArray());
+
+        return $project;
+    }
+
+
 }

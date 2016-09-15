@@ -28,6 +28,14 @@ export let store = {
             store.state.projects = (response.data);
         });
     },
+    // Fetches a project by ID
+    fetchProject: function(projectId, callback) {
+        Vue.http.get('/projects/' + projectId).then(function (response) {
+            if (callback) {
+                callback(response.data);
+            }
+        });
+    },
     // Fetches counts for each scheduled task list (Today, Next Week, etc.)
     // and stores result it in global state object
     fetchScheduledTaskCounts: function() {
@@ -37,8 +45,8 @@ export let store = {
     },
     // Fetches tasks for the specified list
     fetchTaskList: function(id, listType, callback) {
-        let basePath = this.getBasePath(listType);
-        Vue.http.get(basePath + id).then((response) => {
+        let url = this.getBasePath(id, listType);
+        Vue.http.get(url).then((response) => {
             if (callback) {
                 callback(response.data);
             }
@@ -47,12 +55,12 @@ export let store = {
         });
     },
     // Determines the proper URL endpoint depending on the list type
-    getBasePath: function (listType) {
+    getBasePath: function (id, listType) {
         if (listType == 'scheduled') {
-            return '/tasklists/';
+            return '/tasklists/' + id;
         }
         if (listType == 'project') {
-            return '/projects/';
+            return '/projects/' + id + '/tasks';
         }
     },
     // Fetches a task by ID
@@ -87,6 +95,31 @@ export let store = {
             store.refreshSidebarData();
             if (callback) {
                 callback();
+            }
+        });
+    },
+    saveProject: function(project, callback) {
+        if (project.id) {
+            this.updateProject(project, callback);
+        } else {
+            this.addProject(project, callback);
+        }
+    },
+    // Add a new project to the DB
+    addProject: function(project, callback) {
+        Vue.http.post('/projects', project).then(function (response) {
+            store.fetchProjects();
+            if (callback) {
+                callback(response.data);
+            }
+        });
+    },
+    // Updates an existing project to the DB
+    updateProject: function(project, callback) {
+        Vue.http.patch('/projects/' + project.id, project).then(function (response) {
+            store.fetchProjects();
+            if (callback) {
+                callback(response.data);
             }
         });
     },

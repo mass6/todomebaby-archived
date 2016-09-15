@@ -12,12 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-    use UserScopingTrait, UuidTrait;
 
-    /**
-     * @var array
-     */
-    protected $fillable = ['name', 'user_id', 'active'];
+    use UserScopingTrait, UuidTrait;
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -27,13 +23,19 @@ class Project extends Model
     public $incrementing = false;
 
     /**
+     * @var array
+     */
+    protected $fillable = [ 'user_id', 'name', 'description', 'due_date', 'active' ];
+
+
+    /**
      * Returns all tasks which are open
      *
      * @return mixed
      */
     public function openTasks()
     {
-        return $this->tasks()->with('project')->get()->filter(function($task){
+        return $this->tasks()->with('project')->get()->filter(function ($task) {
             return $task->complete == false;
         })->values();
     }

@@ -262,25 +262,6 @@ class TaskServiceTest extends TestCase
         $this->assertArrayHasKey('project', $tasksDueInFuture->first()->toArray());
     }
 
-
-    /**
-     * @test
-     */
-    public function it_retrieves_all_tasks_by_project()
-    {
-        // Given I have a project named Project One with two tasks
-        $this->tasks = $this->generateUserTasks();
-        $project = factory(Project::class)->create(['name' => 'Project One', 'user_id' => $this->user->id]);
-        $this->tasks->first()->associateToProject($project->id);
-        $this->tasks->last()->associateToProject($project->id);
-
-        // When I call getTasksByProjectId()
-        $tasks = $this->taskService->getTasksByProjectId($project->id);
-
-        // Then it should return 2 projects
-        $this->assertCount(2, $tasks);
-    }
-
     /**
      * Service retrieves count of all tasks due in future
      *

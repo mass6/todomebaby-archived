@@ -39,7 +39,10 @@ Route::group(['middleware' => ['auth','web']], function () {
     Route::get('tasklists/next-week', 'TasksController@getTasksDueNextWeek');
     Route::get('tasklists/future', 'TasksController@getTasksDueInFuture');
 
+    Route::post('projects', 'ProjectsController@store');
     Route::get('projects', 'ProjectsController@getActive');
-    Route::get('projects/{project}', 'TasksController@getTasksByProject');
+    Route::get('projects/{project}/tasks', 'ProjectsController@getTasksByProject');
+    Route::patch('projects/{project}', 'ProjectsController@update');
+    Route::get('projects/{project}', 'ProjectsController@show');
 });
 

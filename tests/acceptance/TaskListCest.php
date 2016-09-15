@@ -48,19 +48,12 @@ class TaskListCest
     {
         $I->wantTo('View tasks due today');
         $I->am('Registered User');
-        //$user = $I->haveAnAccount();
-        //$tasks = factory(Task::class, 3)->make(['complete' => false ]);
-        //$user->tasks()->saveMany($tasks);
-        //$I->login($user->email, 'secret');
-
-        $project1 = $I->haveAProject($user = $I->loginAsARegisteredUser(), 'Project One');
+        $user = $I->haveAnAccount();
+        $project1 = $I->haveAProject($user, 'Project One');
         $tasks1 = $I->haveTasks($user, 3, $project1);
         $project2 = $I->haveAProject($user, 'Project Two');
         $tasks2 = $I->haveTasks($user, 2, $project2);
-
-        //$user->tasks()->saveMany($tasks);
-        //var_dump($user->tasks->toArray());
-
+        $I->login($user->email);
 
         // create 2 tasks due today
         $tasks1[0]->due_date = Carbon::today()->toDateString();
