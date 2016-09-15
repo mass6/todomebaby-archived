@@ -32,7 +32,6 @@
         color:#ffffff;
         font-size:14px;
         font-weight: 600;
-        /*margin-bottom: 20px;*/
     }
     .navigation > li > ul li:first-child {
          padding-top: 0;
@@ -40,6 +39,7 @@
     .navigation > li > a {
         color: #ffffff;
         font-weight: 300;
+        background-color: #066fae;
     }
     .navigation > li ul li a {
         line-height: 12px;
@@ -49,14 +49,15 @@
     .navigation li a:focus {
         background-color: #4CAF50;
     }
+    .navigation-main > li > a:focus {
+        background-color: #066fae;
+    }
     .v-link-active { background-color: #4CAF50;}
     .navigation > li > a:hover {
-        background: none;
         cursor: default;
     }
     .navigation > li ul {
         background-color: #0277BD;
-        /*margin-left: -24px;*/
     }
     span.period-link, a.project-link {
         font-size: 12px;
@@ -69,6 +70,27 @@
     a.add-project {
         margin-top: -32px;
         margin-right: 6px;
+    }
+    @media (min-width: 769px) {
+        /* Override */
+        .sidebar-separate .sidebar-category {
+            background-color: #0277BD;  /* Override */
+            border-radius: 3px;
+            margin-bottom: 20px;
+        }
+        /* Override */
+        .sidebar-xs .sidebar-main .navigation > li > a > span {
+            background-color: #066fae; /* Override */
+            border: 1px solid #066fae; /* Override */
+        }
+        /* Override */
+        .sidebar-xs .sidebar-main .navigation > nli:hover > a > spa {
+            background-color: #055D92; /* Override */
+        }
+        /* Override */
+        .sidebar-xs .sidebar-main .navigation > li > ul {
+            background-color: #0277BD; /* Override */
+        }
     }
 </style>
 <script>

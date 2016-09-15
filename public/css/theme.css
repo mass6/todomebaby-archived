@@ -28744,4 +28744,11 @@ label.display-block {
 .margin-left-45 {
 	margin-left: 45px;
 }
+
+@media (min-width: 769px) {
+	/* Changed */
+	.sidebar-xs .header-highlight .navbar-header .navbar-brand {
+		background: url('/images/logo-small.png') no-repeat center center;
+	}
+}
 /*# sourceMappingURL=theme.css.map */
