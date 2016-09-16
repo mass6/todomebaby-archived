@@ -209,7 +209,9 @@
                 if (this.editMode == false) {
                     this.expandForm();
                 }
-                this.initiliazePlugins();
+                this.$nextTick(function(){
+                    this.initiliazePlugins();
+                });
             },
             expandForm: function() {
                 this.editMode = true;
@@ -223,9 +225,7 @@
             },
             initiliazePlugins: function() {
                 var that = this;
-                this.$nextTick(function(){
-                    that.taskFormPlugins.init();
-                });
+                that.taskFormPlugins.init();
             },
             deactivateForm: function() {
                 this.clearForm();

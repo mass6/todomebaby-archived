@@ -173,6 +173,7 @@ class SidebarCest
         $I->click('Tomorrow');
         $I->waitForText($tasks[2]->title, 4);
         $I->click($tasks[2]->title);
+        $I->waitForElement('#task-form-container', 4);
         $I->click('#task-due-date');
         $I->click('Today');
         $I->click('Save Task');

@@ -3,7 +3,7 @@ export let taskFormPlugins = {
     initiDueDatePicker: function() {
         let $input = $('#task-due-date').pickadate({format: 'yyyy-mm-dd'});
         let picker = $input.pickadate('picker');
-        if (picker.get() !== '' && this.task.due_date !== 'undefined') {
+        if (picker.get() !== '') {
             picker.set('select', picker.get(), { format: 'yyyy-mm-dd' });
         }
     },
