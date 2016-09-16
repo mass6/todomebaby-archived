@@ -160,6 +160,7 @@
 </style>
 <script>
     import { store } from '../store'
+    import { taskFormPlugins } from '../TaskFormPlugins'
     export default{
         props: {
             task: {
@@ -179,7 +180,8 @@
                 store: store,
                 filter: {filterType: '', filterValue: ''},
                 defaultTags: null,
-                editMode: false
+                editMode: false,
+                taskFormPlugins: taskFormPlugins
             }
         },
         computed: {
@@ -211,7 +213,6 @@
             },
             expandForm: function() {
                 this.editMode = true;
-
                 //this.setDefaultTags();
             },
             cancelForm: function() {
@@ -223,19 +224,8 @@
             initiliazePlugins: function() {
                 var that = this;
                 this.$nextTick(function(){
-                    that.initializeDueDatePicker();
-                    // Tooltips
-                    $('[data-popup="tooltip"]').tooltip({
-                        template: '<div class="tooltip"><div class="bg-teal"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div></div>'
-                    });
+                    that.taskFormPlugins.init();
                 });
-            },
-            initializeDueDatePicker: function() {
-                let $input = $('#task-due-date').pickadate({format: 'yyyy-mm-dd'});
-                let picker = $input.pickadate('picker');
-                if (picker.get() !== '' && this.task.due_date !== 'undefined') {
-                    picker.set('select', picker.get(), { format: 'yyyy-mm-dd' });
-                }
             },
             deactivateForm: function() {
                 this.clearForm();
