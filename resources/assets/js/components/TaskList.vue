@@ -161,7 +161,6 @@
 
     import { store } from '../store'
     import TaskForm from './TaskForm.vue'
-    import NewForm from './NewForm.vue'
     var timer = [];
     export default{
         data(){
@@ -181,8 +180,7 @@
             }
         },
         components: {
-            'taskform': TaskForm,
-            'newform': NewForm
+            'taskform': TaskForm
         },
         route: {
             data: function (transition) {
