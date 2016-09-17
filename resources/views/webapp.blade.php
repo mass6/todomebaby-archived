@@ -127,6 +127,15 @@
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/picker.date.js"></script>
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/legacy.js"></script>
 <!-- /pickadate -->
+<!-- Tags Input -->
+{{--<script type="text/javascript" src="/js/plugins/tags/tagsinput.forked.min.js"></script>--}}
+{{--<script type="text/javascript" src="/js/plugins/tags/tokenfield.min.js"></script>--}}
+{{--<script type="text/javascript" src="/js/plugins/typeahead/typeahead.bundle.min.js"></script>--}}
+<script type="text/javascript" src="/js/plugins/temp/tagsinput.min.js"></script>
+<script type="text/javascript" src="/js/plugins/temp/tokenfield.min.js"></script>
+<script type="text/javascript" src="/js/plugins/temp/prism.min.js"></script>
+<script type="text/javascript" src="/js/plugins/temp/typeahead.bundle.min.js"></script>
+<!-- /tags input -->
 <script>
     window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),

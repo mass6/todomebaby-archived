@@ -37,7 +37,7 @@
                                     <!-- Tags Block -->
                                     <div class="tag-block">
                                         <span v-for="context in task.contexts" class="task-selectable text-blue-tdm" @click.stop.prevent="selectContext(context)"> @{{ context.name }} </span>
-                                        <span v-for="tag in task.tags" class="task-selectable text-teal-700" @click.stop.prevent="selectTag(tag)"> #{{ tag.name }} </span>
+                                        <span v-for="tag in task.tags" class="tag-selectable text-teal-700" @click.stop.prevent="selectTag(tag)"> {{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </span>
                                     </div>
                                     <!-- /tags block -->
                                 </div>
@@ -148,7 +148,7 @@
         display: inline;
     }
     .tag-block {margin-top: 5px;margin-left:8px;font-size: .85em;}
-    div.tag-block > span.task-selectable {margin-right: 2px;}
+    div.tag-block > span.tag-selectable {margin-right: 2px;}
     span.project-link {
         font-size: .85em;
         color: #9E9E9E;
@@ -176,7 +176,7 @@
                 },
                 showListName: false,
                 displayTaskList: false,
-                selectedTask: {id: null, title: ''}
+                selectedTask: {id: null, title: '', tags: []}
             }
         },
         components: {

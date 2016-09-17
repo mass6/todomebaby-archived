@@ -27,17 +27,21 @@ class TaskListCest
     {
         $I->wantToTest('Task list displays all specified task data');
         $I->am('Registered User');
-
-        $project = $I->haveAProject($user = $I->loginAsARegisteredUser(), 'Project One');
-        $tasks = $I->haveTasks($user, 1, $project);
+        $user = $I->haveAnAccount();
+        $project = $I->haveAProject($user, 'Project One');
+        $tags = $I->haveTasksWithTags(1, $user, ['@foo', 'bar'], $project, [])->first()->tags;
         putenv('DISABLE_GLOBAL_SCOPES=true');
-        $task = Task::with('project')->withoutGlobalScopes()->first();
+        $task = Task::with('project', 'tags')->withoutGlobalScopes()->first();
+
+        $I->login($user->email);
 
         $I->click('Future');
         $I->waitForText('Future',4, '.list-heading');
         $I->waitForText($task->title, 4);
         $I->see('Project One', '.project-link');
         $I->see($task->priority, 'a.dropdown-toggle');
+        $I->see('#' . $tags[0]->name, '.tag-selectable');
+        $I->see($tags[1]->name, '.tag-selectable');
     }
 
     /**

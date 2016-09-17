@@ -89,4 +89,19 @@ class AcceptanceTester extends \Codeception\Actor
 
         return $tasks;
     }
+
+    public function haveTasksWithTags($amount = 1, $user, array $tags = ['@foo', 'bar'], Project $project = null, $overrides = [])
+    {
+        $tasks = $this->haveTasks($user, $amount, $project, $overrides);
+
+        return $tasks->each(function($task) use ($tags) {
+            collect($tags)
+                ->each(function($tag) use ($task) {
+                    $task->tags()->create([
+                        'user_id' => $task->user->id,
+                        'name' => trim($tag),
+                    ]);
+                });
+        });
+    }
 }

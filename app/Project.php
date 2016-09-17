@@ -37,7 +37,11 @@ class Project extends Model
     {
         return $this->tasks()->with('project')->get()->filter(function ($task) {
             return $task->complete == false;
-        })->values();
+        })->load(['tags' => function($query)
+        {
+            $query->orderBy('is_context', 'desc');
+            $query->orderBy('name', 'asc');
+        }])->values();
     }
 
 

@@ -12,8 +12,36 @@ export let taskFormPlugins = {
             template: '<div class="tooltip"><div class="bg-teal"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div></div>'
         });
     },
+    initTagsInput: function() {
+
+        // Use Bloodhound engine
+        var engine = new Bloodhound({
+            local: [
+                {value: '@home'},
+                {value: '@office'},
+                {value: '@work'} ,
+                {value: '@travel'}
+            ],
+            datumTokenizer: function(d) {
+                return Bloodhound.tokenizers.whitespace(d.value);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        // Initialize engine
+        engine.initialize();
+
+        // Initialize tokenfield
+        $('.tokenfield-typeahead').tokenfield({
+            typeahead: [null, {
+                displayKey: 'value',
+                source: engine.ttAdapter()
+            }]
+        });
+    },
     init: function() {
         this.initiDueDatePicker();
         this.initToolTips();
+        this.initTagsInput();
     }
 };

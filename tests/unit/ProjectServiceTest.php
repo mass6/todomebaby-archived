@@ -108,6 +108,7 @@ class ProjectServiceTest extends TestCase
 
         // Then it should return 2 projects
         $this->assertCount(2, $tasks);
+        $this->assertArrayHasKey('tags', $tasks->first()->toArray());
     }
 
     // Command Service Tests

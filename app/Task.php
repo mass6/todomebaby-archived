@@ -179,11 +179,22 @@ class Task extends Model
 
     // Model Relations
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }

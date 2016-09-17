@@ -72,6 +72,8 @@ class TaskServiceTest extends TestCase
         $this->assertInstanceOf(Task::class, $foundTask);
         $this->assertEquals($createdTask->id, $foundTask->id);
         $this->assertEquals($createdTask->title, $foundTask->title);
+        $this->assertArrayHasKey('project', $foundTask->toArray());
+        $this->assertArrayHasKey('tags', $foundTask->toArray());
     }
 
     /**
@@ -110,6 +112,7 @@ class TaskServiceTest extends TestCase
         $tasksDueToday = $this->taskService->getTasksDueToday();
         $this->assertCount(2, $tasksDueToday);
         $this->assertArrayHasKey('project', $tasksDueToday->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasksDueToday->first()->toArray());
     }
 
     /**
@@ -146,6 +149,7 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueTomorrow);
         $this->assertArrayHasKey('project', $tasksDueTomorrow->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasksDueTomorrow->first()->toArray());
     }
 
     /**
@@ -183,6 +187,7 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueThisWeek);
         $this->assertArrayHasKey('project', $tasksDueThisWeek->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasksDueThisWeek->first()->toArray());
     }
 
     /**
@@ -219,6 +224,8 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueNextWeek);
         $this->assertArrayHasKey('project', $tasksDueNextWeek->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasksDueNextWeek->first()->toArray());
+
     }
 
     /**
@@ -260,6 +267,7 @@ class TaskServiceTest extends TestCase
 
         $this->assertCount(2, $tasksDueInFuture);
         $this->assertArrayHasKey('project', $tasksDueInFuture->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasksDueInFuture->first()->toArray());
     }
 
     /**
@@ -295,19 +303,62 @@ class TaskServiceTest extends TestCase
             'next' => true,
             'due_date' => Carbon::tomorrow()->toDateString(),
             'project_id' => $project->id,
-            'priority' => 'MED',
+            'tagsinput' => '@foo, bar',
+            'priority' => 'medium',
             'details' => 'Details about this task',
         ];
         //$this->user->projects()->create(factory(Project::class)->make([])->toArray());
-        $task = factory(Task::class)->make($taskFormData);
-        $this->taskService->addTask($task->toArray());
-        $this->assertCount(1, $this->user->tasks);
+        //$task = factory(Task::class)->make($taskFormData);
+        //$task->tags = '@foo, bar';
+        $this->taskService->addTask($taskFormData);
 
-        $savedTask = collect($this->user->tasks->first());
+        $savedTask = $this->user->tasks->first();
+        $this->assertCount(1, $this->user->tasks);
         $this->assertEquals(
-            $task->toArray(),
-            $savedTask->only(['title', 'complete', 'next', 'due_date', 'project_id', 'priority', 'details'])->toArray()
+            [
+                'title' => 'Task 1',
+                'complete' => false,
+                'next' => true,
+                'due_date' => Carbon::tomorrow()->toDateString(),
+                'project_id' => $project->id,
+                'priority' => 'medium',
+                'details' => 'Details about this task',
+            ],
+            collect($savedTask)->only(['title', 'complete', 'next', 'due_date', 'project_id', 'priority', 'details'])->toArray()
         );
+
+        $tags = $savedTask->tags;
+        $this->assertCount(2, $tags);
+        $this->assertEquals('@foo', $tags[0]->name);
+        $this->assertEquals(true, $tags[0]->is_context);
+        $this->assertEquals('bar', $tags[1]->name);
+        $this->assertEquals(false, $tags[1]->is_context);
+    }
+
+    /**
+     * Tags should not be created if tags input field is blank
+     *
+     * @test
+     */
+    public function it_does_not_save_blank_tags()
+    {
+        $data1 = ['tagsinput' => '', 'title' => 'Task 1'];
+        $data2 = ['tagsinput' => ' ', 'title' => 'Task 2'];
+        $data3 = ['tagsinput' => '  ', 'title' => 'Task 3'];
+        $data4 = ['tagsinput' => ' , ', 'title' => 'Task 3'];
+        $data5 = ['tagsinput' => 'foo, ', 'title' => 'Task 4'];
+        $this->taskService->addTask($data1);
+        $this->taskService->addTask($data2);
+        $this->taskService->addTask($data3);
+        $this->taskService->addTask($data4);
+        $this->taskService->addTask($data5);
+
+        $tasks = $this->user->tasks;
+        $this->assertCount(0, $tasks[0]->tags);
+        $this->assertCount(0, $tasks[1]->tags);
+        $this->assertCount(0, $tasks[2]->tags);
+        $this->assertCount(0, $tasks[3]->tags);
+        $this->assertCount(1, $tasks[4]->tags);
     }
 
 
@@ -315,7 +366,6 @@ class TaskServiceTest extends TestCase
      * Service updates a task
      *
      * @test
-     * @group current
      */
     public function it_updates_a_task()
     {
@@ -329,11 +379,13 @@ class TaskServiceTest extends TestCase
             'details' => 'Details about this task',
             'user_id' => $this->user->id,
         ];
-        $task = factory(Task::class)->create($taskData);
+
+        $task = $this->generateUserTasks($this->user,1,false,$taskData);
 
         $newData = [
             'title' => 'Task Changed',
-            'next' => false
+            'next' => false,
+            'tagsinput' => '@foo, baz, bop',
         ];
 
         $this->taskService->updateTask($task, $newData);
@@ -341,6 +393,46 @@ class TaskServiceTest extends TestCase
         $this->assertEquals('Task Changed', $task->title);
         $this->assertEquals(false, $task->next);
         $this->assertEquals($date, $task->due_date);
+    }
+
+    /**
+     * Service updates a task
+     *
+     * @test
+     */
+    public function it_updates_tags()
+    {
+        $task = $this->generateUserTasks($this->user,1);
+
+        $newData = [
+            'tagsinput' => '@foo, baz, bop',
+        ];
+
+        $this->taskService->updateTask($task, $newData);
+        $this->assertCount(3, $task->tags);
+        $this->assertEquals('@foo', $task->tags[0]->name);
+        $this->assertEquals('baz', $task->tags[1]->name);
+        $this->assertEquals('bop', $task->tags[2]->name);
+    }
+
+    /**
+     * Service does not update tags if tagsinput is missing
+     *
+     * @test
+     */
+    public function it_does_not_updates_tags_if_tagsinput_field_is_not_present_in_request()
+    {
+        $task = $this->generateUserTasks($this->user,1);
+
+        // No tags data is provided in the uddate data
+        $newData = [
+            'title' => 'New title',
+        ];
+
+        $this->taskService->updateTask($task, $newData);
+        $this->assertCount(2, $task->tags);
+        $this->assertEquals('@foo', $task->tags[0]->name);
+        $this->assertEquals('bar', $task->tags[1]->name);
     }
 
     /**
@@ -444,6 +536,14 @@ class TaskServiceTest extends TestCase
         $overrides['complete'] = $complete;
         $tasks = factory(Task::class, $amount)->make($overrides);
         $amount > 1 ? $user->tasks()->saveMany($tasks) : $user->tasks()->save($tasks);
+        $tasks->each(function($task) {
+            collect(['@foo', 'bar'])->each(function($tagName) use ($task) {
+                $task->tags()->create([
+                    'user_id' => $task->user->id,
+                    'name' => $tagName
+                ]);
+            });
+        });
 
         return $tasks;
     }

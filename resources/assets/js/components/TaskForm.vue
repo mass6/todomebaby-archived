@@ -41,19 +41,19 @@
             <br/>
             <!-- /due date-->
 
-            <!--<div class="row">-->
+            <!-- Tags -->
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Using typeahead -->
+                    <div class="form-group">
+                        <label for="task-tagsinput">Tags</label>
+                        <input v-model="task.tagsinput" id="task-tagsinput" name="task-tagsinput" type="text" class="form-control tokenfield-typeahead" value="">
+                    </div>
+                    <!-- /using typeahead -->
 
-                <!--<div class="col-md-12">-->
-
-                    <!--&lt;!&ndash; Using typeahead &ndash;&gt;-->
-                    <!--<div class="form-group">-->
-                        <!--<label>Tags</label>-->
-                        <!--<input v-model="task.tagsinput" id="task-tagsinput" type="text" class="form-control tokenfield-typeahead" value="">-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash; /using typeahead &ndash;&gt;-->
-
-                <!--</div>-->
-            <!--</div>-->
+                </div>
+            </div>
+            <!-- /tags -->
 
             <!-- Project -->
             <div class="row">
@@ -71,9 +71,6 @@
             </div>
             <br/>
             <!-- /project -->
-
-
-
 
             <!-- Priority -->
             <div class="row">
@@ -168,7 +165,8 @@
                 default: function () {
                     return {
                         title: '',
-                        next: false
+                        next: false,
+                        tags: []
                     }
                 }
             },
@@ -226,6 +224,16 @@
             initiliazePlugins: function() {
                 var that = this;
                 that.taskFormPlugins.init();
+                if (this.task.tags  && this.task.tags.length) {
+                    console.log('repopulate tags');
+                    this.repopulateTags();
+                }
+            },
+            repopulateTags: function() {
+                let tags = this.task.tags.map(function(tag){
+                    return tag.name;
+                });
+                $('#task-tagsinput').tokenfield('setTokens', tags);
             },
             deactivateForm: function() {
                 this.clearForm();
