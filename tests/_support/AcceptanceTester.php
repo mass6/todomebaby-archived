@@ -1,5 +1,6 @@
 <?php
 use App\Project;
+use App\Tag;
 use App\Task;
 use App\User;
 
@@ -92,16 +93,17 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function haveTasksWithTags($amount = 1, $user, array $tags = ['@foo', 'bar'], Project $project = null, $overrides = [])
     {
-        $tasks = $this->haveTasks($user, $amount, $project, $overrides);
+        $tagModels = collect($tags)->map(function($tag) use ($user) {
+            return factory(Tag::class)->create([
+                'name'=> $tag,
+                'user_id'=>$user->id,
+                'is_context' => substr($tag,0,1) === '@' ?: false,
+            ]);
+        });
 
-        return $tasks->each(function($task) use ($tags) {
-            collect($tags)
-                ->each(function($tag) use ($task) {
-                    $task->tags()->create([
-                        'user_id' => $task->user->id,
-                        'name' => trim($tag),
-                    ]);
-                });
+        return $this->haveTasks($user, $amount, $project, $overrides)
+            ->each(function($task) use ($tagModels) {
+            $task->tags()->attach($tagModels->pluck('id')->all());
         });
     }
 }

@@ -62,6 +62,9 @@ export let store = {
         if (listType == 'project') {
             return '/projects/' + id + '/tasks';
         }
+        if (listType == 'tag') {
+            return '/tags/' + id + '/tasks';
+        }
     },
     // Fetches a task by ID
     fetchTask: function(taskId, callback) {

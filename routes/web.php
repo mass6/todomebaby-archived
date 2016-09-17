@@ -56,5 +56,7 @@ Route::group(['middleware' => ['auth','web']], function () {
     Route::get('projects/{project}/tasks', 'ProjectsController@getTasksByProject');
     Route::patch('projects/{project}', 'ProjectsController@update');
     Route::get('projects/{project}', 'ProjectsController@show');
+
+    Route::get('tags/{tag}/tasks', 'TasksController@getTasksByTag');
 });
 

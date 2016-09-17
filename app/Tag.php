@@ -34,4 +34,9 @@ class Tag extends Model
     protected $casts = [
         'is_context' => 'boolean',
     ];
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class);
+    }
 }

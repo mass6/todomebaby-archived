@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Project;
 use App\Tag;
 use App\Task;
 use App\User;
@@ -47,6 +46,7 @@ class TaskService
         return $this->user;
     }
 
+
     /**
      * @param User $user
      */
@@ -67,6 +67,43 @@ class TaskService
         return Task::with('project', 'tags')->find($id);
     }
 
+
+    /**
+     * Retrieve all open tasks by Tag
+     *
+     * @param Tag $tag
+     *
+     * @return mixed
+     */
+    public function findByTag(Tag $tag)
+    {
+        return $tag->tasks()->open()->with('project')->with([
+            'tags' => function ($query) {
+                $query->orderBy('is_context', 'desc');
+                $query->orderBy('name', 'asc');
+            }
+        ])->get();
+    }
+
+
+    /**
+     * Retrieve all open tasks by Tag Name
+     *
+     * @param $name
+     *
+     * @return mixed
+     */
+    public function findByTagName($name)
+    {
+        return Tag::where('name', $name)->first()->tasks()->open()->with('project')->with([
+            'tags' => function ($query) {
+                $query->orderBy('is_context', 'desc');
+                $query->orderBy('name', 'asc');
+            }
+        ])->get();
+    }
+
+
     /**
      * @return mixed
      */
@@ -75,76 +112,6 @@ class TaskService
         return $this->task->open()->get();
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getTasksDueToday()
-    {
-        return $this->defaultTaskListQuery()
-            ->where('due_date', '<=', Carbon::today()->toDateString())
-            ->get();
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getTasksDueTomorrow()
-    {
-        return $this->defaultTaskListQuery()
-            ->where('due_date',  Carbon::tomorrow()->toDateString())
-            ->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTasksDueThisWeek()
-    {
-        return $this->defaultTaskListQuery()
-            ->where('due_date', '>=', Carbon::today()->startOfWeek()->toDateString())
-            ->where('due_date', '<=', Carbon::today()->endOfWeek()->toDateString())
-            ->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTasksDueNextWeek()
-    {
-        return $this->defaultTaskListQuery()
-            ->where('due_date', '>=',Carbon::today()->startOfWeek()->addDays(7)->toDateString())
-            ->where('due_date', '<=', Carbon::today()->endOfWeek()->addDays(7)->toDateString())
-            ->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTasksDueInFuture()
-    {
-        return $this->defaultTaskListQuery()
-            ->where(function ($query) {
-                $query->whereNull('due_date')
-                      ->orWhere('due_date', '>',Carbon::today()->endOfWeek()->addDays(7)->toDateString());
-            })->select([ '*', DB::raw('due_date IS NULL AS due_date_null') ])->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function defaultTaskListQuery()
-    {
-        return $this->task
-            ->open()
-            ->with('project')
-            ->with(['tags' => function($query)
-            {
-                $query->orderBy('is_context', 'desc');
-                $query->orderBy('name', 'asc');
-            }]);
-    }
 
     /**
      * @return mixed
@@ -158,10 +125,43 @@ class TaskService
     /**
      * @return mixed
      */
+    public function getTasksDueToday()
+    {
+        return $this->defaultTaskListQuery()->where('due_date', '<=', Carbon::today()->toDateString())->get();
+    }
+
+
+    /**
+     * @return mixed
+     */
+    protected function defaultTaskListQuery()
+    {
+        return $this->task->open()->with('project')->with([
+            'tags' => function ($query) {
+                $query->orderBy('is_context', 'desc');
+                $query->orderBy('name', 'asc');
+            }
+        ]);
+    }
+
+
+    /**
+     * @return mixed
+     */
     public function tasksDueTomorrowCount()
     {
         return $this->getTasksDueTomorrow()->count();
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getTasksDueTomorrow()
+    {
+        return $this->defaultTaskListQuery()->where('due_date', Carbon::tomorrow()->toDateString())->get();
+    }
+
 
     /**
      * @return mixed
@@ -171,6 +171,18 @@ class TaskService
         return $this->getTasksDueThisWeek()->count();
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getTasksDueThisWeek()
+    {
+        return $this->defaultTaskListQuery()->where('due_date', '>=',
+            Carbon::today()->startOfWeek()->toDateString())->where('due_date', '<=',
+            Carbon::today()->endOfWeek()->toDateString())->get();
+    }
+
+
     /**
      * @return mixed
      */
@@ -179,12 +191,36 @@ class TaskService
         return $this->getTasksDueNextWeek()->count();
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getTasksDueNextWeek()
+    {
+        return $this->defaultTaskListQuery()->where('due_date', '>=',
+            Carbon::today()->startOfWeek()->addDays(7)->toDateString())->where('due_date', '<=',
+            Carbon::today()->endOfWeek()->addDays(7)->toDateString())->get();
+    }
+
+
     /**
      * @return mixed
      */
     public function tasksDueInFutureCount()
     {
         return $this->getTasksDueInFuture()->count();
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getTasksDueInFuture()
+    {
+        return $this->defaultTaskListQuery()->where(function ($query) {
+            $query->whereNull('due_date')->orWhere('due_date', '>',
+                Carbon::today()->endOfWeek()->addDays(7)->toDateString());
+        })->select([ '*', DB::raw('due_date IS NULL AS due_date_null') ])->get();
     }
 
     // Command Services
@@ -202,38 +238,16 @@ class TaskService
 
         $due_date = $data->get('due_date') ?: null;
 
-        $task =  $this->user->tasks()->create([
-            'title' => $data->get('title'),
-            'complete' => $data->get('complete', false),
+        $task = $this->user->tasks()->create([
+            'title'        => $data->get('title'),
+            'complete'     => $data->get('complete', false),
             'completed_at' => null,
-            'next' => $data->get('next', false),
-            'due_date' => $due_date,
-            'priority' => $data->get('priority', 'LOW'),
-            'details' => $data->get('details'),
+            'next'         => $data->get('next', false),
+            'due_date'     => $due_date,
+            'priority'     => $data->get('priority', 'LOW'),
+            'details'      => $data->get('details'),
         ]);
         $this->associateToProject($task, $data->get('project_id'));
-        $this->associateTags($task, $data->get('tagsinput'));
-
-        return $task;
-    }
-
-
-    /**
-     * @param Task  $task
-     * @param array $data
-     *
-     * @return Task
-     */
-    public function updateTask(Task $task, Array $data)
-    {
-        $data = collect($data);
-        if ($data->get('due_date') === '' ) {
-            $data->put('due_date', null);
-        }
-        if ($data->get('project_id') === '' ) {
-            $data->put('project_id', null);
-        }
-        $task->update($data->toArray());
         $this->associateTags($task, $data->get('tagsinput'));
 
         return $task;
@@ -257,8 +271,9 @@ class TaskService
     private function associateTags(Task $task, $tags)
     {
         // Don't udpate if tags are
-        if (is_null($tags))
-            return ;
+        if (is_null($tags)) {
+            return;
+        }
 
         $tags      = $this->filterOutWhiteSpace($tags);
         $tagModels = $this->getTagModels($tags, $task);
@@ -274,10 +289,10 @@ class TaskService
     protected function filterOutWhiteSpace($tags)
     {
         return collect(explode(',', $tags))->filter(function ($tag) {
-                return trim($tag);
-            })->map(function ($tag) {
-                return trim($tag);
-            });
+            return trim($tag);
+        })->map(function ($tag) {
+            return trim($tag);
+        });
     }
 
 
@@ -324,6 +339,28 @@ class TaskService
             'name'       => $name,
             'is_context' => substr(trim($name), 0, 1) == '@' ?: false,
         ]);
+    }
+
+
+    /**
+     * @param Task  $task
+     * @param array $data
+     *
+     * @return Task
+     */
+    public function updateTask(Task $task, Array $data)
+    {
+        $data = collect($data);
+        if ($data->get('due_date') === '') {
+            $data->put('due_date', null);
+        }
+        if ($data->get('project_id') === '') {
+            $data->put('project_id', null);
+        }
+        $task->update($data->toArray());
+        $this->associateTags($task, $data->get('tagsinput'));
+
+        return $task;
     }
 
 

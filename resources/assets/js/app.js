@@ -51,6 +51,12 @@ router.map({
         listType: 'project',
         canRedirectTo: true,
         component: TaskList
+    },
+    '/tags/:id': {
+        name: 'tags.show',
+        listType: 'tag',
+        canRedirectTo: true,
+        component: TaskList
     }
 });
 // Any invalid route will redirect to home

@@ -225,7 +225,6 @@
                 var that = this;
                 that.taskFormPlugins.init();
                 if (this.task.tags  && this.task.tags.length) {
-                    console.log('repopulate tags');
                     this.repopulateTags();
                 }
             },

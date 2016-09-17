@@ -3,12 +3,15 @@
 use App\Project;
 use App\Services\ProjectService;
 use App\Services\TaskService;
+use App\Tag;
 use App\Task;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TaskServiceTest extends TestCase
 {
@@ -287,6 +290,39 @@ class TaskServiceTest extends TestCase
         $this->assertEquals(4, $this->taskService->tasksDueInFutureCount());
     }
 
+
+    /**
+     * @test
+     */
+    public function it_retrieves_tasks_by_tag()
+    {
+        $this->generateUserTasks($this->user, 2);
+        $tasks = $this->generateUserTasks($this->user, 3, false, [], ['bazz']);
+
+        $tasks = $this->taskService->findByTag($tasks->first()->tags->first());
+
+        $this->assertCount(3, $tasks);
+        $this->assertArrayHasKey('project', $tasks->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasks->first()->toArray());
+        $this->assertEquals('bazz', $tasks->first()->tags->first()->name);
+    }
+    /**
+     * @test
+     */
+    public function it_retrieves_tasks_by_tag_name()
+    {
+        $this->generateUserTasks($this->user, 2);
+        $this->generateUserTasks($this->user, 3, false, [], ['bazz']);
+
+        $tasks = $this->taskService->findByTagName('bazz');
+
+
+        $this->assertCount(3, $tasks);
+        $this->assertArrayHasKey('project', $tasks->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasks->first()->toArray());
+        $this->assertEquals('bazz', $tasks->first()->tags->first()->name);
+    }
+
     // Command Service Tests
 
     /**
@@ -527,22 +563,23 @@ class TaskServiceTest extends TestCase
      * @param int   $amount
      * @param bool  $complete
      * @param array $overrides
+     * @param array $tags
      *
      * @return mixed
      */
-    protected function generateUserTasks(User $user = null, $amount = 5, $complete = false, $overrides = [])
+    protected function generateUserTasks(User $user = null, $amount = 5, $complete = false, $overrides = [], $tags = ['@foo', 'bar'])
     {
         $user = $user ?: $this->user;
         $overrides['complete'] = $complete;
         $tasks = factory(Task::class, $amount)->make($overrides);
         $amount > 1 ? $user->tasks()->saveMany($tasks) : $user->tasks()->save($tasks);
-        $tasks->each(function($task) {
-            collect(['@foo', 'bar'])->each(function($tagName) use ($task) {
-                $task->tags()->create([
-                    'user_id' => $task->user->id,
-                    'name' => $tagName
-                ]);
-            });
+
+        $tagModels = collect($tags)->map(function($tag) use ($user) {
+            return factory(Tag::class)->create(['name'=> $tag, 'user_id'=>$user->id]);
+        });
+
+        $tasks->each(function($task) use ($tagModels) {
+            $task->tags()->attach($tagModels->pluck('id')->all());
         });
 
         return $tasks;

@@ -73,6 +73,24 @@ class TasksControllerTest extends TestCase
 
     /**
      * @test
+     * @group controller
+     */
+    public function it_retrieves_tasks_by_tag()
+    {
+        $mTag = m::mock('App\Tag');
+        $mTag->shouldReceive('getAttribute')->with('name')->once()->andReturn('foo');
+        $this->service->shouldReceive('findByTag')->with($mTag)->once()->andReturn('tasks');
+
+        $controller = new TasksController;
+        $response = $controller->getTasksByTag($mTag, $this->service);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals('foo', $response->getData()->listName);
+        $this->assertEquals('tasks', $response->getData()->tasks);
+    }
+
+    /**
+     * @test
      */
     public function testGetTasksDueToday()
     {

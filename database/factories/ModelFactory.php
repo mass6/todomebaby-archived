@@ -40,3 +40,10 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
         'active' => true,
     ];
 });
+$factory->define(App\Tag::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->word,
+        'is_context' => false,
+    ];
+});

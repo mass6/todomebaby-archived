@@ -9,7 +9,7 @@
             <br/>
 
             <section id="task-list-container" v-show="showListName">
-                <h2 class="list-heading text-light">{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
+                <h2 class="list-heading text-light">{{ taskList.listType == 'tag' && taskList.listName.charAt(0) !== '@' ? '#' : '' }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
                     <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
                 <div id="context-tasks" class="table-responsive">
                     <table class="table tasks-list table-lg" v-show="displayTaskList">
@@ -36,8 +36,8 @@
                                     <span class="project-link" data-project="{{task.project_id}}" @click="selectProject(task.project)">{{ task.project ? '(' + task.project.name + ')' : '' }}</span><br/>
                                     <!-- Tags Block -->
                                     <div class="tag-block">
-                                        <span v-for="context in task.contexts" class="task-selectable text-blue-tdm" @click.stop.prevent="selectContext(context)"> @{{ context.name }} </span>
-                                        <span v-for="tag in task.tags" class="tag-selectable text-teal-700" @click.stop.prevent="selectTag(tag)"> {{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </span>
+                                        <!--<span v-for="context in task.contexts" class="task-selectable text-blue-tdm" @click.stop.prevent="selectContext(context)"> @{{ context.name }} </span>-->
+                                        <a href="javascript:void(0)" v-for="tag in task.tags" class="tag-selectable text-teal-700" @click.stop.prevent="getTasksByTag(tag)"> {{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </a>
                                     </div>
                                     <!-- /tags block -->
                                 </div>
@@ -147,6 +147,7 @@
         border-bottom: 1px dashed #427ef5;
         display: inline;
     }
+    .tag-selectable:hover {cursor: pointer;}
     .tag-block {margin-top: 5px;margin-left:8px;font-size: .85em;}
     div.tag-block > span.tag-selectable {margin-right: 2px;}
     span.project-link {
@@ -238,6 +239,10 @@
                 return this.taskList.tasks.filter(function(task) {
                     return task.id == taskId;
                 })[0];
+            },
+            getTasksByTag: function(tag) {
+                this.$route.router.go({name: 'tags.show', params:{id: tag.id}});
+                this.fetchTasks('tag', tag.id);
             },
             initializeDueDatePickers: function() {
                 var that = this;
