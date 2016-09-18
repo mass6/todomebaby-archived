@@ -2,6 +2,7 @@ export let store = {
     // Shared state object
     state: {
         projects: [],
+        contexts: [],
         scheduledTaskCounts: {},
         previousRoute: {},
         defaultRoute: {
@@ -18,14 +19,21 @@ export let store = {
     refreshSidebarData: function() {
         // fetch projects
         this.fetchProjects();
+        // fetch context counts
+        this.fetchContexts();
         // fetch scheduled counts
         this.fetchScheduledTaskCounts();
-        // fetch context counts
     },
     // Fetches projects and stores in global state object
     fetchProjects: function () {
         Vue.http.get('/projects').then(function (response) {
             store.state.projects = (response.data);
+        });
+    },
+    // Fetches contexts and stores in global state object
+    fetchContexts: function () {
+        Vue.http.get('/tags/contexts').then(function (response) {
+            store.state.contexts = (response.data);
         });
     },
     // Fetches a project by ID

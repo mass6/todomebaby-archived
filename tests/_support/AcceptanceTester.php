@@ -106,4 +106,15 @@ class AcceptanceTester extends \Codeception\Actor
             $task->tags()->attach($tagModels->pluck('id')->all());
         });
     }
+
+    public function haveTags($user, $tags = ['foo'])
+    {
+        return collect($tags)->map(function($tag) use ($user) {
+            return Tag::firstOrCreate([
+                'name' => $tag,
+                'user_id' => $user->id,
+                'is_context' => substr($tag,0,1) === '@' ?: false,
+            ]);
+        });
+    }
 }

@@ -2,9 +2,11 @@
     <li class="">
         <a href="Javascript:void(0)"><i class="icon-question3"></i> <span>Contexts</span></a>
         <ul>
-            <li><a href="Javascript:void(0)">@home</a></li>
-            <li><a href="Javascript:void(0)">@work</a></li>
-            <li><a href="Javascript:void(0)">@travel</a></li>
+            <li v-for="context in sharedState.contexts">
+                <a v-link="{ name: 'tags.show', params: { id: context.id }, replace: true, exact: true }" class="context-link" v-link-active @click.stop="taskListSelected">
+                    {{ context.name }}<span id="context-{{context.id}}-task-count" class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="context.taskCount">{{ context.taskCount }}</span>
+                </a>
+            </li>
         </ul>
     </li>
 </template>
@@ -12,11 +14,17 @@
 
 </style>
 <script>
-
+    import { store } from '../store'
     export default{
         data(){
             return{
-                msg:'hello vue'
+                sharedState: store.state,
+                store: store
+            }
+        },
+        methods: {
+            taskListSelected: function () {
+                this.$dispatch('taskListWasSelected');
             }
         }
     }

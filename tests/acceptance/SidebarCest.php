@@ -55,6 +55,40 @@ class SidebarCest
         $I->see(3, '#project-' . $projects[1]->id . '-task-count');
     }
 
+
+    public function it_displays_links_to_all_contexts(AcceptanceTester $I)
+    {
+        // given I have a context named @foo
+        $I->wantToTest('I can see links to contexts in sidebar');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $I->haveTags($user, ['@foo']);
+
+        // when I am at the webapp home page
+        $I->login($user->email);
+
+        // then I should only see links to each active project
+        $I->waitForText('@foo', 4, 'a.context-link');
+    }
+
+
+
+    public function it_displays_open_task_counts_for_each_context(AcceptanceTester $I)
+    {
+        // given I have 2 open tasks with @foo context
+        $I->wantToTest('I can see task counts for each context in sidebar');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $tasks = $I->haveTasksWithTags(2, $user, ['@foo']);
+
+        // when I am at the webapp home page
+        $I->login($user->email);
+
+        // then I should see open task counts next to @foo context
+        $I->waitForText('@foo', 4, 'a.context-link');
+        $I->see(2, '#context-' . $tasks->first()->tags->first()->id . '-task-count');
+    }
+
     public function it_displays_number_of_open_tasks_due_today(AcceptanceTester $I)
     {
         // given I have 3 tasks due today, 2 of which are still open
@@ -166,7 +200,6 @@ class SidebarCest
         $tasks[1]->save();
         $tasks[2]->due_date = Carbon::tomorrow()->toDateString();
         $tasks[2]->save();
-
 
         // when I set the due date of the last task for today
         $I->login($user->email);

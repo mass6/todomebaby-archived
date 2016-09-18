@@ -59,7 +59,7 @@
     .navigation > li ul {
         background-color: #0277BD;
     }
-    span.period-link, a.project-link {
+    span.period-link, a.project-link, a.context-link {
         font-size: 12px;
         font-weight: 300;
         color: #ffffff !important;

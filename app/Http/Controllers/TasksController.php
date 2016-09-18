@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Tag;
 use App\Task;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
@@ -55,17 +54,6 @@ class TasksController extends Controller
         return response()->json($taskService->findById($id));
     }
 
-
-    /**
-     * @param Tag         $tag
-     * @param TaskService $taskService
-     *
-     * @return mixed
-     */
-    public function getTasksByTag(Tag $tag, TaskService $taskService)
-    {
-        return $this->getTaskListResponse($tag->name, $taskService->findByTag($tag));
-    }
 
     /**
      * @param TaskService $taskService

@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Tag
+ * @package App
+ */
 class Tag extends Model
 {
     use UuidTrait;
@@ -35,8 +39,26 @@ class Tag extends Model
         'is_context' => 'boolean',
     ];
 
+
+    /**
+     * Tag can belong to many tasks
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function tasks()
     {
         return $this->belongsToMany(Task::class);
     }
+
+
+    /**
+     * Retrieves all open tasks associated with the model
+     *
+     * @return mixed
+     */
+    public function openTasks()
+    {
+        return $this->tasks()->where('tasks.complete', false);
+    }
+
 }

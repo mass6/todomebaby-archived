@@ -34,7 +34,7 @@ class ProjectFormCest
     }
 
 
-    public function it_updates_a_new_project(AcceptanceTester $I)
+    public function it_updates_a_project(AcceptanceTester $I)
     {
         $I->wantTo('Add a project');
         $I->am('Registered User');

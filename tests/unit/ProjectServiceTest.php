@@ -89,6 +89,7 @@ class ProjectServiceTest extends TestCase
         $activeProjects = $this->projectService->getActiveProjects();
 
         $this->assertCount(4, $activeProjects);
+        $this->assertArrayHasKey('taskCount', $activeProjects->first()->toArray());
     }
 
 
