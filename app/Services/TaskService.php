@@ -77,12 +77,7 @@ class TaskService
      */
     public function findByTag(Tag $tag)
     {
-        return $tag->tasks()->open()->with('project')->with([
-            'tags' => function ($query) {
-                $query->orderBy('is_context', 'desc');
-                $query->orderBy('name', 'asc');
-            }
-        ])->get();
+        return $tag->tasks()->taskList()->get();
     }
 
 
@@ -95,12 +90,7 @@ class TaskService
      */
     public function findByTagName($name)
     {
-        return Tag::where('name', $name)->first()->tasks()->open()->with('project')->with([
-            'tags' => function ($query) {
-                $query->orderBy('is_context', 'desc');
-                $query->orderBy('name', 'asc');
-            }
-        ])->get();
+        return Tag::where('name', $name)->first()->tasks()->taskList()->get();
     }
 
 
@@ -116,6 +106,18 @@ class TaskService
     /**
      * @return mixed
      */
+    public function getTasksDueToday()
+    {
+        return $this->task
+            ->where('due_date', '<=', Carbon::today()->toDateString())
+            ->taskList()
+            ->get();
+    }
+
+
+    /**
+     * @return mixed
+     */
     public function tasksDueTodayCount()
     {
         return $this->getTasksDueToday()->count();
@@ -125,23 +127,11 @@ class TaskService
     /**
      * @return mixed
      */
-    public function getTasksDueToday()
+    public function getTasksDueTomorrow()
     {
-        return $this->defaultTaskListQuery()->where('due_date', '<=', Carbon::today()->toDateString())->get();
-    }
-
-
-    /**
-     * @return mixed
-     */
-    protected function defaultTaskListQuery()
-    {
-        return $this->task->open()->with('project')->with([
-            'tags' => function ($query) {
-                $query->orderBy('is_context', 'desc');
-                $query->orderBy('name', 'asc');
-            }
-        ]);
+        return $this->task
+            ->where('due_date', Carbon::tomorrow()->toDateString())
+            ->taskList()->get();
     }
 
 
@@ -157,9 +147,12 @@ class TaskService
     /**
      * @return mixed
      */
-    public function getTasksDueTomorrow()
+    public function getTasksDueThisWeek()
     {
-        return $this->defaultTaskListQuery()->where('due_date', Carbon::tomorrow()->toDateString())->get();
+        return $this->task
+            ->where('due_date', '>=', Carbon::today()->startOfWeek()->toDateString())
+            ->where('due_date', '<=', Carbon::today()->endOfWeek()->toDateString())
+            ->taskList()->get();
     }
 
 
@@ -175,11 +168,12 @@ class TaskService
     /**
      * @return mixed
      */
-    public function getTasksDueThisWeek()
+    public function getTasksDueNextWeek()
     {
-        return $this->defaultTaskListQuery()->where('due_date', '>=',
-            Carbon::today()->startOfWeek()->toDateString())->where('due_date', '<=',
-            Carbon::today()->endOfWeek()->toDateString())->get();
+        return $this->task
+            ->where('due_date', '>=', Carbon::today()->startOfWeek()->addDays(7)->toDateString())
+            ->where('due_date', '<=', Carbon::today()->endOfWeek()->addDays(7)->toDateString())
+            ->taskList()->get();
     }
 
 
@@ -195,11 +189,13 @@ class TaskService
     /**
      * @return mixed
      */
-    public function getTasksDueNextWeek()
+    public function getTasksDueInFuture()
     {
-        return $this->defaultTaskListQuery()->where('due_date', '>=',
-            Carbon::today()->startOfWeek()->addDays(7)->toDateString())->where('due_date', '<=',
-            Carbon::today()->endOfWeek()->addDays(7)->toDateString())->get();
+        return $this->task
+            ->where(function ($query) {
+                $query->whereNull('due_date')->orWhere('due_date', '>', Carbon::today()->endOfWeek()->addDays(7)->toDateString());
+            })
+            ->taskList()->get();
     }
 
 
@@ -209,18 +205,6 @@ class TaskService
     public function tasksDueInFutureCount()
     {
         return $this->getTasksDueInFuture()->count();
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getTasksDueInFuture()
-    {
-        return $this->defaultTaskListQuery()->where(function ($query) {
-            $query->whereNull('due_date')->orWhere('due_date', '>',
-                Carbon::today()->endOfWeek()->addDays(7)->toDateString());
-        })->select([ '*', DB::raw('due_date IS NULL AS due_date_null') ])->get();
     }
 
     // Command Services

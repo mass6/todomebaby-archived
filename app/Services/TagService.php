@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Tag;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TagService

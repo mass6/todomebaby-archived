@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Project
@@ -35,13 +36,19 @@ class Project extends Model
      */
     public function openTasks()
     {
-        return $this->tasks()->with('project')->get()->filter(function ($task) {
-            return $task->complete == false;
-        })->load(['tags' => function($query)
-        {
-            $query->orderBy('is_context', 'desc');
-            $query->orderBy('name', 'asc');
-        }])->values();
+        return $this->tasks()->open()
+            ->with('project')
+            ->with([
+                'tags' => function ($query) {
+                    $query->orderBy('is_context', 'desc');
+                    $query->orderBy('name', 'asc');
+                }
+            ])
+            ->select(['*', DB::raw('due_date IS NULL AS due_date_null')])
+            ->orderBy('next', 'desc')
+            ->orderBy('due_date_null', 'asc')
+            ->orderBy('due_date')
+            ->get();
     }
 
 
