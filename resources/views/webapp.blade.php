@@ -132,6 +132,10 @@
 <script type="text/javascript" src="/js/plugins/tags/prism.min.js"></script>
 <script type="text/javascript" src="/js/plugins/typeahead/typeahead.bundle.min.js"></script>
 <!-- /tags input -->
+<!-- Sweet Alert - for delete confirmation modal -->
+<script type="text/javascript" src="/js/plugins/notifications/sweet_alert.min.js"></script>
+<!-- /sweet alert -->
+
 <script>
     window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),

@@ -417,6 +417,19 @@ class TaskServiceTest extends TestCase
     }
 
     /**
+     * Service deletes a task
+     *
+     * @test
+     */
+    public function it_deletes_a_task()
+    {
+        $task = factory(Task::class)->create(['user_id'=>$this->user->id]);
+        $result = $this->taskService->deleteTask($task);
+
+        $this->assertTrue($result, 'Task deletion response was not true');
+    }
+
+    /**
      * Service updates a task
      *
      * @test

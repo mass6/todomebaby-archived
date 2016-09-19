@@ -107,6 +107,7 @@
             <div>
                 <button type="submit" id="save-task-button" class="btn btn-primary" v-bind:class="{ 'disabled': !task.title.length }" @click.stop.prevent="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
                 <button class="btn btn-grey" @click="cancelForm">Cancel </button>
+                <button v-if="task.id" type="button" class="btn btn-danger btn-sm" id="delete-task-button" @click="deleteTask(task)">Delete <i class="icon-bin position-right"></i></button>
             </div>
         </section>
 
@@ -153,11 +154,17 @@
         width: 240px!important;
         min-width: 60px;
     }
+    .sweet-alert button.cancel {
+        background-color: #ddd;
+    }
+    @media (min-width:1025px) {
+        .sweet-alert {
+            top:30%;
+        }
+    }
     [v-cloak] {
         display: none;
     }
-
-
 </style>
 <script>
     import { store } from '../store'
@@ -266,6 +273,23 @@
                 this.store.saveTask(this.task, function(){
                     that.$dispatch('taskSaved', that.task);
                     that.deactivateForm();
+                });
+            },
+            deleteTask: function(task) {
+                let that = this;
+                swal({
+                    title: '"' + this.task.title + '"' + " will be deleted forever.",
+                    text: "You will not be able to undo this action.",
+                    imageUrl: "images/check-circle-outlined.png",
+                    showCancelButton: true,
+                    cancelButtonColor: '#DDDDDD',
+                    confirmButtonColor: "#ff4f18",
+                    confirmButtonText: "Yes, delete task!"
+                }, function () {
+                    that.store.deleteTask(task, function() {
+                        that.$dispatch('taskDeleted', task);
+                        that.deactivateForm();
+                    });
                 });
             },
             markComplete: function(task){

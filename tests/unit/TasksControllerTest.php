@@ -1,13 +1,10 @@
 <?php
 
 use App\Http\Controllers\TasksController;
-use App\User;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use \Mockery as m;
 
 class TasksControllerTest extends TestCase
@@ -69,6 +66,19 @@ class TasksControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(['task'], $response->getData());
+    }
+
+    /**
+     * @test
+     */
+    public function testDestroy()
+    {
+        $mTask = m::mock('App\Task');
+        $this->service->shouldReceive('deleteTask')->with($mTask)->andReturn(true);
+        $controller = new TasksController;
+        $response = $controller->destroy($mTask, $this->service);
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**

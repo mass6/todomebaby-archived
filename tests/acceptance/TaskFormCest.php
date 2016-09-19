@@ -140,6 +140,28 @@ class TaskFormCest
         ]);
     }
 
+    public function it_deletes_a_task(AcceptanceTester $I)
+    {
+        $I->wantTo('Delete a task');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $task = $I->haveTasks($user, 1, null, ['due_date' => Carbon::today()->toDateString()])->first();
+
+        $I->login($user->email);
+        $I->waitForText($task->title, 4);
+        $I->click($task->title);
+
+        // Delete task data
+        $I->waitForText('Delete', 4, '#delete-task-button');
+        $I->click('Delete');
+        // See and confirm delete modal
+        $I->waitForElement('.sweet-alert.visible', 4);
+        $I->click('button.confirm');
+
+        $I->wait(1);
+        $I->dontSeeRecord('tasks', ['title' => $task->title]);
+    }
+
     public function it_resets_the_task_form(AcceptanceTester $I)
     {
         $I->wantToTest('Reset Form button');

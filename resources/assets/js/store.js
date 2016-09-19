@@ -109,6 +109,15 @@ export let store = {
             }
         });
     },
+    // Deletes a existing task from the DB
+    deleteTask: function(task, callback) {
+        Vue.http.delete('/tasks/' + task.id).then(function (response) {
+            store.refreshSidebarData();
+            if (callback) {
+                callback();
+            }
+        });
+    },
     saveProject: function(project, callback) {
         if (project.id) {
             this.updateProject(project, callback);

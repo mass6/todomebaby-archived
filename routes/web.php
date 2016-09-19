@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth','web']], function () {
     Route::get('tasks/scheduled', 'TasksController@getScheduledTaskCounts');
     Route::get('tasks/{task}', 'TasksController@show');
     Route::patch('tasks/{task}', 'TasksController@update');
+    Route::delete('tasks/{task}', 'TasksController@destroy');
 
     Route::get('tasklists/today', 'TasksController@getTasksDueToday');
     Route::get('tasklists/tomorrow', 'TasksController@getTasksDueTomorrow');

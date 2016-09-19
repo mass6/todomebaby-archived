@@ -8,7 +8,6 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class TaskService
@@ -345,6 +344,20 @@ class TaskService
         $this->associateTags($task, $data->get('tagsinput'));
 
         return $task;
+    }
+
+
+    /**
+     * Delete task
+     *
+     * @param Task $task
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function deleteTask(Task $task)
+    {
+        return $task->delete();
     }
 
 

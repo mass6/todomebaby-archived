@@ -15,6 +15,18 @@ class TasksController extends Controller
 {
 
     /**
+     * @param             $id
+     * @param TaskService $taskService
+     *
+     * @return mixed
+     */
+    public function show($id, TaskService $taskService)
+    {
+        return response()->json($taskService->findById($id));
+    }
+
+
+    /**
      * @param Request     $request
      * @param TaskService $taskService
      *
@@ -37,21 +49,21 @@ class TasksController extends Controller
      */
     public function update(Task $task, Request $request, TaskService $taskService)
     {
-        $updatedTask = $taskService->updateTask($task, $request->all());
-
-        return response()->json($updatedTask);
+        return response()->json($taskService->updateTask($task, $request->all()));
     }
 
 
     /**
-     * @param             $id
+     * Delete a task
+     *
+     * @param Task        $task
      * @param TaskService $taskService
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id, TaskService $taskService)
+    public function destroy(Task $task, TaskService $taskService)
     {
-        return response()->json($taskService->findById($id));
+        return response()->json($taskService->deleteTask($task));
     }
 
 

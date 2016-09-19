@@ -320,6 +320,10 @@
             taskSaved: function() {
                 this.refreshTaskList();
                 this.$route.router.go({path: this.taskList.listPath});
+            },
+            taskDeleted: function() {
+                this.refreshTaskList();
+                this.$route.router.go({path: this.taskList.listPath});
             }
         }
 
