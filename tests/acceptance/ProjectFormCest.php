@@ -36,7 +36,7 @@ class ProjectFormCest
 
     public function it_updates_a_project(AcceptanceTester $I)
     {
-        $I->wantTo('Add a project');
+        $I->wantTo('Update a project');
         $I->am('Registered User');
         $user = $I->haveAnAccount();
         $project = $I->haveAProject($user, 'Project One');

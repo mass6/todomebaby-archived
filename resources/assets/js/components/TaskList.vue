@@ -33,7 +33,7 @@
                             <td class="task-title" id="task-title-selection-{{ task.id }}">
                                 <div>
                                     <a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </a>
-                                    <span class="project-link" data-project="{{task.project_id}}" @click="selectProject(task.project)">{{ task.project ? '(' + task.project.name + ')' : '' }}</span><br/>
+                                    <span v-if="task.project" class="project-link" data-project="{{task.project_id}}" @click="getTasksByProject(task.project)">({{ task.project.name}})</span><br/>
                                     <!-- Tags Block -->
                                     <div class="tag-block">
                                         <!--<span v-for="context in task.contexts" class="task-selectable text-blue-tdm" @click.stop.prevent="selectContext(context)"> @{{ context.name }} </span>-->
@@ -240,9 +240,11 @@
                     return task.id == taskId;
                 })[0];
             },
+            getTasksByProject: function(project) {
+                this.$route.router.go({name: 'projects.show', params:{id: project.id}});
+            },
             getTasksByTag: function(tag) {
                 this.$route.router.go({name: 'tags.show', params:{id: tag.id}});
-                this.fetchTasks('tag', tag.id);
             },
             initializeDueDatePickers: function() {
                 var that = this;

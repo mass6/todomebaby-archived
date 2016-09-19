@@ -184,7 +184,7 @@ class TaskListCest
     /**
      * @param AcceptanceTester $I
      */
-    public function it_find_tasks_by_tag(AcceptanceTester $I)
+    public function it_finds_tasks_by_tag(AcceptanceTester $I)
     {
         $I->wantTo('Find tasks by Tag');
         $I->am('Registered User');
@@ -201,6 +201,32 @@ class TaskListCest
 
         $I->waitForText('@bazz', 4, '.list-heading');
         $I->see($tasks->first()->title);
+        $I->see($tasks[1]->title);
+        $I->see($tasks[2]->title);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function it_finds_tasks_by_project_link(AcceptanceTester $I)
+    {
+        // Given I have a project with 3 associated tasks, 1 of which are due today
+        $I->wantTo('Find tasks by Project link');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $project = $I->haveAProject($user, 'Project One');
+        $tasks = $I->haveTasks($user, 3, $project);
+        $tasks->first()->setDueDate(Carbon::today()->toDateString());
+
+        // When I login and click the project link next to the first task in the task list
+        $I->login($user->email);
+        $I->waitForText($tasks->first()->title);
+        $I->dontSee($tasks[1]->title);
+        $I->see($project->name, '.project-link');
+        $I->click($project->name);
+
+        $I->waitForText($project->name, 4, '.list-heading');
+        $I->see($tasks[0]->title);
         $I->see($tasks[1]->title);
         $I->see($tasks[2]->title);
     }
