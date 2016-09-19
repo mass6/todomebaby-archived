@@ -56,6 +56,7 @@ Route::group(['middleware' => ['auth','web']], function () {
     Route::get('projects', 'ProjectsController@getActive');
     Route::get('projects/{project}/tasks', 'ProjectsController@getTasksByProject');
     Route::patch('projects/{project}', 'ProjectsController@update');
+    Route::delete('projects/{project}', 'ProjectsController@destroy');
     Route::get('projects/{project}', 'ProjectsController@show');
 
     Route::get('tags/contexts', 'TagsController@getContexts');

@@ -42,6 +42,7 @@
                 <div>
                     <button type="submit" class="btn btn-primary" @click="saveProject(project)">Save Project <i class="icon-checkmark3 position-right"></i></button>
                     <button class="btn btn-grey" @click="cancel">Cancel </button>
+                    <button v-if="project.id" type="button" class="btn btn-danger btn-sm" id="delete-project-button" @click="deleteProject(project)">Delete <i class="icon-bin position-right"></i></button>
                 </div>
 
             </div>
@@ -50,7 +51,14 @@
     </div>
 </template>
 <style>
-
+    .sweet-alert button.cancel {
+        background-color: #ddd;
+    }
+    @media (min-width:1025px) {
+        .sweet-alert {
+            top:30%;
+        }
+    }
 </style>
 <script>
     import { store } from '../store'
@@ -107,6 +115,22 @@
             },
             resetProjectForm: function () {
                 this.project = {};
+            },
+            deleteProject: function(project) {
+                let that = this;
+                swal({
+                    title: '"' + this.project.name + '"' + " will be deleted forever.",
+                    text: "You will not be able to undo this action.",
+                    imageUrl: "images/check-circle-outlined.png",
+                    showCancelButton: true,
+                    cancelButtonColor: '#DDDDDD',
+                    confirmButtonColor: "#ff4f18",
+                    confirmButtonText: "Yes, delete project!"
+                }, function () {
+                    that.store.deleteProject(project, function() {
+                        that.$route.router.go('/lists/today');
+                    });
+                });
             }
         },
         events: {

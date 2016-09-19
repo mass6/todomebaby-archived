@@ -148,6 +148,25 @@ class ProjectServiceTest extends TestCase
     }
 
 
+    /**
+     * It delete a project and related tasks
+     *
+     * @test
+     */
+    public function it_deletes_a_project_with_tasks()
+    {
+        $project = factory(Project::class)->create(['user_id'=>$this->user->id]);
+        $tasks = $this->generateUserTasks($this->user, 2, $project);
+
+        $result = $this->projectService->deleteProject($project);
+
+        $this->assertTrue($result, 'deleteProject method response did not return true');
+        $this->dontSeeInDatabase('projects', ['name' => $project->name]);
+        $this->dontSeeInDatabase('tasks', ['title' => $tasks[0]->title]);
+        $this->dontSeeInDatabase('tasks', ['title' => $tasks[1]->title]);
+    }
+
+
     // Helper Methods
 
     /**
@@ -169,6 +188,15 @@ class ProjectServiceTest extends TestCase
         return $projects;
     }
 
+
+    /**
+     * @param User         $user
+     * @param int          $amount
+     * @param Project|null $project
+     * @param array        $overrides
+     *
+     * @return \Illuminate\Support\Collection
+     */
     protected function generateUserTasks(User $user, $amount = 5, Project $project = null, $overrides = [])
     {
         $tasks = collect([]);

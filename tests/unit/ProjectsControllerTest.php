@@ -32,12 +32,12 @@ class ProjectsControllerTest extends TestCase
      */
     public function testShow()
     {
-        $this->service->shouldReceive('findById')->with(1)->andReturn('task');
+        $this->service->shouldReceive('findById')->with(1)->andReturn('project');
         $controller = new ProjectsController;
         $response = $controller->show(1, $this->service);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('task', $response->getData());
+        $this->assertEquals('project', $response->getData());
     }
 
     /**
@@ -74,25 +74,6 @@ class ProjectsControllerTest extends TestCase
     }
 
 
-    ///**
-    // * @test
-    // */
-    //public function testGetTasksByProject()
-    //{
-    //    $project = m::mock('App\Project');
-    //    $project->shouldReceive('getAttribute')->with('id')->andReturn(1);
-    //    $project->shouldReceive('getAttribute')->with('name')->andReturn('Project One');
-    //    $this->service->shouldReceive('getTasksByProjectId')->with($project->id)->andReturn(collect(['tasks']));
-    //
-    //    $controller = new TasksController();
-    //    $response = $controller->getTasksByProject($project, $this->service);
-    //
-    //    $this->assertInstanceOf(JsonResponse::class, $response);
-    //    $this->assertEquals($project->name, $response->getData()->listName);
-    //    $this->assertEquals(['tasks'], $response->getData()->tasks);
-    //}
-
-
     public function testStore()
     {
         $mockRequest = m::mock('Illuminate\Http\Request');
@@ -121,6 +102,19 @@ class ProjectsControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('bar', $response->getData());
+    }
+
+    /**
+     * @test
+     */
+    public function testDestroy()
+    {
+        $mProject = m::mock('App\Project');
+        $this->service->shouldReceive('deleteProject')->with($mProject)->andReturn(true);
+        $controller = new ProjectsController;
+        $response = $controller->destroy($mProject, $this->service);
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
 }

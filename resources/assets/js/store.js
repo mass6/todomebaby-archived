@@ -143,6 +143,15 @@ export let store = {
             }
         });
     },
+    // Deletes a project from the DB
+    deleteProject: function(project, callback) {
+        Vue.http.delete('/projects/' + project.id).then(function (response) {
+            store.refreshSidebarData();
+            if (callback) {
+                callback();
+            }
+        });
+    },
     playSound: function(filename) {
         document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="multimedia/' + filename + '.mp3" type="audio/mpeg" /><source src="multimedia/' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="multimedia/' + filename +'.mp3" /></audio>';
     }

@@ -69,4 +69,34 @@ class ProjectFormCest
         $I->seeInField('Description', 'New Description');
         $I->seeInField('Due Date', Carbon::today()->toDateString());
     }
+
+
+    public function it_deletes_a_project(AcceptanceTester $I)
+    {
+        // Given I have a project with 1 task
+        $I->wantTo('Delete a project');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $project = $I->haveAProject($user, 'Project One');
+        $task = $I->haveTasks($user, 1, $project, ['due_date' => Carbon::today()->toDateString()])->first();
+
+        // When I login and go to the project edit page
+        $I->login($user->email);
+        $I->waitForText($project->name, 4, '.project-link');
+        $I->click($project->name);
+        $I->waitForElement('span.project-edit',4);
+        $I->click('span.project-edit');
+        $I->waitForText('Edit Project', 4);
+
+        // And I delete the project
+        $I->waitForText('Delete', 4, '#delete-project-button');
+        $I->click('Delete');
+        $I->waitForElement('.sweet-alert.visible', 4);
+        $I->click('button.confirm');
+
+        // Then the project and associatd task should be deleted
+        $I->wait(1);
+        $I->dontSeeRecord('projects', ['name' => $project->name]);
+        $I->dontSeeRecord('tasks', ['title' => $task->title]);
+    }
 }

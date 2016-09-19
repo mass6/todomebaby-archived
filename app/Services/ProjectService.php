@@ -124,4 +124,22 @@ class ProjectService
     }
 
 
+    /**
+     * Delete project and any related tasks
+     *
+     * @param Project $project
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function deleteProject(Project $project)
+    {
+        $project->tasks->each(function($task) {
+            $task->delete();
+        });
+
+        return $project->delete();
+    }
+
+
 }

@@ -76,4 +76,16 @@ class ProjectsController extends Controller
 
         return response()->json($updatedProject);
     }
+
+
+    /**
+     * @param Project        $project
+     * @param ProjectService $projectService
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Project $project, ProjectService $projectService)
+    {
+        return response()->json($projectService->deleteProject($project));
+    }
 }
