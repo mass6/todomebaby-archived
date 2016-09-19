@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tag extends Model
 {
-    use UuidTrait;
+    use UserScopingTrait, UuidTrait;
 
     /**
      * Indicates if the IDs are auto-incrementing.

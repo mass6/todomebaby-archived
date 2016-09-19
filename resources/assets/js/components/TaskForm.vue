@@ -149,6 +149,10 @@
     .task-next {
         cursor: pointer;
     }
+    .tokenfield .token-input {
+        width: 240px!important;
+        min-width: 60px;
+    }
     [v-cloak] {
         display: none;
     }

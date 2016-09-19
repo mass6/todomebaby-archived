@@ -47,7 +47,6 @@ class TagServiceTest extends TestCase
      * Service retrieves all contexts
      *
      * @test
-     * @group fail
      */
     public function it_retrieves_all_contexts()
     {
@@ -57,6 +56,40 @@ class TagServiceTest extends TestCase
 
         $this->assertCount(2, $contexts);
         $this->assertArrayHasKey('taskCount', $contexts->first()->toArray());
+    }
+
+    /**
+     * Service retrieves all contexts
+     *
+     * @test
+     * @group fail
+     */
+    public function testGetTagSuggestions()
+    {
+        Tag::create([
+            'name' => '@foo',
+            'user_id' => $this->user->id,
+            'is_context' => true,
+        ]);
+        Tag::create([
+            'name' => 'bar',
+            'user_id' => $this->user->id,
+            'is_context' => false,
+        ]);
+        Tag::create([
+            'name' => 'baz',
+            'user_id' => $this->user->id,
+            'is_context' => false,
+        ]);
+
+        $contextSuggestions = $this->tagService->getSuggestions('@f');
+        $tagSuggestions = $this->tagService->getSuggestions('ba');
+
+        $this->assertCount(1, $contextSuggestions);
+        $this->assertEquals('@foo', $contextSuggestions[0]['value']);
+        $this->assertCount(2, $tagSuggestions);
+        $this->assertEquals('bar', $tagSuggestions[0]['value']);
+        $this->assertEquals('baz', $tagSuggestions[1]['value']);
     }
 
 

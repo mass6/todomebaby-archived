@@ -36,7 +36,6 @@
                                     <span v-if="task.project" class="project-link" data-project="{{task.project_id}}" @click="getTasksByProject(task.project)">({{ task.project.name}})</span><br/>
                                     <!-- Tags Block -->
                                     <div class="tag-block">
-                                        <!--<span v-for="context in task.contexts" class="task-selectable text-blue-tdm" @click.stop.prevent="selectContext(context)"> @{{ context.name }} </span>-->
                                         <a href="javascript:void(0)" v-for="tag in task.tags" class="tag-selectable text-teal-700" @click.stop.prevent="getTasksByTag(tag)"> {{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </a>
                                     </div>
                                     <!-- /tags block -->
@@ -81,6 +80,9 @@
     }
     table.tasks-list {
         margin-bottom: 360px;
+    }
+    table.tasks-list>tbody>tr:last-child {
+        border-bottom: 1px solid #dddddd;
     }
     .table-lg > tbody > tr > td.check-complete {
         padding: 15px 10px;

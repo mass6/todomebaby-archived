@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+/**
+ * Class TagsController
+ * @package App\Http\Controllers
+ */
 class TagsController extends Controller
 {
 
@@ -24,8 +28,30 @@ class TagsController extends Controller
         return response()->json(['listName' => $tag->name, 'tasks' => $taskService->findByTag($tag)]);
     }
 
+
+    /**
+     * Get tags flagged as context
+     *
+     * @param TagService $tagService
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getContexts(TagService $tagService)
     {
         return response()->json($tagService->getContexts());
+    }
+
+
+    /**
+     * Get tags suggestion for TypeAhead
+     *
+     * @param            $query
+     * @param TagService $tagService
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTagSuggestions($query, TagService $tagService)
+    {
+        return response()->json($tagService->getSuggestions($query));
     }
 }

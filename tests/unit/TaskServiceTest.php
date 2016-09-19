@@ -46,21 +46,6 @@ class TaskServiceTest extends TestCase
 
     // Query Service Tests
 
-    /**
-     * Service scopes queries to specified user
-     *
-     * @test
-     */
-    public function it_scopes_queries_to_the_specified_user()
-    {
-        $this->tasks = $this->generateUserTasks();
-        // create tasks that belong to another user
-        $otherUser = factory(User::class)->create([]);
-        $this->generateUserTasks($otherUser, 3);
-
-        $scopedUsersTasks = $this->taskService->getOpenTasks();
-        $this->assertCount(5, $scopedUsersTasks);
-    }
 
     /**
      * Service retrieves a task by ID

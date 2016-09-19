@@ -16,12 +16,10 @@ export let taskFormPlugins = {
 
         // Use Bloodhound engine
         var engine = new Bloodhound({
-            local: [
-                {value: '@home'},
-                {value: '@office'},
-                {value: '@work'} ,
-                {value: '@travel'}
-            ],
+            remote: {
+                url: '/tags/typeahead/%QUERY',
+                wildcard: '%QUERY',
+            },
             datumTokenizer: function(d) {
                 return Bloodhound.tokenizers.whitespace(d.value);
             },
@@ -37,6 +35,24 @@ export let taskFormPlugins = {
                 displayKey: 'value',
                 source: engine.ttAdapter()
             }]
+        });
+
+        // Prevent duplicate tokens from being created
+        $('.tokenfield-typeahead').on('tokenfield:createtoken', function (event) {
+            var existingTokens = $(this).tokenfield('getTokens');
+            $.each(existingTokens, function(index, token) {
+                if (token.value === event.attrs.value)
+                    event.preventDefault();
+            });
+        });
+
+        // Add class when token is created
+        $('.tokenfield-typeahead').on('tokenfield:createdtoken', function (e) {
+            if (e.attrs.value.charAt(0) === '@') {
+                $(e.relatedTarget).addClass('bg-primary')
+            } else {
+                $(e.relatedTarget).addClass('bg-success')
+            }
         });
     },
     init: function() {

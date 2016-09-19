@@ -1,11 +1,7 @@
 <?php
 
-use App\Project;
-use App\Services\ProjectService;
-use App\Services\TaskService;
 use App\Task;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -20,11 +16,6 @@ class TaskModelTest extends TestCase
      */
     public $user;
 
-    /**
-     * @var Task
-     */
-    private $task;
-
 
     /**
      *
@@ -35,11 +26,23 @@ class TaskModelTest extends TestCase
 
         $this->user = factory(User::class)->create([]);
         $this->actingAs($this->user);
-        $this->task = Task::create([
-            'title' => 'Task',
-            'priority' => 'LOW',
-            'user_id' => $this->user->id,
-        ]);
+    }
+
+    /**
+     * Service scopes queries to specified user
+     *
+     * @test
+     * @group failing
+     */
+    public function it_scopes_queries_to_the_specified_user()
+    {
+        $this->generateUserTasks(5);
+        // create tasks that belong to another user
+        $unscopedUser = factory(User::class)->create([]);
+        $this->generateUserTasks(3, $unscopedUser);
+
+        $scopedUsersTasks = Task::all();
+        $this->assertCount(5, $scopedUsersTasks);
     }
 
 
@@ -50,7 +53,11 @@ class TaskModelTest extends TestCase
      */
     public function it_sets_the_task_priority()
     {
-        $task = $this->task;
+        $task = $this->generateUserTasks(1, null, [
+            'title' => 'Task',
+            'priority' => 'LOW',
+            'user_id' => $this->user->id,
+        ]);
         $task->setPriority('med');
         $this->assertEquals('med', $task->getOriginal('priority'));
     }
@@ -63,7 +70,7 @@ class TaskModelTest extends TestCase
      */
     public function it_throws_an_exception_if_priority_value_is_not_allowed()
     {
-        $task = $this->task;
+        $task = $this->generateUserTasks(1);
         $task->priority = 'INVALID';
     }
 
@@ -74,7 +81,7 @@ class TaskModelTest extends TestCase
      */
     public function it_transforms_the_priority_field_into_human_readable_text()
     {
-        $task = $this->task;
+        $task = $this->generateUserTasks(1, null, ['priority' => 'low']);
         $this->assertEquals('low', $task->priority);
 
         $task->priority = 'MED';
@@ -82,6 +89,16 @@ class TaskModelTest extends TestCase
 
         $task->priority = 'HGH';
         $this->assertEquals('high', $task->priority);
+    }
+
+    // Helper Methods
+
+
+    protected function generateUserTasks($amount = 5, User $user = null, $overrides = [])
+    {
+        $overrides['user_id'] = $user ? $user->id : $this->user->id;
+
+        return factory(Task::class, $amount)->create($overrides);
     }
 
 }

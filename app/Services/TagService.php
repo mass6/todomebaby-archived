@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 class TagService
 {
 
-
     /**
      * @var Tag
      */
@@ -53,6 +52,11 @@ class TagService
 
     // Query Services
 
+    /**
+     * Get all tags flagged as context
+     *
+     * @return mixed
+     */
     public function getContexts()
     {
         return $this->tag->where('name', 'like', '@%')->get()
@@ -62,5 +66,21 @@ class TagService
             });
     }
 
+
+    /**
+     * Get tags suggestions for TypeAhead
+     *
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function getSuggestions($query)
+    {
+        return Tag::where('name', 'like', "%$query%")
+            ->get()
+            ->map(function($tag){
+                return ['value' => $tag->name];
+            });
+    }
 
 }

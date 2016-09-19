@@ -42,22 +42,6 @@ class ProjectServiceTest extends TestCase
 
     // Query Service Tests
 
-    /**
-     * Service scopes queries to specified user
-     *
-     * @test
-     */
-    public function it_scopes_queries_to_the_specified_user()
-    {
-        $this->projects = $this->generateUserProjects();
-        // create projects that belong to another user
-        $otherUser = factory(User::class)->create([]);
-        $this->generateUserProjects($otherUser, 3);
-
-        $scopedUsersProjects = $this->projectService->getActiveProjects();
-
-        $this->assertCount(5, $scopedUsersProjects);
-    }
 
     /**
      * Service retrieves a project by ID

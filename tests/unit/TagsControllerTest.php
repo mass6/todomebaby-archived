@@ -55,4 +55,17 @@ class TagsControllerTest extends TestCase
         $this->assertEquals('contexts', $response->getData());
     }
 
+    /**
+     * @test
+     */
+    public function testGetTagSuggestions()
+    {
+        $this->service->shouldReceive('getSuggestions')->once()->with('query')->andReturn('suggestions');
+        $controller = new TagsController;
+        $response = $controller->getTagSuggestions('query', $this->service);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals('suggestions', $response->getData());
+    }
+
 }
