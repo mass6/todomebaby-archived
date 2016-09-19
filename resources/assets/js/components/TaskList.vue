@@ -115,6 +115,7 @@
         margin-left: 6px;
         font-size: .65em;
         vertical-align: super;
+        cursor: pointer;
     }
     #context-tasks.table-responsive {
         min-height: 101px;
