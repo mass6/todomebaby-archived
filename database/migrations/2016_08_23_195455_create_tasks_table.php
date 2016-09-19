@@ -22,7 +22,7 @@ class CreateTasksTable extends Migration
             $table->boolean('next')->default(false);
             $table->date('due_date')->nullable();
             $table->uuid('project_id')->nullable();
-            $table->char('priority', 3)->nullable();
+            $table->tinyInteger('priority')->default(1);
             $table->text('details')->nullable();
             $table->timestamps();
         });

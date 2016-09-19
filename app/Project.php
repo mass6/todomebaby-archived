@@ -48,6 +48,7 @@ class Project extends Model
             ->orderBy('next', 'desc')
             ->orderBy('due_date_null', 'asc')
             ->orderBy('due_date')
+            ->orderBy('priority', 'desc')
             ->get();
     }
 

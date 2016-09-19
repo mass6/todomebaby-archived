@@ -59,7 +59,7 @@ class TaskModelTest extends TestCase
             'user_id' => $this->user->id,
         ]);
         $task->setPriority('med');
-        $this->assertEquals('med', $task->getOriginal('priority'));
+        $this->assertEquals('medium', $task->priority);
     }
 
     /**

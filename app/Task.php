@@ -21,11 +21,11 @@ class Task extends Model
      * Task Priority level name mapping
      */
     const PRIORITY_LEVELS = [
-        'low'    => 'low',
-        'med'    => 'med',
-        'medium' => 'med',
-        'hgh'    => 'hgh',
-        'high'   => 'hgh'
+        'low'    => '1',
+        'med'    => '2',
+        'medium' => '2',
+        'hgh'    => '3',
+        'high'   => '3'
     ];
 
     /**
@@ -90,7 +90,8 @@ class Task extends Model
             ->select(['*', DB::raw('due_date IS NULL AS due_date_null')])
             ->orderBy('next', 'desc')
             ->orderBy('due_date_null', 'asc')
-            ->orderBy('due_date');
+            ->orderBy('due_date')
+            ->orderBy('priority', 'desc');
     }
 
     /**
@@ -145,9 +146,9 @@ class Task extends Model
     public function getPriorityAttribute($value)
     {
         $humanReadable = [
-            'low' => 'low',
-            'med' => 'medium',
-            'hgh' => 'high',
+            '1' => 'low',
+            '2' => 'medium',
+            '3' => 'high',
         ];
 
         return $humanReadable[$value];
