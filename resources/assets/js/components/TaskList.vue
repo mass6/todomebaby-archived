@@ -24,7 +24,7 @@
                         </thead>
                         <tbody>
                         <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete" transition="fade">
+                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete" :transition="transitionName">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -145,6 +145,9 @@
         -webkit-transition-delay: 1.5s; /* Safari */
         transition-delay: 1.5s;
     }
+    .fade-enter {
+        opacity: 0;
+    }
     .task-selectable.task-title {font-size:1.1em;color: #042a4a;}
     .task-selectable.task-title:hover {
         border-bottom: 1px dashed #427ef5;
@@ -179,6 +182,7 @@
                 },
                 showListName: false,
                 displayTaskList: false,
+                transitionName: 'fade',
                 selectedTask: {id: null, title: '', tags: []}
             }
         },
@@ -220,6 +224,7 @@
                 return this.$route.params.id ? this.$route.params.id : this.sharedState.defaultRoute.params.id;
             },
             fetchTasks: function(listType, listId) {
+                this.transitionName = null;
                 var that = this;
                 this.store.fetchTaskList(listId, listType, function(result) {
                     that.taskList = result;
@@ -228,6 +233,7 @@
                     that.taskList.listPath = that.$route.path;
                     that.showListName = true;
                     that.displayTaskList = true;
+                    that.transitionName = 'fade';
                     that.$nextTick(function(){
                         that.initializeDueDatePickers();
                     });
