@@ -147,6 +147,8 @@
     }
     .fade-enter {
         opacity: 0;
+        -webkit-transition-delay: .25s; /* Safari */
+        transition-delay: .25s;
     }
     .task-selectable.task-title {font-size:1.1em;color: #042a4a;}
     .task-selectable.task-title:hover {
