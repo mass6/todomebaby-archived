@@ -12,7 +12,7 @@
                        @click="markComplete(task)"
                        v-if="task.id"
                     ></i>
-                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" @focus="activateForm">
+                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" v-on:keyup.enter="saveTask" @focus="activateForm">
                     <i class="pull-right task-next" :class="taskClassNext" data-popup="tooltip" title="Mark as Next" data-placement="top" @click="task.next = !task.next" v-if="editMode"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
                 </div>
             </div>
