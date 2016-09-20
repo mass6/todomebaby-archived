@@ -73,10 +73,14 @@ class Task extends Model
         return $query->where('complete', false);
     }
 
+
     /**
      * Scope the query to only include open tasks.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param      $query
+     * @param bool $includeCompleted
+     *
+     * @return Builder
      */
     public function scopeTaskList($query, $includeCompleted = false)
     {

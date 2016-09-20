@@ -68,9 +68,10 @@ class TaskService
 
 
     /**
-     * Retrieve all open tasks by Tag
+     * Retrieve tasks by Tag
      *
-     * @param Tag $tag
+     * @param Tag  $tag
+     * @param bool $withCompleted
      *
      * @return mixed
      */
@@ -103,6 +104,8 @@ class TaskService
 
 
     /**
+     * @param bool $withCompleted
+     *
      * @return mixed
      */
     public function getTasksDueToday($withCompleted = false)
@@ -124,6 +127,8 @@ class TaskService
 
 
     /**
+     * @param bool $withCompleted
+     *
      * @return mixed
      */
     public function getTasksDueTomorrow($withCompleted = false)
@@ -145,6 +150,8 @@ class TaskService
 
 
     /**
+     * @param bool $withCompleted
+     *
      * @return mixed
      */
     public function getTasksDueThisWeek($withCompleted = false)
@@ -167,6 +174,8 @@ class TaskService
 
 
     /**
+     * @param bool $withCompleted
+     *
      * @return mixed
      */
     public function getTasksDueNextWeek($withCompleted = false)
@@ -189,6 +198,8 @@ class TaskService
 
 
     /**
+     * @param bool $withCompleted
+     *
      * @return mixed
      */
     public function getTasksDueInFuture($withCompleted = false)

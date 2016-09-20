@@ -75,8 +75,10 @@ class ProjectService
             });
     }
 
+
     /**
-     * @param $id
+     * @param      $id
+     * @param bool $withCompleted
      *
      * @return mixed
      */
