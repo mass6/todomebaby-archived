@@ -61,7 +61,7 @@
                             <td>
                                 <div class="input-group due-date-picker">
                                     <span class="input-group-addon"><i class="icon-calendar3"></i></span>
-                                    <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task-id="{{task.id}}" type="text" class="form-control pickadate-due-date">
+                                    <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task-id="{{task.id}}" type="text" class="form-control pickadate-due-date" v-bind:class="{ 'text-danger': isPastDue(task) }">
                                 </div>
                             </td>
                             <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}" @click="toggleNext(task)"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i></td>
@@ -312,6 +312,9 @@
             editProject: function() {
                 this.$route.router.go({name: 'projects.edit', params: {id: this.taskList.listId}});
             },
+            isPastDue: function(task) {
+                return moment(task.due_date).isBefore(moment().format('YYYY-MM-DD'));
+            }
         },
         events: {
             taskFormDeactivated: function() {
