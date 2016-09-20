@@ -1,10 +1,16 @@
 export let taskFormPlugins = {
 
-    initiDueDatePicker: function() {
+    initiDueDatePicker: function(taskList) {
         let $input = $('#task-due-date').pickadate({format: 'yyyy-mm-dd'});
         let picker = $input.pickadate('picker');
         if (picker.get() !== '') {
             picker.set('select', picker.get(), { format: 'yyyy-mm-dd' });
+        } else {
+            if (taskList.listName === 'Today') {
+                picker.set('select', moment().format('YYYY-MM-DD'), { format: 'yyyy-mm-dd' });
+            } else if (taskList.listName === 'Tomorrow') {
+                picker.set('select', moment().add(1, 'days').format('YYYY-MM-DD'), { format: 'yyyy-mm-dd' });
+            }
         }
     },
     initToolTips: function() {
@@ -55,8 +61,8 @@ export let taskFormPlugins = {
             }
         });
     },
-    init: function() {
-        this.initiDueDatePicker();
+    init: function(taskList) {
+        this.initiDueDatePicker(taskList);
         this.initToolTips();
         this.initTagsInput();
     }

@@ -234,7 +234,7 @@
             },
             initiliazePlugins: function() {
                 var that = this;
-                that.taskFormPlugins.init();
+                that.taskFormPlugins.init(this.taskList);
                 if (this.task.tags  && this.task.tags.length) {
                     this.repopulateTags();
                 }

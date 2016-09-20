@@ -7,6 +7,7 @@
 
 require('./bootstrap');
 
+window.moment = require('moment');
 
 var VueRouter = require('vue-router');
 Vue.use(VueRouter);
