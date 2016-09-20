@@ -30,11 +30,13 @@ class Project extends Model
 
 
     /**
-     * Returns all tasks which are open
+     * Returns all tasks associated with current project
+     *
+     * @param bool $withCompleted
      *
      * @return mixed
      */
-    public function openTasks($withCompleted = false)
+    public function taskList($withCompleted = false)
     {
         $query = $this->tasks()
             ->with('project')

@@ -70,7 +70,7 @@ class ProjectService
     {
         return Project::where('active', true)->orderBy('name', 'asc')->get()
             ->map(function($project){
-                $project->taskCount = $project->openTasks()->count();
+                $project->taskCount = $project->taskList()->count();
                 return $project;
             });
     }
@@ -86,7 +86,7 @@ class ProjectService
     {
         $project = Project::find($id);
 
-        return $project->openTasks($withCompleted);
+        return $project->taskList($withCompleted);
     }
 
     /**
