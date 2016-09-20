@@ -59,7 +59,7 @@ class TagService
      */
     public function getContexts()
     {
-        return $this->tag->where('name', 'like', '@%')->get()
+        return $this->tag->where('name', 'like', '@%')->orderBy('name', 'asc')->get()
             ->map(function($tag){
                 $tag->taskCount = $tag->openTasks()->count();
                 return $tag;
