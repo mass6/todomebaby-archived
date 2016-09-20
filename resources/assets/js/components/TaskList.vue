@@ -26,7 +26,7 @@
                         </thead>
                         <tbody>
                         <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete" :transition="transitionName">
+                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -88,7 +88,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="task-item row-complete" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-show="task.complete" :transition="transitionName">
+                        <tr class="task-item row-complete" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-show="task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}-completed"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}-completed" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -229,7 +229,6 @@
                 showListName: false,
                 displayTaskList: false,
                 withCompletedTasks: false,
-                transitionName: 'fade',
                 selectedTask: {id: null, title: '', tags: []}
             }
         },
@@ -271,7 +270,6 @@
                 return this.$route.params.id ? this.$route.params.id : this.sharedState.defaultRoute.params.id;
             },
             fetchTasks: function(listType, listId) {
-                this.transitionName = null;
                 var that = this;
                 this.store.fetchTaskList(listId, listType, this.withCompletedTasks, function(result) {
                     that.taskList = result;
@@ -280,7 +278,6 @@
                     that.taskList.listPath = that.$route.path;
                     that.showListName = true;
                     that.displayTaskList = true;
-                    that.transitionName = 'fade';
                     that.$nextTick(function(){
                         that.initializeDueDatePickers();
                     });
