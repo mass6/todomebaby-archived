@@ -24,7 +24,7 @@
                         </thead>
                         <tbody>
                         <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}">
+                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete" transition="fade">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -138,12 +138,12 @@
         opacity: .6;
     }
     .fade-transition {
-        transition: opacity 1s ease;
+        transition: opacity .5s ease;
     }
     .fade-leave {
         opacity: 0;
-        -webkit-transition-delay: 1s; /* Safari */
-        transition-delay: 1s;
+        -webkit-transition-delay: 1.5s; /* Safari */
+        transition-delay: 1.5s;
     }
     .task-selectable.task-title {font-size:1.1em;color: #042a4a;}
     .task-selectable.task-title:hover {
@@ -165,7 +165,6 @@
 
     import { store } from '../store'
     import TaskForm from './TaskForm.vue'
-    var timer = [];
     export default{
         data(){
             return {
@@ -270,12 +269,11 @@
                 this.selectedTask = {title: '', next: false};
             },
             toggleComplete: function(task) {
-                clearTimeout(timer[task.id]);
                 task.complete = ! task.complete;
                 if (task.complete) {
                     this.store.playSound('ding');
                 }
-                this.delayedUpdate(task);
+                this.updateTask(task);
             },
             toggleNext: function(task) {
                 task.next = ! task.next;
@@ -292,12 +290,6 @@
                 this.store.saveTask(task, function(){
                     that.refreshTaskList();
                 });
-            },
-            delayedUpdate: function(task) {
-                var that = this;
-                timer[task.id] = setTimeout(function(){
-                    that.updateTask(task);
-                }, 6000);
             },
             setListName: function(name) {
                 this.taskList.listName =  this.toTitleCase(this.hyphensToSpaces(name));

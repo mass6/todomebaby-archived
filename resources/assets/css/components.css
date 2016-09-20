@@ -121,15 +121,15 @@ a.badge,
   -o-transition: border-color ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s;
 }
-.table tr,
-.table th,
-.table td,
-.htContextMenu td,
-.ranges ul li {
-  -webkit-transition: background-color ease-in-out 0.15s;
-  -o-transition: background-color ease-in-out 0.15s;
-  transition: background-color ease-in-out 0.15s;
-}
+/*.table tr,*/
+/*.table th,*/
+/*.table td,*/
+/*.htContextMenu td,*/
+/*.ranges ul li {*/
+  /*-webkit-transition: background-color ease-in-out 0.15s;*/
+  /*-o-transition: background-color ease-in-out 0.15s;*/
+  /*transition: background-color ease-in-out 0.15s;*/
+/*}*/
 /* ------------------------------------------------------------------------------
  *
  *  # Sidebar layouts
