@@ -23,9 +23,9 @@ class TagsController extends Controller
      *
      * @return mixed
      */
-    public function getTasksByTag(Tag $tag, TaskService $taskService)
+    public function getTasksByTag(Tag $tag, TaskService $taskService, Request $request)
     {
-        return response()->json(['listName' => $tag->name, 'tasks' => $taskService->findByTag($tag)]);
+        return response()->json(['listName' => $tag->name, 'tasks' => $taskService->findByTag($tag, $request->get('with-completed'))]);
     }
 
 

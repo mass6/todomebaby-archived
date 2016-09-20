@@ -95,9 +95,9 @@ class TasksController extends Controller
      *
      * @return mixed
      */
-    public function getTasksDueToday(TaskService $taskService)
+    public function getTasksDueToday(TaskService $taskService, Request $request)
     {
-        return $this->getTaskListResponse('Today', $taskService->getTasksDueToday());
+        return $this->getTaskListResponse('Today', $taskService->getTasksDueToday($request->get('with-completed')));
     }
 
 
@@ -106,9 +106,9 @@ class TasksController extends Controller
      *
      * @return mixed
      */
-    public function getTasksDueTomorrow(TaskService $taskService)
+    public function getTasksDueTomorrow(TaskService $taskService, Request $request)
     {
-        return $this->getTaskListResponse('Tomorrow', $taskService->getTasksDueTomorrow());
+        return $this->getTaskListResponse('Tomorrow', $taskService->getTasksDueTomorrow($request->get('with-completed')));
     }
 
 
@@ -117,9 +117,9 @@ class TasksController extends Controller
      *
      * @return mixed
      */
-    public function getTasksDueThisWeek(TaskService $taskService)
+    public function getTasksDueThisWeek(TaskService $taskService, Request $request)
     {
-        return $this->getTaskListResponse('This Week', $taskService->getTasksDueThisWeek());
+        return $this->getTaskListResponse('This Week', $taskService->getTasksDueThisWeek($request->get('with-completed')));
     }
 
 
@@ -128,9 +128,9 @@ class TasksController extends Controller
      *
      * @return mixed
      */
-    public function getTasksDueNextWeek(TaskService $taskService)
+    public function getTasksDueNextWeek(TaskService $taskService, Request $request)
     {
-        return $this->getTaskListResponse('Next Week', $taskService->getTasksDueNextWeek());
+        return $this->getTaskListResponse('Next Week', $taskService->getTasksDueNextWeek($request->get('with-completed')));
     }
 
 
@@ -139,9 +139,9 @@ class TasksController extends Controller
      *
      * @return mixed
      */
-    public function getTasksDueInFuture(TaskService $taskService)
+    public function getTasksDueInFuture(TaskService $taskService, Request $request)
     {
-        return $this->getTaskListResponse('Future', $taskService->getTasksDueInFuture());
+        return $this->getTaskListResponse('Future', $taskService->getTasksDueInFuture($request->get('with-completed')));
     }
 
 

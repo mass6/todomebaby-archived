@@ -86,9 +86,11 @@ class TasksControllerTest extends TestCase
      */
     public function testGetTasksDueToday()
     {
-        $this->service->shouldReceive('getTasksDueToday')->once()->andReturn(collect(['tasks']));
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getTasksDueToday')->once()->with(true)->andReturn(collect(['tasks']));
         $controller = new TasksController;
-        $response = $controller->getTasksDueToday($this->service);
+        $response = $controller->getTasksDueToday($this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('Today', $response->getData()->listName);
@@ -100,9 +102,11 @@ class TasksControllerTest extends TestCase
      */
     public function testGetTasksDueTomorrow()
     {
-        $this->service->shouldReceive('getTasksDueTomorrow')->once()->andReturn(collect(['tasks']));
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getTasksDueTomorrow')->once()->with(true)->andReturn(collect(['tasks']));
         $controller = new TasksController;
-        $response = $controller->getTasksDueTomorrow($this->service);
+        $response = $controller->getTasksDueTomorrow($this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('Tomorrow', $response->getData()->listName);
@@ -113,9 +117,11 @@ class TasksControllerTest extends TestCase
      */
     public function testGetTasksDueThisWeek()
     {
-        $this->service->shouldReceive('getTasksDueThisWeek')->once()->andReturn(collect(['tasks']));
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getTasksDueThisWeek')->once()->with(true)->andReturn(collect(['tasks']));
         $controller = new TasksController;
-        $response = $controller->getTasksDueThisWeek($this->service);
+        $response = $controller->getTasksDueThisWeek($this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('This Week', $response->getData()->listName);
@@ -126,9 +132,11 @@ class TasksControllerTest extends TestCase
      */
     public function testGetTasksDueNextWeek()
     {
-        $this->service->shouldReceive('getTasksDueNextWeek')->once()->andReturn(collect(['tasks']));
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getTasksDueNextWeek')->once()->with(true)->andReturn(collect(['tasks']));
         $controller = new TasksController();
-        $response = $controller->getTasksDueNextWeek($this->service);
+        $response = $controller->getTasksDueNextWeek($this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('Next Week', $response->getData()->listName);
@@ -139,9 +147,11 @@ class TasksControllerTest extends TestCase
      */
     public function testGetTasksDueInFuture()
     {
-        $this->service->shouldReceive('getTasksDueInFuture')->once()->andReturn(collect(['tasks']));
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getTasksDueInFuture')->once()->with(true)->andReturn(collect(['tasks']));
         $controller = new TasksController();
-        $response = $controller->getTasksDueInFuture($this->service);
+        $response = $controller->getTasksDueInFuture($this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('Future', $response->getData()->listName);

@@ -11,6 +11,8 @@
             <section id="task-list-container" v-show="showListName">
                 <h2 class="list-heading text-light">{{ taskList.listType == 'tag' && taskList.listName.charAt(0) !== '@' ? '#' : '' }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
                     <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
+
+                <!--  Open Tasks List -->
                 <div id="context-tasks" class="table-responsive">
                     <table class="table tasks-list table-lg" v-show="displayTaskList">
                         <thead>
@@ -24,7 +26,7 @@
                         </thead>
                         <tbody>
                         <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-show="!task.complete" :transition="transitionName">
+                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete" :transition="transitionName">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
                             <!-- /complete box -->
@@ -69,6 +71,49 @@
                         </tbody>
                     </table>
                 </div>
+
+                <br/>
+                <button class="btn btn-xs bg-blue-tdm text-white" @click="toggleCompletedList">Show Completed Tasks</button>
+
+                <!--  Completed Tasks List -->
+                <div id="completed-tasks" class="table-responsive">
+                    <table class="table tasks-list table-lg" v-show="withCompletedTasks">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th style="width: 40%;"></th>
+                            <th>Priority</th>
+                            <th>Due Date</th>
+                            <th>Next</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="task-item row-complete" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-show="task.complete" :transition="transitionName">
+                            <!-- Complete Box -->
+                            <td class="check-complete" id="task-complete-{{ task.id }}-completed"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}-completed" @click="toggleComplete(task)"></i></td>
+                            <!-- /complete box -->
+
+                            <!-- Task Title -->
+                            <td class="task-title" id="task-title-selection-{{ task.id }}-completed">
+                                <div>
+                                    <a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </a>
+                                    <span v-if="task.project" class="project-link" >({{ task.project.name}})</span><br/>
+
+                                </div>
+                            </td>
+                            <!-- / task title-->
+
+                            <td>
+                                {{ task.priority ? task.priority.toUpperCase(): ''}}
+                            </td>
+                            <td>
+                                {{ task.due_date}}
+                            </td>
+                            <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}"><a href="javascript:void(0)" id="task-next-completed">&nbsp;</a></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </div>
     </div>
@@ -78,9 +123,9 @@
     h2.list-heading {
         margin-bottom: -40px;
     }
-    table.tasks-list {
-        margin-bottom: 360px;
-    }
+    /*table.tasks-list {*/
+        /*margin-bottom: 360px;*/
+    /*}*/
     table.tasks-list>tbody>tr:last-child {
         border-bottom: 1px solid #dddddd;
     }
@@ -117,9 +162,10 @@
         vertical-align: super;
         cursor: pointer;
     }
-    #context-tasks.table-responsive {
+    #context-tasks.table-responsive, #completed-tasks.table-responsive {
         min-height: 101px;
         border:none;
+        overflow: visible;
     }
     .table-striped>tbody>tr.task-item, .table>tbody>tr.task-item {
         border-left: 6px solid white;
@@ -142,8 +188,6 @@
     }
     .fade-leave {
         opacity: 0;
-        -webkit-transition-delay: 1.5s; /* Safari */
-        transition-delay: 1.5s;
     }
     .fade-enter {
         opacity: 0;
@@ -184,6 +228,7 @@
                 },
                 showListName: false,
                 displayTaskList: false,
+                withCompletedTasks: false,
                 transitionName: 'fade',
                 selectedTask: {id: null, title: '', tags: []}
             }
@@ -196,6 +241,7 @@
                 if (this.isNotAnEditRequest() && this.listShouldBeUpdated()) {
                     this.updateTaskList();
                 }
+                this.withCompletedTasks = false;
             }
         },
         methods: {
@@ -227,7 +273,7 @@
             fetchTasks: function(listType, listId) {
                 this.transitionName = null;
                 var that = this;
-                this.store.fetchTaskList(listId, listType, function(result) {
+                this.store.fetchTaskList(listId, listType, this.withCompletedTasks, function(result) {
                     that.taskList = result;
                     that.taskList.listType = listType;
                     that.taskList.listId = listId;
@@ -314,6 +360,10 @@
             },
             isPastDue: function(task) {
                 return moment(task.due_date).isBefore(moment().format('YYYY-MM-DD'));
+            },
+            toggleCompletedList: function() {
+                this.withCompletedTasks = ! this.withCompletedTasks;
+                this.refreshTaskList(this.withCompletedTasks);
             }
         },
         events: {

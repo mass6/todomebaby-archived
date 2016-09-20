@@ -52,8 +52,8 @@ export let store = {
         });
     },
     // Fetches tasks for the specified list
-    fetchTaskList: function(id, listType, callback) {
-        let url = this.getBasePath(id, listType);
+    fetchTaskList: function(id, listType, completed, callback) {
+        let url = this.getBasePath(id, listType, completed);
         Vue.http.get(url).then((response) => {
             if (callback) {
                 callback(response.data);
@@ -63,15 +63,20 @@ export let store = {
         });
     },
     // Determines the proper URL endpoint depending on the list type
-    getBasePath: function (id, listType) {
+    getBasePath: function (id, listType, completed) {
+        let queryString = '';
+        if (completed == true) {
+            queryString = '?with-completed=true';
+        }
+
         if (listType == 'scheduled') {
-            return '/tasklists/' + id;
+            return '/tasklists/' + id + queryString;
         }
         if (listType == 'project') {
-            return '/projects/' + id + '/tasks';
+            return '/projects/' + id + '/tasks' + queryString;
         }
         if (listType == 'tag') {
-            return '/tags/' + id + '/tasks';
+            return '/tags/' + id + '/tasks' + queryString;
         }
     },
     // Fetches a task by ID

@@ -42,7 +42,6 @@ class ProjectsControllerTest extends TestCase
 
     /**
      * @test
-     * @group isolated
      */
     public function testGetActiveProjects()
     {
@@ -63,10 +62,12 @@ class ProjectsControllerTest extends TestCase
         $project = m::mock('App\Project');
         $project->shouldReceive('getAttribute')->with('name')->andReturn('Project One');
         $project->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        $this->service->shouldReceive('getTasksByProjectId')->with(1)->andReturn(collect(['tasks']));
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getTasksByProjectId')->with(1, true)->andReturn(collect(['tasks']));
 
         $controller = new ProjectsController;
-        $response = $controller->getTasksByProject($project, $this->service);
+        $response = $controller->getTasksByProject($project, $this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals($project->name, $response->getData()->listName);

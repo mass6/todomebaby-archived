@@ -80,11 +80,11 @@ class ProjectService
      *
      * @return mixed
      */
-    public function getTasksByProjectId($id)
+    public function getTasksByProjectId($id, $withCompleted = false)
     {
         $project = Project::find($id);
 
-        return $project->openTasks();
+        return $project->openTasks($withCompleted);
     }
 
     /**

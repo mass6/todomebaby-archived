@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Task
@@ -77,10 +78,14 @@ class Task extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTaskList($query)
+    public function scopeTaskList($query, $includeCompleted = false)
     {
-        return $query->where('complete', false)
-            ->with('project')
+        if (! $includeCompleted) {
+            $query->open();
+        }
+
+        return $query->
+            with('project')
             ->with([
                 'tags' => function ($query) {
                     $query->orderBy('is_context', 'desc');

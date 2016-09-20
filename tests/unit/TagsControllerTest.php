@@ -31,11 +31,13 @@ class TagsControllerTest extends TestCase
     {
         $mTag = m::mock('App\Tag');
         $mTag->shouldReceive('getAttribute')->with('name')->once()->andReturn('foo');
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
         $mService = m::mock('App\Services\TaskService');
-        $mService->shouldReceive('findByTag')->with($mTag)->once()->andReturn('tasks');
+        $mService->shouldReceive('findByTag')->with($mTag, true)->once()->andReturn('tasks');
 
         $controller = new TagsController;
-        $response = $controller->getTasksByTag($mTag, $mService);
+        $response = $controller->getTasksByTag($mTag, $mService, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals('foo', $response->getData()->listName);

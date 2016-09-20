@@ -44,9 +44,9 @@ class ProjectsController extends Controller
      *
      * @return mixed
      */
-    public function getTasksByProject(Project $project, ProjectService $projectService)
+    public function getTasksByProject(Project $project, ProjectService $projectService, Request $request)
     {
-        return response()->json(['listName' => $project->name, 'tasks' => $projectService->getTasksByProjectId($project->id)]);
+        return response()->json(['listName' => $project->name, 'tasks' => $projectService->getTasksByProjectId($project->id, $request->get('with-completed'))]);
     }
 
     /**

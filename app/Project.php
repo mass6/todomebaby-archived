@@ -34,9 +34,9 @@ class Project extends Model
      *
      * @return mixed
      */
-    public function openTasks()
+    public function openTasks($withCompleted = false)
     {
-        return $this->tasks()->open()
+        $query = $this->tasks()
             ->with('project')
             ->with([
                 'tags' => function ($query) {
@@ -49,8 +49,13 @@ class Project extends Model
             ->orderBy('due_date_null', 'asc')
             ->orderBy('due_date')
             ->orderBy('priority', 'desc')
-            ->orderBy('created_at', 'asc')
-            ->get();
+            ->orderBy('created_at', 'asc');
+
+        if (! $withCompleted) {
+            return $query->open()->get();
+        }
+
+        return $query->get();
     }
 
 
