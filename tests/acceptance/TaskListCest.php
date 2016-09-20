@@ -127,28 +127,14 @@ class TaskListCest
         $I->wantTo('View tasks due next week');
         $I->am('Registered User');
         $user = $I->haveAnAccount();
+        $task = $I->haveTasks($user, 1, null, ['due_date' => Carbon::today()->endOfWeek()->addDays(1)->toDateString()])->first();
+
         $I->login($user->email, 'secret');
-
-        $tasks = factory(Task::class, 5)->make(['complete' => false ]);
-        $user->tasks()->saveMany($tasks);
-
-        // set 2 tasks due next week
-        $tasks[0]->setDueDate(Carbon::today()->endOfWeek()->addDays(1)->toDateString());
-        $tasks[1]->setDueDate(Carbon::today()->endOfWeek()->addDays(7)->toDateString());
-        // set 2 tasks due this week
-        $tasks[2]->setDueDate(Carbon::today()->startOfWeek()->toDateString());
-        $tasks[3]->setDueDate(Carbon::today()->endOfWeek()->toDateString());
-
-        // set 1 task due in future
-        $tasks[4]->setDueDate(Carbon::today()->addDays(15)->toDateString());
+        $I->waitForText('Today',4, '.list-heading');
+        $I->dontSee($task->title);
 
         $I->click('Next Week');
-        $I->waitForText('Next Week',4, '.list-heading');
-        $I->waitForText($tasks[0]->title, 4);
-        $I->see($tasks[1]->title);
-        $I->dontSee($tasks[2]->title);
-        $I->dontSee($tasks[3]->title);
-        $I->dontSee($tasks[4]->title);
+        $I->waitForText($task->title, 4);
     }
     /**
      * @param AcceptanceTester $I
