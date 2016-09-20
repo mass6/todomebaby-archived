@@ -217,6 +217,7 @@
             activateForm: function() {
                 if (this.editMode == false) {
                     this.expandForm();
+                    window.scrollTo(0, 0);
                 }
                 this.$nextTick(function(){
                     this.initiliazePlugins();

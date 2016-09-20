@@ -196,7 +196,6 @@
                 if (this.isNotAnEditRequest() && this.listShouldBeUpdated()) {
                     this.updateTaskList();
                 }
-                window.scrollTo(0, 0);
             }
         },
         methods: {
