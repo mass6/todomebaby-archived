@@ -54,7 +54,7 @@ class TaskFormCest
             'user_id' => $user->id,
             'due_date' => Carbon::today()->toDateString(),
             'project_id' => $project->id,
-            'priority' => 'med',
+            'priority' => '2',
             'details' => 'New task details',
             'complete' => 0,
             'next' => 0,
@@ -123,7 +123,7 @@ class TaskFormCest
             'title' => 'Updated title',
             'user_id' => $user->id,
             'due_date' => Carbon::today()->toDateString(),
-            'priority' => 'hgh',
+            'priority' => '3',
             'details' => 'Updated details'
         ]);
         $I->seeRecord('tags', [

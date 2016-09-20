@@ -94,7 +94,8 @@ class AcceptanceTester extends \Codeception\Actor
     public function haveTasksWithTags($amount = 1, $user, array $tags = ['@foo', 'bar'], Project $project = null, $overrides = [])
     {
         $tagModels = collect($tags)->map(function($tag) use ($user) {
-            return factory(Tag::class)->create([
+            putenv('DISABLE_GLOBAL_SCOPES=true');
+            return Tag::firstOrCreate([
                 'name'=> $tag,
                 'user_id'=>$user->id,
                 'is_context' => substr($tag,0,1) === '@' ?: false,
@@ -110,6 +111,7 @@ class AcceptanceTester extends \Codeception\Actor
     public function haveTags($user, $tags = ['foo'])
     {
         return collect($tags)->map(function($tag) use ($user) {
+            putenv('DISABLE_GLOBAL_SCOPES=true');
             return Tag::firstOrCreate([
                 'name' => $tag,
                 'user_id' => $user->id,
