@@ -25,7 +25,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-if="! taskList.tasks.length"><td>You have no tasks in this list.</td></tr>
+                        <tr v-if="taskListEmpty"><td>You have no tasks in this list.</td></tr>
                         <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
@@ -232,6 +232,13 @@
                 selectedTask: {id: null, title: '', tags: []}
             }
         },
+        computed: {
+            taskListEmpty: function() {
+                return ! this.taskList.tasks.filter(function(task) {
+                    return ! task.complete;
+                }).length;
+            }
+        },
         components: {
             'taskform': TaskForm
         },
@@ -360,7 +367,9 @@
             },
             toggleCompletedList: function() {
                 this.withCompletedTasks = ! this.withCompletedTasks;
-                this.refreshTaskList(this.withCompletedTasks);
+                if (this.withCompletedTasks){
+                    this.refreshTaskList(this.withCompletedTasks);
+                }
             }
         },
         events: {
