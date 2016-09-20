@@ -68,7 +68,7 @@ class ProjectService
      */
     public function getActiveProjects()
     {
-        return Project::where('active', true)->get()
+        return Project::where('active', true)->orderBy('name', 'asc')->get()
             ->map(function($project){
                 $project->taskCount = $project->openTasks()->count();
                 return $project;
