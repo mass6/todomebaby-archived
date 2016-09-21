@@ -1,7 +1,7 @@
 <template>
 
     <!-- Simple panel -->
-    <div class="panel panel-primary app-panel">
+    <div class="panel panel-flat app-panel">
 
         <div class="panel-heading">
             <h6 class="panel-title list-heading"><span v-show="showListName">{{ taskListPrefix }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
@@ -19,7 +19,7 @@
                 <div id="context-tasks" class="table-responsive">
                     <table class="table tasks-list table-lg" v-show="displayTaskList">
                         <thead v-show="!taskListEmpty">
-                            <tr class="active border-double">
+                            <tr class="">
                                 <th colspan="2">Title</th>
                                 <th>Priority</th>
                                 <th>Due Date</th>
@@ -122,6 +122,12 @@
 
 </template>
 <style>
+    .app-panel {
+        border: none;
+    }
+    .app-panel > .panel-heading + .panel-body {
+        padding-top: 20px;
+    }
     .app-panel>.panel-heading {
         background-color: #0277bd;
         border-color: #055d92;
@@ -129,6 +135,7 @@
         border-top-left-radius: 0;
         height: 44px;
         padding: 9px 20px;
+        color: #fff;
     }
     h6.list-heading {
         font-size:18px;
