@@ -1,12 +1,14 @@
 <template>
     <!-- Simple panel -->
-    <div class="panel panel-flat">
+    <div class="panel panel-flat app-panel">
+
+        <div class="panel-heading">
+            <h6 class="panel-title list-heading">{{ isEditing() ? 'Edit Project' : 'New Project' }}&nbsp;</h6>
+        </div>
 
         <div class="panel-body">
 
             <div id="project-form-container">
-
-                <h2>{{ isEditing() ? 'Edit Project' : 'New Project' }}</h2>
 
                 <!-- Grid -->
                 <div class="row">

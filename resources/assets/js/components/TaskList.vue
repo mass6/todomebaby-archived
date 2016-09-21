@@ -122,25 +122,6 @@
 
 </template>
 <style>
-    .app-panel {
-        border: none;
-    }
-    .app-panel > .panel-heading + .panel-body {
-        padding-top: 20px;
-    }
-    .app-panel>.panel-heading {
-        background-color: #0277bd;
-        border-color: #055d92;
-        border-top-right-radius: 0;
-        border-top-left-radius: 0;
-        height: 44px;
-        padding: 9px 20px;
-        color: #fff;
-    }
-    h6.list-heading {
-        font-size:18px;
-    }
-
     span.project-edit.clickable {
         margin-left: 20px;
         font-size: .65em;
