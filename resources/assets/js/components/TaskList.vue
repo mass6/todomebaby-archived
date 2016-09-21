@@ -19,8 +19,8 @@
                 <div id="context-tasks" class="table-responsive">
                     <table class="table tasks-list table-lg" v-show="displayTaskList">
                         <thead v-show="!taskListEmpty">
-                            <tr class="">
-                                <th colspan="2">Title</th>
+                            <tr class="active border-double">
+                                <th colspan="2">Task</th>
                                 <th>Priority</th>
                                 <th>Due Date</th>
                                 <th>Next</th>
