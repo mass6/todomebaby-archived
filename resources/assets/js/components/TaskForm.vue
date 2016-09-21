@@ -162,9 +162,6 @@
             top:30%;
         }
     }
-    [v-cloak] {
-        display: none;
-    }
 </style>
 <script>
     import { store } from '../store'

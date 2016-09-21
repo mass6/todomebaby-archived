@@ -44,3 +44,8 @@
 		background: url('/images/logo-small.png') no-repeat center center;
 	}
 }
+
+
+[v-cloak] {
+	display: none;
+}
