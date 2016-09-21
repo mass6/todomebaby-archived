@@ -1,7 +1,6 @@
 <template>
     <div id="task-form-container">
         <!-- Grid -->
-        <p id="instructions" class="text text-bold" v-if="$route.name == 'tasks.list'">Add a Task</p>
 
         <div class="form-group form-control input-group-facade" :class="{'margin-left-45': task.id }">
             <div class="col-sm-12">
@@ -12,7 +11,7 @@
                        @click="markComplete(task)"
                        v-if="task.id"
                     ></i>
-                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Task Title" v-on:keyup.enter="saveTask" @focus="activateForm">
+                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input input-xlg" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Add a task" v-on:keyup.enter="saveTask" @focus="activateForm">
                     <i class="pull-right task-next" :class="taskClassNext" data-popup="tooltip" title="Mark as Next" data-placement="top" @click="task.next = !task.next" v-if="editMode"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
                 </div>
             </div>
@@ -132,12 +131,13 @@
 
     i.icon-star-empty3, i.icon-star-full2 {
         color:green;
-        font-size: 1.8em;
-        line-height: 36px;
+        font-size: 2.3em;
+        line-height: 46px;
     }
     .form-control.input-group-facade {
         padding:0;
         width:auto;
+        height: 46px;
     }
     .transparent-input {
         border:none;
@@ -146,6 +146,8 @@
     }
     #task-title {
         width:80%;
+        padding-left: 5px;
+        margin-top: 2px;
     }
     .task-next {
         cursor: pointer;

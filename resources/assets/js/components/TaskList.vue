@@ -1,7 +1,12 @@
 <template>
 
     <!-- Simple panel -->
-    <div class="panel panel-flat">
+    <div class="panel panel-primary app-panel">
+
+        <div class="panel-heading">
+            <h6 class="panel-title list-heading"><span v-show="showListName">{{ taskListPrefix }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
+                <span class="project-edit clickable label label-default" @click.stop.prevent="editProject">edit</span></small></span>&nbsp;</h6>
+        </div>
 
         <div class="panel-body">
 
@@ -9,23 +14,20 @@
             <br/>
 
             <section id="task-list-container" v-show="showListName">
-                <h2 class="list-heading text-light">{{ taskList.listType == 'tag' && taskList.listName.charAt(0) !== '@' ? '#' : '' }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
-                    <span class="project-edit clickable label border-orange label-flat text-orange" @click.stop.prevent="editProject">edit</span></small></h2>
 
                 <!--  Open Tasks List -->
                 <div id="context-tasks" class="table-responsive">
                     <table class="table tasks-list table-lg" v-show="displayTaskList">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th style="width: 40%;"></th>
-                            <th>Priority</th>
-                            <th>Due Date</th>
-                            <th>Next</th>
-                        </tr>
+                        <thead v-show="!taskListEmpty">
+                            <tr class="active border-double">
+                                <th colspan="2">Title</th>
+                                <th>Priority</th>
+                                <th>Due Date</th>
+                                <th>Next</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr v-if="taskListEmpty"><td>You have no tasks in this list.</td></tr>
+                        <tr v-if="taskListEmpty"><td>Way to go!  You have no open tasks in this list.</td></tr>
                         <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
@@ -120,8 +122,23 @@
 
 </template>
 <style>
-    h2.list-heading {
-        margin-bottom: -40px;
+    .app-panel>.panel-heading {
+        background-color: #0277bd;
+        border-color: #055d92;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+        height: 44px;
+        padding: 9px 20px;
+    }
+    h6.list-heading {
+        font-size:18px;
+    }
+
+    span.project-edit.clickable {
+        margin-left: 20px;
+        font-size: .65em;
+        vertical-align: super;
+        cursor: pointer;
     }
     /*table.tasks-list {*/
         /*margin-bottom: 360px;*/
@@ -155,12 +172,6 @@
     .table>tbody>tr>td.check {
         padding: 12px 2px;
         width: 20px;
-    }
-    span.project-edit.clickable {
-        margin-left: 6px;
-        font-size: .65em;
-        vertical-align: super;
-        cursor: pointer;
     }
     #context-tasks.table-responsive, #completed-tasks.table-responsive {
         min-height: 101px;
@@ -237,6 +248,10 @@
                 return ! this.taskList.tasks.filter(function(task) {
                     return ! task.complete;
                 }).length;
+            },
+            taskListPrefix: function() {
+                if (this.taskList.listType == 'tag' && this.taskList.listName.charAt(0) !== '@')
+                        return '#';
             }
         },
         components: {

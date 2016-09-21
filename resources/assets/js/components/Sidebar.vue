@@ -28,6 +28,9 @@
     </div>
 </template>
 <style>
+    .navigation {
+        padding-top:0;
+    }
     .navigation .navigation-header {
         color:#ffffff;
         font-size:14px;
