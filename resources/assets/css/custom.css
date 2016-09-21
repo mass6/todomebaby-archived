@@ -18,7 +18,7 @@
 	border: none;
 }
 .app-panel > .panel-heading + .panel-body {
-	padding-top: 20px;
+	padding-top: 28px;
 }
 .app-panel>.panel-heading {
 	background-color: #0277bd;

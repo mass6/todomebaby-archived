@@ -138,6 +138,7 @@
         padding:0;
         width:auto;
         height: 46px;
+        border: 1px solid green;
     }
     .transparent-input {
         border:none;
@@ -148,6 +149,18 @@
         width:80%;
         padding-left: 5px;
         margin-top: 2px;
+    }
+    #task-title::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: #4caf50;
+    }
+    #task-title:-moz-placeholder { /* Firefox 18- */
+        color: #4caf50;
+    }
+    #task-title::-moz-placeholder {  /* Firefox 19+ */
+        color: #4caf50;
+    }
+    #task-title:-ms-input-placeholder {
+        color: #4caf50;
     }
     .task-next {
         cursor: pointer;
