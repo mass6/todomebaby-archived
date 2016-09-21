@@ -123,7 +123,7 @@
 </template>
 <style>
     span.project-edit.clickable {
-        margin-left: 20px;
+        margin-left: 10px;
         font-size: .65em;
         vertical-align: super;
         cursor: pointer;
