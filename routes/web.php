@@ -50,7 +50,7 @@ Route::group(['middleware' => ['auth','web']], function () {
     Route::get('tasklists/tomorrow', 'TasksController@getTasksDueTomorrow');
     Route::get('tasklists/this-week', 'TasksController@getTasksDueThisWeek');
     Route::get('tasklists/next-week', 'TasksController@getTasksDueNextWeek');
-    Route::get('tasklists/future', 'TasksController@getTasksDueInFuture');
+    Route::get('tasklists/later', 'TasksController@getTasksDueLater');
 
     Route::post('projects', 'ProjectsController@store');
     Route::get('projects', 'ProjectsController@getActive');

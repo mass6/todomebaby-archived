@@ -90,7 +90,7 @@
                                     <li><a href="#"><span>Tomorrow</span><span class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="scheduledTaskCounts.today">3</span></a></li>
                                     <li><a href="#" class="sidebar-active"><span>This Week</span><span class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="scheduledTaskCounts.today">4</span></a></li>
                                     <li><a href="#"><span>Next Week</span><span class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="scheduledTaskCounts.today">3</span></a></li>
-                                    <li><a href="#"><span>Future</span><span class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="scheduledTaskCounts.today">3</span></a></li>
+                                    <li><a href="#"><span>Later</span><span class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="scheduledTaskCounts.today">3</span></a></li>
                                 </ul>
                             </li>
                             <li class="">

@@ -78,14 +78,14 @@ class TasksController extends Controller
         $tomorrow = $taskService->tasksDueTomorrowCount();
         $thisWeek = $taskService->tasksDueThisWeekCount();
         $nextWeek = $taskService->tasksDueNextWeekCount();
-        $future = $taskService->tasksDueInFutureCount();
+        $later = $taskService->tasksDueLaterCount();
 
         return response()->json([
             'today' => $today,
             'tomorrow' => $tomorrow,
             'thisWeek' => $thisWeek,
             'nextWeek' => $nextWeek,
-            'future' => $future,
+            'later' => $later,
         ]);
     }
 
@@ -139,9 +139,9 @@ class TasksController extends Controller
      *
      * @return mixed
      */
-    public function getTasksDueInFuture(TaskService $taskService, Request $request)
+    public function getTasksDueLater(TaskService $taskService, Request $request)
     {
-        return $this->getTaskListResponse('Future', $taskService->getTasksDueInFuture($request->get('with-completed')));
+        return $this->getTaskListResponse('Later', $taskService->getTasksDueLater($request->get('with-completed')));
     }
 
 

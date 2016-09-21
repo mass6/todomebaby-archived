@@ -35,8 +35,8 @@ class TaskListCest
 
         $I->login($user->email);
 
-        $I->click('Future');
-        $I->waitForText('Future',4, '.list-heading');
+        $I->click('Later');
+        $I->waitForText('Later',4, '.list-heading');
         $I->waitForText($task->title, 4);
         $I->see('Project One', '.project-link');
         $I->see($task->priority, 'a.dropdown-toggle');
@@ -83,7 +83,7 @@ class TaskListCest
         $tasks[1]->setDueDate(Carbon::tomorrow()->toDateString());
         // set 1 task due today
         $tasks[2]->setDueDate(Carbon::today()->toDateString());
-        // set 1 task due in future
+        // set 1 task due later
         $tasks[3]->setDueDate(Carbon::today()->addDays(10)->toDateString());
 
         $I->click('Tomorrow');
@@ -139,9 +139,9 @@ class TaskListCest
     /**
      * @param AcceptanceTester $I
      */
-    public function it_displays_tasks_due_in_future(AcceptanceTester $I)
+    public function it_displays_tasks_due_later(AcceptanceTester $I)
     {
-        $I->wantTo('View tasks due in future');
+        $I->wantTo('View tasks due later');
         $I->am('Registered User');
         $user = $I->haveAnAccount();
         $I->login($user->email, 'secret');
@@ -149,7 +149,7 @@ class TaskListCest
         $tasks = factory(Task::class, 5)->make(['complete' => false ]);
         $user->tasks()->saveMany($tasks);
 
-        // set 1 task due in future (> next week)
+        // set 1 task due later (> next week)
         $tasks[0]->setDueDate(Carbon::today()->addDays(15)->toDateString());
 
         // set 1 task without a no due date
@@ -159,8 +159,8 @@ class TaskListCest
         $tasks[2]->setDueDate(Carbon::today()->toDateString());
         $tasks[3]->setDueDate(Carbon::today()->toDateString());
 
-        $I->click('Future');
-        $I->waitForText('Future',4, '.list-heading');
+        $I->click('Later');
+        $I->waitForText('Later',4, '.list-heading');
         $I->waitForText($tasks[0]->title, 4);
         $I->see($tasks[1]->title);
         $I->dontSee($tasks[2]->title);

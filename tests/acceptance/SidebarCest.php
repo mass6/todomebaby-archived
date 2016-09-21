@@ -169,10 +169,10 @@ class SidebarCest
         $I->see(2, '#task-count-next-week');
     }
 
-    public function it_displays_number_of_open_tasks_due_in_future(AcceptanceTester $I)
+    public function it_displays_number_of_open_tasks_due_in_later(AcceptanceTester $I)
     {
-        // given I have 3 tasks due in future, 2 of which are still open
-        $I->wantToTest('I can see number of tasks due in future in sidebar');
+        // given I have 3 tasks due later, 2 of which are still open
+        $I->wantToTest('I can see number of tasks due later in sidebar');
         $I->am('Registered User');
         $tasks = $I->haveTasks($user = $I->haveAnAccount(), 3);
 
@@ -183,8 +183,8 @@ class SidebarCest
 
         // when I am at the webapp home page
         $I->login($user->email);
-        $I->waitForElement('#task-count-future', 4);
-        $I->see(2, '#task-count-future');
+        $I->waitForElement('#task-count-later', 4);
+        $I->see(2, '#task-count-later');
     }
 
     public function it_updates_scheduled_task_counts_after_task_is_saved(AcceptanceTester $I)

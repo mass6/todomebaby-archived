@@ -236,7 +236,7 @@ class TaskServiceTest extends TestCase
      *
      * @test
      */
-    public function it_retrieves_all_tasks_due_in_future()
+    public function it_retrieves_all_tasks_due_later()
     {
         $this->tasks = $this->generateUserTasks();
         $project = factory(Project::class)->create(['name' => 'My New Project', 'user_id' => $this->user->id]);
@@ -251,19 +251,19 @@ class TaskServiceTest extends TestCase
         $this->tasks->last()->due_date = null;
         $this->tasks->last()->save();
 
-        $tasksDueInFuture = $this->taskService->getTasksDueInFuture();
+        $tasksDueLater = $this->taskService->getTasksDueLater();
 
-        $this->assertCount(2, $tasksDueInFuture);
-        $this->assertArrayHasKey('project', $tasksDueInFuture->first()->toArray());
-        $this->assertArrayHasKey('tags', $tasksDueInFuture->first()->toArray());
+        $this->assertCount(2, $tasksDueLater);
+        $this->assertArrayHasKey('project', $tasksDueLater->first()->toArray());
+        $this->assertArrayHasKey('tags', $tasksDueLater->first()->toArray());
     }
 
     /**
-     * Service retrieves count of all tasks due in future
+     * Service retrieves count of all tasks due later
      *
      * @test
      */
-    public function it_retrieves_count_of_all_tasks_due_in_future()
+    public function it_retrieves_count_of_all_tasks_due_later()
     {
         $this->tasks = $this->generateUserTasks();
 
@@ -272,7 +272,7 @@ class TaskServiceTest extends TestCase
         $this->tasks->last()->due_date = null;
         $this->tasks->last()->save();
 
-        $this->assertEquals(4, $this->taskService->tasksDueInFutureCount());
+        $this->assertEquals(4, $this->taskService->tasksDueLaterCount());
     }
 
 

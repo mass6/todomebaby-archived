@@ -238,6 +238,8 @@
                 }).length;
             },
             taskListPrefix: function() {
+                if (this.taskList.listType == 'scheduled')
+                        return 'Due ';
                 if (this.taskList.listType == 'tag' && this.taskList.listName.charAt(0) !== '@')
                         return '#';
             }

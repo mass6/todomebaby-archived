@@ -145,16 +145,16 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
-    public function testGetTasksDueInFuture()
+    public function testGetTasksDueLater()
     {
         $mRequest = m::mock('Illuminate\Http\Request');
         $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
-        $this->service->shouldReceive('getTasksDueInFuture')->once()->with(true)->andReturn(collect(['tasks']));
+        $this->service->shouldReceive('getTasksDueLater')->once()->with(true)->andReturn(collect(['tasks']));
         $controller = new TasksController();
-        $response = $controller->getTasksDueInFuture($this->service, $mRequest);
+        $response = $controller->getTasksDueLater($this->service, $mRequest);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('Future', $response->getData()->listName);
+        $this->assertEquals('Later', $response->getData()->listName);
         $this->assertEquals(['tasks'], $response->getData()->tasks);
     }
 
@@ -167,7 +167,7 @@ class TasksControllerTest extends TestCase
         $this->service->shouldReceive('tasksDueTomorrowCount')->once()->andReturn(2);
         $this->service->shouldReceive('tasksDueThisWeekCount')->once()->andReturn(2);
         $this->service->shouldReceive('tasksDueNextWeekCount')->once()->andReturn(2);
-        $this->service->shouldReceive('tasksDueInFutureCount')->once()->andReturn(2);
+        $this->service->shouldReceive('tasksDueLaterCount')->once()->andReturn(2);
 
         $controller = new TasksController;
         $response = $controller->getScheduledTaskCounts($this->service);
@@ -177,7 +177,7 @@ class TasksControllerTest extends TestCase
         $this->assertEquals(2, $response->getData()->tomorrow);
         $this->assertEquals(2, $response->getData()->thisWeek);
         $this->assertEquals(2, $response->getData()->nextWeek);
-        $this->assertEquals(2, $response->getData()->future);
+        $this->assertEquals(2, $response->getData()->later);
     }
 
 }

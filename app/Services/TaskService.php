@@ -202,7 +202,7 @@ class TaskService
      *
      * @return mixed
      */
-    public function getTasksDueInFuture($withCompleted = false)
+    public function getTasksDueLater($withCompleted = false)
     {
         return $this->task
             ->where(function ($query) {
@@ -216,9 +216,9 @@ class TaskService
     /**
      * @return mixed
      */
-    public function tasksDueInFutureCount()
+    public function tasksDueLaterCount()
     {
-        return $this->getTasksDueInFuture()->count();
+        return $this->getTasksDueLater()->count();
     }
 
     // Command Services
