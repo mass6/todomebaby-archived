@@ -114,6 +114,7 @@
 
 <!-- Core JS files -->
 <script type="text/javascript" src="/js/core/libraries/jquery.min.js"></script>
+<script type="text/javascript" src="/js/core/libraries/jquery.min.js"></script>
 {{--<script type="text/javascript" src="/temp/bootstrap.min.js"></script>--}}
 <script type="text/javascript" src="/js/core/limitless-app.js"></script>
 <!-- /core JS files -->
@@ -122,11 +123,12 @@
 <script type="text/javascript" src="/js/app.js"></script>
 <!-- /app JS files -->
 
-<!-- Pickadate -->
+<!-- Date Pickers -->
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/picker.js"></script>
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/picker.date.js"></script>
 <script type="text/javascript" src="/js/plugins/pickers/pickadate/legacy.js"></script>
-<!-- /pickadate -->
+<script type="text/javascript" src="/js/core/libraries/widgets.min.js"></script>
+<!-- /date pickers -->
 <!-- Tags Input -->
 <script type="text/javascript" src="/js/plugins/tags/tokenfield.min.js"></script>
 <script type="text/javascript" src="/js/plugins/tags/prism.min.js"></script>

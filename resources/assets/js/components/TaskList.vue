@@ -16,7 +16,7 @@
             <section id="task-list-container" v-show="showListName">
 
                 <!--  Open Tasks List -->
-                <div id="context-tasks" class="table-responsive">
+                <div id="open-tasks" class="table-responsive">
                     <table class="table tasks-list tasks-list-open table-lg" v-show="displayTaskList">
                         <thead v-show="!taskListEmpty">
                             <tr class="active border-double">
@@ -63,9 +63,9 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="input-group due-date-picker">
-                                    <span class="input-group-addon"><i class="icon-calendar3"></i></span>
-                                    <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task-id="{{task.id}}" type="text" class="form-control pickadate-due-date" v-bind:class="{ 'text-danger': isPastDue(task) }">
+                                <div class="input-group input-group-transparent bordered-date">
+                                    <div class="input-group-addon"><i class="icon-calendar3 position-left"></i></div>
+                                    <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task="{{task | json}}" type="text" class="form-control datepicker" v-bind:class="{ 'text-danger': isPastDue(task) }">
                                 </div>
                             </td>
                             <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}" @click="toggleNext(task)"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i></td>
@@ -104,6 +104,9 @@
 
 </template>
 <style>
+    section#task-list-container {
+        margin-bottom:36px;
+    }
     span.project-edit.clickable {
         margin-left: 10px;
         font-size: .65em;
@@ -136,6 +139,15 @@
     .due-date-picker {
         width: 150px;
     }
+    .bordered-date > .input-group-addon {
+        padding: 2px 2px 2px 10px;
+        border: 1px solid #dadada;
+    }
+    .bordered-date .form-control {
+        padding-left: 10px;
+        border: 1px solid #dadada;
+        border-left: none;
+    }
     .picker--opened .picker__holder {
         min-width: 250px;
     }
@@ -143,11 +155,11 @@
         padding: 12px 2px;
         width: 20px;
     }
-    #context-tasks.table-responsive, #completed-tasks.table-responsive {
-        min-height: 101px;
-        border:none;
-        overflow: visible;
-    }
+    /*#context-tasks.table-responsive, #completed-tasks.table-responsive {*/
+        /*min-height: 101px;*/
+        /*border:none;*/
+        /*overflow-x: visible;*/
+    /*}*/
     .table-striped>tbody>tr.task-item, .table>tbody>tr.task-item {
         border-left: 6px solid white;
     }
@@ -307,13 +319,14 @@
             },
             initializeDueDatePickers: function() {
                 var that = this;
-                $('.pickadate-due-date').pickadate({
-                    format: 'yyyy-mm-dd',
-                    onSet: function(context) {
-                        let component = this;
-                        setTimeout(function(){
-                            that.updateTask(that.getTaskById(component.$node[0].getAttribute('data-task-id')));
-                        }, 500);
+                $(".datepicker").datepicker({
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    dateFormat: "yy-mm-dd",
+                    onSelect: function (date, picker) {
+                        let task = JSON.parse(this.getAttribute('data-task'));
+                        task.due_date = date;
+                        that.updateTask(task);
                     }
                 });
             },
