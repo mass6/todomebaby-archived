@@ -17,7 +17,7 @@
 
                 <!--  Open Tasks List -->
                 <div id="context-tasks" class="table-responsive">
-                    <table class="table tasks-list table-lg" v-show="displayTaskList">
+                    <table class="table tasks-list tasks-list-open table-lg" v-show="displayTaskList">
                         <thead v-show="!taskListEmpty">
                             <tr class="active border-double">
                                 <th colspan="2">Task</th>
@@ -75,20 +75,12 @@
                 </div>
 
                 <br/>
-                <button class="btn btn-xs bg-blue-tdm text-white" @click="toggleCompletedList">Show Completed Tasks</button>
+
+                <button class="btn btn-xs bg-blue-tdm text-white button-complete" @click="toggleCompletedList">{{ !withCompletedTasks ? 'Show Completed Tasks' : 'Hide Completed Tasks' }}</button>
 
                 <!--  Completed Tasks List -->
                 <div id="completed-tasks" class="table-responsive">
-                    <table class="table tasks-list table-lg" v-show="withCompletedTasks">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th style="width: 40%;"></th>
-                            <th>Priority</th>
-                            <th>Due Date</th>
-                            <th>Next</th>
-                        </tr>
-                        </thead>
+                    <table class="table tasks-list tasks-list-complete table-xs" v-show="withCompletedTasks">
                         <tbody>
                         <tr class="task-item row-complete" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-show="task.complete">
                             <!-- Complete Box -->
@@ -97,21 +89,11 @@
 
                             <!-- Task Title -->
                             <td class="task-title" id="task-title-selection-{{ task.id }}-completed">
-                                <div>
-                                    <a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </a>
-                                    <span v-if="task.project" class="project-link" >({{ task.project.name}})</span><br/>
-
-                                </div>
+                                <a href="javascript:void(0)" class="task-selectable task-title line-through" @click="selectTask(task)">{{ task.title }} </a>
+                                <span v-if="task.project" class="project-link" >({{ task.project.name}})</span><br/>
+                                <p class="completed-at">Completed {{ completedAt(task.completed_at) }}</p>
                             </td>
                             <!-- / task title-->
-
-                            <td>
-                                {{ task.priority ? task.priority.toUpperCase(): ''}}
-                            </td>
-                            <td>
-                                {{ task.due_date}}
-                            </td>
-                            <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}"><a href="javascript:void(0)" id="task-next-completed">&nbsp;</a></i></td>
                         </tr>
                         </tbody>
                     </table>
@@ -128,10 +110,10 @@
         vertical-align: super;
         cursor: pointer;
     }
-    /*table.tasks-list {*/
-        /*margin-bottom: 360px;*/
-    /*}*/
-    table.tasks-list>tbody>tr:last-child {
+    table.tasks-list {
+        margin-bottom: 20px;
+    }
+    table.tasks-list-open>tbody>tr:last-child {
         border-bottom: 1px solid #dddddd;
     }
     .table-lg > tbody > tr > td.check-complete {
@@ -173,14 +155,27 @@
         background-color: #F9F9F9;
         border-left: 6px solid #055D92;
     }
-    .table-striped>tbody>tr.row-complete, .table>tbody>tr.row-complete {
-        text-decoration: line-through;
-        background-color: #E6E6E6;
+    .button-complete {
+        margin-bottom:10px;
+        width:148px;
+        text-align: left;
+    }
+    .table.tasks-list-complete>tbody>tr.row-complete {
+        background-color: #f1f1f1;
         color: #7e7e7e;
+        font-size: .9em;
+        border: 2px solid white;
     }
     .row-complete span.task-selectable.task-title {
         color: #7e7e7e;
         opacity: .6;
+    }
+    .tasks-list-complete td.task-title {
+        padding:0;
+    }
+    .completed-at {
+        margin-top: 5px;
+        font-style: italic;
     }
     .fade-transition {
         transition: opacity .5s ease;
@@ -374,6 +369,13 @@
                 this.withCompletedTasks = ! this.withCompletedTasks;
                 if (this.withCompletedTasks){
                     this.refreshTaskList(this.withCompletedTasks);
+                }
+            },
+            completedAt: function(timestamp) {
+                if (timestamp == 'undefined' || timestamp !== '') {
+                    return 'recently';
+                } else {
+                    return timestamp;
                 }
             }
         },

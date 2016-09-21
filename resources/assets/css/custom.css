@@ -68,7 +68,9 @@ h6.list-heading {
 		background: url('/images/logo-small.png') no-repeat center center;
 	}
 }
-
+.line-through {
+	text-decoration: line-through;
+}
 
 [v-cloak] {
 	display: none;
