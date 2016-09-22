@@ -26,37 +26,42 @@ export let store = {
     },
     // Fetches projects and stores in global state object
     fetchProjects: function () {
+        let that = this;
         Vue.http.get('/projects').then(function (response) {
-            store.state.projects = (response.data);
+            store.state.projects = (that.normalizeResponse(response.data));
         });
     },
     // Fetches contexts and stores in global state object
     fetchContexts: function () {
+        let that = this;
         Vue.http.get('/tags/contexts').then(function (response) {
-            store.state.contexts = (response.data);
+            store.state.contexts = (that.normalizeResponse(response.data));
         });
     },
     // Fetches a project by ID
     fetchProject: function(projectId, callback) {
+        let that = this;
         Vue.http.get('/projects/' + projectId).then(function (response) {
             if (callback) {
-                callback(response.data);
+                callback(that.normalizeResponse(response.data));
             }
         });
     },
     // Fetches counts for each scheduled task list (Today, Next Week, etc.)
     // and stores result it in global state object
     fetchScheduledTaskCounts: function() {
+        let that = this;
         Vue.http.get('/tasks/scheduled').then(function (response) {
-            store.state.scheduledTaskCounts = (response.data);
+            store.state.scheduledTaskCounts = (that.normalizeResponse(response.data));
         });
     },
     // Fetches tasks for the specified list
     fetchTaskList: function(id, listType, completed, callback) {
         let url = this.getBasePath(id, listType, completed);
+        let that = this;
         Vue.http.get(url).then((response) => {
             if (callback) {
-                callback(response.data);
+                callback(that.normalizeResponse(response.data));
             }
         }, (response) => {
             console.log(response.statusText);
@@ -81,10 +86,11 @@ export let store = {
     },
     // Fetches a task by ID
     fetchTask: function(taskId, callback) {
+        let that = this;
         Vue.http.get('/tasks/' + taskId).then(function (response) {
-            store.state.task = response.data;
+            store.state.task = that.normalizeResponse(response.data);
             if (callback) {
-                callback(response.data);
+                callback(that.normalizeResponse(response.data));
             }
         });
     },
@@ -132,19 +138,21 @@ export let store = {
     },
     // Add a new project to the DB
     addProject: function(project, callback) {
+        let that = this;
         Vue.http.post('/projects', project).then(function (response) {
             store.fetchProjects();
             if (callback) {
-                callback(response.data);
+                callback(that.normalizeResponse(response.data));
             }
         });
     },
     // Updates an existing project to the DB
     updateProject: function(project, callback) {
+        let that = this;
         Vue.http.patch('/projects/' + project.id, project).then(function (response) {
             store.fetchProjects();
             if (callback) {
-                callback(response.data);
+                callback(that.normalizeResponse(response.data));
             }
         });
     },
@@ -156,6 +164,12 @@ export let store = {
                 callback();
             }
         });
+    },
+    // Method normalize inner response properties to json in case they are stings.
+    // Workaround fix for issue where responses returned over https, the inner
+    // response properties are being stringified.
+    normalizeResponse(response) {
+        return typeof (response) == 'string' ? JSON.parse(response) : response;
     },
     playSound: function(filename) {
         document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="multimedia/' + filename + '.mp3" type="audio/mpeg" /><source src="multimedia/' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="multimedia/' + filename +'.mp3" /></audio>';
