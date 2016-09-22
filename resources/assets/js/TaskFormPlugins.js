@@ -55,9 +55,9 @@ export let taskFormPlugins = {
         // Add class when token is created
         $('.tokenfield-typeahead').on('tokenfield:createdtoken', function (e) {
             if (e.attrs.value.charAt(0) === '@') {
-                $(e.relatedTarget).addClass('bg-primary')
-            } else {
                 $(e.relatedTarget).addClass('bg-success')
+            } else {
+                $(e.relatedTarget).addClass('bg-primary')
             }
         });
     },
