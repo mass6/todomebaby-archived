@@ -473,7 +473,6 @@ class TaskServiceTest extends TestCase
      * Service updates a task
      *
      * @test
-     * @group current
      */
     public function it_unsets_a_project()
     {

@@ -47,6 +47,25 @@ class TaskModelTest extends TestCase
 
 
     /**
+     * Created_at field is set by ApplicationServiceProvider event method
+     *
+     * @test
+     *
+     */
+    public function it_automatically_sets_the_completed_at_field()
+    {
+        $task = $this->generateUserTasks(1)->first();
+        $this->assertNull($task->completed_at);
+
+        $task->update(['complete' => true]);
+        $this->assertNotEmpty($task->completed_at);
+
+        $task->update(['complete' => false]);
+        $this->assertNull($task->completed_at);
+    }
+
+
+    /**
      * Service scopes queries to specified user
      *
      * @test

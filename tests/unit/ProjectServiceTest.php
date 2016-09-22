@@ -122,7 +122,6 @@ class ProjectServiceTest extends TestCase
      * Service updates a task
      *
      * @test
-     * @group current
      */
     public function it_updates_a_task()
     {

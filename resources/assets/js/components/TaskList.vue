@@ -385,7 +385,8 @@
                 }
             },
             completedAt: function(timestamp) {
-                if (timestamp == 'undefined' || timestamp !== '') {
+                console.log(timestamp);
+                if (timestamp == 'undefined' || timestamp == null) {
                     return 'recently';
                 } else {
                     return timestamp;

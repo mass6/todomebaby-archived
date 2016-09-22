@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Task;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Task::updating(function($task) {
+            $task->completed_at = $task->complete ? Carbon::now() : null;
+            return;
+        });
     }
 
     /**
