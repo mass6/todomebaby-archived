@@ -249,14 +249,16 @@
                 var that = this;
                 that.taskFormPlugins.init(this.taskList);
                 if (this.task.tags  && this.task.tags.length) {
-                    this.repopulateTags();
+                    this.repopulateTags(this.task.tags);
+                } else if (this.$route.name == 'tags.show') {
+                    this.repopulateTags([{name: this.taskList.listName}]);
                 }
             },
-            repopulateTags: function() {
-                let tags = this.task.tags.map(function(tag){
+            repopulateTags: function(tags) {
+                let tagNames = tags.map(function(tag){
                     return tag.name;
                 });
-                $('#task-tagsinput').tokenfield('setTokens', tags);
+                $('#task-tagsinput').tokenfield('setTokens', tagNames);
             },
             deactivateForm: function() {
                 this.clearForm();
