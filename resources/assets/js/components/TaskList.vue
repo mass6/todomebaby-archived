@@ -173,7 +173,7 @@
         text-align: left;
     }
     .table.tasks-list-complete>tbody>tr.row-complete {
-        background-color: #f1f1f1;
+        background-color: #f6f6f6;
         color: #7e7e7e;
         font-size: .9em;
         border: 2px solid white;

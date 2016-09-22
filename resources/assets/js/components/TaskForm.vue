@@ -105,7 +105,7 @@
 
             <div>
                 <button type="submit" id="save-task-button" class="btn btn-primary" v-bind:class="{ 'disabled': !task.title.length }" @click.stop.prevent="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
-                <button class="btn btn-grey" @click="cancelForm">Cancel </button>
+                <button class="btn bg-grey-300" @click="cancelForm">Cancel </button>
                 <button v-if="task.id" type="button" class="btn btn-danger btn-sm" id="delete-task-button" @click="deleteTask(task)">Delete <i class="icon-bin position-right"></i></button>
             </div>
         </section>

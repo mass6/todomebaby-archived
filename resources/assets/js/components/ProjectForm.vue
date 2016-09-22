@@ -43,7 +43,7 @@
 
                 <div>
                     <button type="submit" class="btn btn-primary" @click="saveProject(project)">Save Project <i class="icon-checkmark3 position-right"></i></button>
-                    <button class="btn btn-grey" @click="cancel">Cancel </button>
+                    <button class="btn bg-grey-300" @click="cancel">Cancel </button>
                     <button v-if="project.id" type="button" class="btn btn-danger btn-sm" id="delete-project-button" @click="deleteProject(project)">Delete <i class="icon-bin position-right"></i></button>
                 </div>
 
