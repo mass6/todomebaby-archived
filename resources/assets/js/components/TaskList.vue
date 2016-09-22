@@ -19,7 +19,7 @@
                 <div id="open-tasks" class="table-responsive">
                     <table class="table tasks-list tasks-list-open table-lg" v-show="displayTaskList">
                         <thead v-show="!taskListEmpty">
-                            <tr class="active border-double">
+                            <tr class="border-double">
                                 <th colspan="2">Task</th>
                                 <th>Priority</th>
                                 <th>Due Date</th>
