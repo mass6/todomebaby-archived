@@ -4,8 +4,8 @@
     <div class="panel panel-flat app-panel">
 
         <div class="panel-heading">
-            <h6 class="panel-title list-heading"><span v-show="showListName">{{ taskListPrefix }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
-                <span class="project-edit clickable label label-default" @click.stop.prevent="editProject">edit</span></small></span>&nbsp;</h6>
+            <h2 class="panel-title list-heading"><span v-show="showListName">{{ taskListPrefix }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
+                <span class="project-edit clickable label label-default" @click.stop.prevent="editProject">edit</span></small></span>&nbsp;</h2>
         </div>
 
         <div class="panel-body">
