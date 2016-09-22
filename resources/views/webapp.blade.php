@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
+    <title>TodoMeBaby</title>
+    <meta name="description" content="Project and task manager. TodoMeBaby is a the perfect online task management app to help you get things done.!" />
 
     <!-- Global stylesheets -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
