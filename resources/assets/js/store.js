@@ -58,13 +58,26 @@ export let store = {
     fetchTaskList: function(id, listType, completed, callback) {
         let url = this.getBasePath(id, listType, completed);
         let that = this;
-        Vue.http.get(url).then((response) => {
-            if (callback) {
-                callback(that.normalizeResponse(response.data));
+        $.ajax({
+            url: url,
+            success: function(response){
+                console.log(response)
+                if (callback) {
+                    callback(that.normalizeResponse(response));
+                }
+            },
+            error: function(xhr,status,error) {
+                console.log(error);
             }
-        }, (response) => {
-            console.log(response.statusText);
         });
+
+        // Vue.http.get(url).then((response) => {
+        //     if (callback) {
+        //         callback(that.normalizeResponse(response.data));
+        //     }
+        // }, (response) => {
+        //     console.log(response.statusText);
+        // });
     },
     // Determines the proper URL endpoint depending on the list type
     getBasePath: function (id, listType, completed) {
