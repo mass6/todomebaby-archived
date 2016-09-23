@@ -61,9 +61,10 @@ export let store = {
         $.ajax({
             url: url,
             success: function(response){
+                console.log('updated');
                 console.log(response)
                 if (callback) {
-                    callback(that.normalizeResponse(response));
+                    callback(response);
                 }
             },
             error: function(xhr,status,error) {
