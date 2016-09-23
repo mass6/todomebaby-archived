@@ -76,12 +76,13 @@
 
                 <br/>
 
-                <button class="btn btn-xs bg-blue-tdm text-white button-complete" @click="toggleCompletedList">{{ !withCompletedTasks ? 'Show Completed Tasks' : 'Hide Completed Tasks' }}</button>
+                <button class="btn btn-xs bg-blue-700 text-white button-complete" @click="toggleCompletedList">{{ !withCompletedTasks ? 'Show Completed Tasks' : 'Hide Completed Tasks' }}</button>
 
                 <!--  Completed Tasks List -->
                 <div id="completed-tasks" class="table-responsive">
                     <table class="table tasks-list tasks-list-complete table-xs" v-show="withCompletedTasks">
                         <tbody>
+                        <tr v-show="displayCompletedTasks && ! hasCompletedTasks"><td>No completed tasks in this list</td></tr>
                         <tr class="task-item row-complete" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-show="task.complete">
                             <!-- Complete Box -->
                             <td class="check-complete" id="task-complete-{{ task.id }}-completed"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}-completed" @click="toggleComplete(task)"></i></td>
@@ -235,14 +236,20 @@
                 showListName: false,
                 displayTaskList: false,
                 withCompletedTasks: false,
+                displayCompletedTasks: false,
                 selectedTask: {id: null, title: '', tags: []}
             }
         },
         computed: {
             taskListEmpty: function() {
-                return ! this.taskList.tasks.filter(function(task) {
+                return ! Boolean(this.taskList.tasks.filter(function(task) {
                     return ! task.complete;
-                }).length;
+                }).length);
+            },
+            hasCompletedTasks: function() {
+                return Boolean(this.taskList.tasks.filter(function(task) {
+                    return task.complete;
+                }).length);
             },
             taskListPrefix: function() {
                 if (this.taskList.listType == 'scheduled')
@@ -273,6 +280,7 @@
                 this.$broadcast('taskListUpdated');
                 this.showListName = false; // hide task list while data is being fetched
                 this.displayTaskList = false; // hide task list while data is being fetched
+                this.displayCompletedTasks = false; // hide task list while data is being fetched
                 this.taskList.listName = '';
                 this.fetchTasks(this.getListType(), this.getListId());
             },
@@ -297,6 +305,7 @@
                     that.taskList.listPath = that.$route.path;
                     that.showListName = true;
                     that.displayTaskList = true;
+                    that.displayCompletedTasks = that.withCompletedTasks;
                     that.$nextTick(function(){
                         that.initializeDueDatePickers();
                     });
@@ -385,7 +394,6 @@
                 }
             },
             completedAt: function(timestamp) {
-                console.log(timestamp);
                 if (timestamp == 'undefined' || timestamp == null) {
                     return 'recently';
                 } else {

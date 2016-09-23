@@ -7,7 +7,6 @@
 
 require('./bootstrap');
 
-
 /**
  * Uncomment below when compiling to production
  */
