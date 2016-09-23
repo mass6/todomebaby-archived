@@ -25,42 +25,35 @@ export let store = {
     },
     // Fetches projects and stores in global state object
     fetchProjects: function () {
-        let that = this;
         Vue.http.get('/projects').then(function (response) {
-            store.state.projects = (that.normalizeResponse(response.data));
+            store.state.projects = response.json();
         });
     },
     // Fetches contexts and stores in global state object
     fetchContexts: function () {
-        let that = this;
         Vue.http.get('/tags/contexts').then(function (response) {
-            store.state.contexts = (that.normalizeResponse(response.data));
+            store.state.contexts = response.json();
         });
     },
     // Fetches a project by ID
     fetchProject: function(projectId, callback) {
-        let that = this;
         Vue.http.get('/projects/' + projectId).then(function (response) {
             if (callback) {
-                callback(that.normalizeResponse(response.data));
+                callback(response.json());
             }
         });
     },
     // Fetches counts for each scheduled task list (Today, Next Week, etc.)
     // and stores result it in global state object
     fetchScheduledTaskCounts: function() {
-        let that = this;
         Vue.http.get('/tasks/scheduled').then(function (response) {
-            store.state.scheduledTaskCounts = (that.normalizeResponse(response.data));
+            store.state.scheduledTaskCounts = response.json();
         });
     },
     // Fetches tasks for the specified list
     fetchTaskList: function(id, listType, completed, callback) {
         let url = this.getBasePath(id, listType, completed);
-        let that = this;
         Vue.http.get(url).then((response) => {
-            console.log('parsing to json');
-            console.log(response.json());
             if (callback) {
                 callback(response.json());
             }
@@ -87,11 +80,10 @@ export let store = {
     },
     // Fetches a task by ID
     fetchTask: function(taskId, callback) {
-        let that = this;
         Vue.http.get('/tasks/' + taskId).then(function (response) {
-            store.state.task = that.normalizeResponse(response.data);
+            store.state.task = response.json();
             if (callback) {
-                callback(that.normalizeResponse(response.data));
+                callback(response.json());
             }
         });
     },
@@ -139,21 +131,19 @@ export let store = {
     },
     // Add a new project to the DB
     addProject: function(project, callback) {
-        let that = this;
         Vue.http.post('/projects', project).then(function (response) {
             store.fetchProjects();
             if (callback) {
-                callback(that.normalizeResponse(response.data));
+                callback(response.json());
             }
         });
     },
     // Updates an existing project to the DB
     updateProject: function(project, callback) {
-        let that = this;
         Vue.http.patch('/projects/' + project.id, project).then(function (response) {
             store.fetchProjects();
             if (callback) {
-                callback(that.normalizeResponse(response.data));
+                callback(response.json());
             }
         });
     },
@@ -165,12 +155,6 @@ export let store = {
                 callback();
             }
         });
-    },
-    // Method normalize inner response properties to json in case they are stings.
-    // Workaround fix for issue where responses returned over https, the inner
-    // response properties are being stringified.
-    normalizeResponse(response) {
-        return typeof (response) == 'string' ? JSON.parse(response) : response;
     },
     playSound: function(filename) {
         document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="multimedia/' + filename + '.mp3" type="audio/mpeg" /><source src="multimedia/' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="multimedia/' + filename +'.mp3" /></audio>';
