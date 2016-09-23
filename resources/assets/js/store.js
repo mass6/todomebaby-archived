@@ -14,10 +14,9 @@ export let store = {
     // Called by App when first run
     initialize: function() {
         this.refreshSidebarData();
-    },
-    // Fetches links and data in sidebar
+    },    // Fetches links and data in sidebar
     refreshSidebarData: function() {
-        // fetch projects
+        // fetch projectsq
         this.fetchProjects();
         // fetch context counts
         this.fetchContexts();
