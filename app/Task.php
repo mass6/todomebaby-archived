@@ -75,7 +75,7 @@ class Task extends Model
 
 
     /**
-     * Scope the query to only include open tasks.
+     * Scope the query to return task list with relations and sorting applied.
      *
      * @param      $query
      * @param bool $includeCompleted
