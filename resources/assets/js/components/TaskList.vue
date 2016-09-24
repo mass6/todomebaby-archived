@@ -220,12 +220,14 @@
 <script>
 
     import { store } from '../store'
+    import { service } from '../service'
+    import { repo } from '../repository'
     import TaskForm from './TaskForm.vue'
     export default{
         data(){
             return {
                 sharedState: store.state,
-                store: store,
+                repo: repo,
                 taskList: {
                     listName: '',
                     tasks: [],
@@ -298,7 +300,8 @@
             },
             fetchTasks: function(listType, listId) {
                 var that = this;
-                this.store.fetchTaskList(listId, listType, this.withCompletedTasks, function(result) {
+                this.repo.fetchTaskList(listId, listType, this.withCompletedTasks, function(result) {
+                    that.sharedState.tasks = result;
                     that.taskList = result;
                     that.taskList.listType = listType;
                     that.taskList.listId = listId;
@@ -350,7 +353,7 @@
             toggleComplete: function(task) {
                 task.complete = ! task.complete;
                 if (task.complete) {
-                    this.store.playSound('ding');
+                    service.playSound('ding');
                 }
                 this.updateTask(task);
             },
@@ -366,7 +369,7 @@
             },
             updateTask: function (task) {
                 var that = this;
-                this.store.saveTask(task, function(){
+                service.saveTask(task, function(){
                     that.refreshTaskList();
                 });
             },

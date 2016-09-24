@@ -1,18 +1,18 @@
 <script>
     import { store } from '../store'
+    import { service } from '../service'
     import Sidebar from './Sidebar.vue'
     export default {
         data(){
             return{
-                sharedState: store.state,
-                store: store
+                sharedState: store.state
             }
         },
         components:{
             'sidebar':Sidebar
         },
         ready: function(){
-            this.store.initialize();
+            service.initialize();
         },
         events: {
             listChanged: function() {

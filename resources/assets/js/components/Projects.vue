@@ -21,8 +21,7 @@
     export default{
         data(){
             return{
-                sharedState: store.state,
-                store: store
+                sharedState: store.state
             }
         },
         methods: {

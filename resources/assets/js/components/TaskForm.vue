@@ -180,6 +180,7 @@
 </style>
 <script>
     import { store } from '../store'
+    import { service } from '../service'
     import { taskFormPlugins } from '../TaskFormPlugins'
     export default{
         props: {
@@ -198,7 +199,6 @@
         data(){
             return{
                 sharedState: store.state,
-                store: store,
                 filter: {filterType: '', filterValue: ''},
                 defaultTags: null,
                 editMode: false,
@@ -216,7 +216,7 @@
         created: function() {
             if (this.isAnEditRequest()) {
                 var that = this;
-                this.store.fetchTask(this.$route.params.id, function(result) {
+                service.fetchTask(this.$route.params.id, function(result) {
                     that.activateForm();
                     that.task = result;
                 });
@@ -237,7 +237,6 @@
             },
             expandForm: function() {
                 this.editMode = true;
-                //this.setDefaultTags();
             },
             cancelForm: function() {
                 this.deactivateForm();
@@ -285,7 +284,7 @@
                     return;
                 }
                 var that = this;
-                this.store.saveTask(this.task, function(){
+                service.saveTask(this.task, function(){
                     that.$dispatch('taskSaved', that.task);
                     that.deactivateForm();
                 });
@@ -301,7 +300,7 @@
                     confirmButtonColor: "#ff4f18",
                     confirmButtonText: "Yes, delete task!"
                 }, function () {
-                    that.store.deleteTask(task, function() {
+                    service.deleteTask(task, function() {
                         that.$dispatch('taskDeleted', task);
                         that.deactivateForm();
                     });

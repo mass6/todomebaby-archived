@@ -64,11 +64,11 @@
 </style>
 <script>
     import { store } from '../store'
+    import { service } from '../service'
     export default{
         data(){
             return{
                 sharedState: store.state,
-                store: store,
                 project: {},
                 showHeading: false
             }
@@ -77,7 +77,7 @@
             data: function(transition) {
                 if ( !this.project.id && this.$route.name == 'projects.edit' ) {
                     var that = this;
-                    this.store.fetchProject(this.$route.params.id, function(project) {
+                    service.fetchProject(this.$route.params.id, function(project) {
                         that.project = project;
                         that.showHeading = true;
                     });
@@ -103,7 +103,7 @@
             saveProject: function(project) {
                 if (project.name.length) {
                     var that = this;
-                    this.store.saveProject(project, function(newProject){
+                    service.saveProject(project, function(newProject){
                         that.goToProjectTasks(newProject);
                     });
                 }
@@ -129,7 +129,7 @@
                     confirmButtonColor: "#ff4f18",
                     confirmButtonText: "Yes, delete project!"
                 }, function () {
-                    that.store.deleteProject(project, function() {
+                    service.deleteProject(project, function() {
                         that.$route.router.go('/lists/today');
                     });
                 });
