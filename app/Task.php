@@ -62,6 +62,13 @@ class Task extends Model
      */
     public $incrementing = false;
 
+    /*
+     |--------------------------------------------------------------------------
+     | Local Query Scopes
+     |--------------------------------------------------------------------------
+     |
+     */
+
     /**
      * Scope the query to only include open tasks.
      *
@@ -71,7 +78,6 @@ class Task extends Model
     {
         return $query->where('complete', false);
     }
-
 
     /**
      * Scope the query to return task list with relations and sorting applied.
@@ -103,47 +109,12 @@ class Task extends Model
             ->orderBy('created_at', 'asc');
     }
 
-    /**
-     * Toggles the Next flag on/off
+    /*
+     |--------------------------------------------------------------------------
+     | Getters
+     |--------------------------------------------------------------------------
+     |
      */
-    public function toggleNextFlag()
-    {
-        if ( ! $this->attributes['next']) {
-            $this->attributes['next'] = true;
-        } else {
-            $this->attributes['next'] = false;
-        }
-        $this->save();
-    }
-
-
-    /**
-     * Toggles the complete flag on/off, and sets/un-sets the completed date
-     */
-    public function toggleComplete()
-    {
-        if ( ! $this->complete) {
-            $this->complete     = true;
-            $this->completed_at = Carbon::now();
-        } else {
-            $this->complete     = false;
-            $this->completed_at = null;
-        }
-        $this->save();
-    }
-
-
-    /**
-     * Sets the due date on the task
-     *
-     * @param $date
-     */
-    public function setDueDate($date)
-    {
-        $this->due_date = $date;
-        $this->save();
-    }
-
 
     /**
      * Get the priority name.
@@ -163,6 +134,60 @@ class Task extends Model
         return $humanReadable[$value];
     }
 
+    /*
+     |--------------------------------------------------------------------------
+     | Setters
+     |--------------------------------------------------------------------------
+     |
+     */
+
+    /**
+     * Toggles the Next flag on/off
+     */
+    public function toggleNextFlag()
+    {
+        if ( ! $this->attributes['next']) {
+            $this->attributes['next'] = true;
+        } else {
+            $this->attributes['next'] = false;
+        }
+        $this->save();
+    }
+
+    /**
+     * Toggles the complete flag on/off, and sets/un-sets the completed date
+     */
+    public function toggleComplete()
+    {
+        if ( ! $this->complete) {
+            $this->complete     = true;
+            $this->completed_at = Carbon::now();
+        } else {
+            $this->complete     = false;
+            $this->completed_at = null;
+        }
+        $this->save();
+    }
+
+    /**
+     * Sets the due date on the task
+     *
+     * @param $date
+     */
+    public function setDueDate($date)
+    {
+        $this->due_date = $date;
+        $this->save();
+    }
+
+    /**
+     * @param $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+        $this->save();
+    }
 
     /**
      * Proxy to setPriority method.
@@ -177,7 +202,6 @@ class Task extends Model
         $this->attributes['priority'] = STATIC::PRIORITY_LEVELS[strtolower($value)];
     }
 
-
     /**
      * @param $value
      */
@@ -188,17 +212,6 @@ class Task extends Model
         }
     }
 
-
-    /**
-     * @param $priority
-     */
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-        $this->save();
-    }
-
-
     /**
      * @param $projectId
      */
@@ -207,8 +220,12 @@ class Task extends Model
         $this->project()->associate(Project::find($projectId))->save();
     }
 
-
-    // Model Relations
+    /*
+     |--------------------------------------------------------------------------
+     | Model Relations
+     |--------------------------------------------------------------------------
+     |
+     */
 
     /**
      * Task belongs to a user
@@ -229,7 +246,6 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
 
     /**
      * Task can have many tags
