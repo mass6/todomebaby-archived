@@ -93,7 +93,6 @@ class TaskService
         return Tag::where('name', $name)->first()->tasks()->taskList()->get();
     }
 
-
     /**
      * @return mixed
      */
@@ -101,7 +100,6 @@ class TaskService
     {
         return $this->task->open()->get();
     }
-
 
     /**
      * @param bool $withCompleted
@@ -116,6 +114,18 @@ class TaskService
             ->get();
     }
 
+    /**
+     * @param bool $withCompleted
+     *
+     * @return mixed
+     */
+    public function getNext($withCompleted = false)
+    {
+        return $this->task
+            ->where('next', true)
+            ->taskList($withCompleted)
+            ->get();
+    }
 
     /**
      * @param bool $withCompleted

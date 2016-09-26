@@ -93,7 +93,25 @@ class TaskServiceTest extends TestCase
         $this->assertArrayHasKey('tags', $inboxTasks->first()->toArray());
         $this->assertTrue(in_array($tasks[0]->title, $titles));
         $this->assertTrue(in_array($tasks[1]->title, $titles));
+    }
 
+    /**
+     * Service retrieves next tasks
+     *
+     * @test
+     */
+    public function it_retrieves_next_tasks()
+    {
+        $tasks = $this->generateUserTasks($this->user, 2, false, ['next' => true]);
+
+        $nextTasks = $this->taskService->getNext();
+        $this->assertCount(2, $nextTasks);
+        $titles = $nextTasks->pluck('title')->all();
+
+        $this->assertArrayHasKey('project', $nextTasks->first()->toArray());
+        $this->assertArrayHasKey('tags', $nextTasks->first()->toArray());
+        $this->assertTrue(in_array($tasks[0]->title, $titles));
+        $this->assertTrue(in_array($tasks[1]->title, $titles));
     }
 
     /**

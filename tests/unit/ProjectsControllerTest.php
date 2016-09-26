@@ -30,7 +30,6 @@ class ProjectsControllerTest extends TestCase
 
     /**
      * @test
-     * @group current
      */
     public function testShow()
     {

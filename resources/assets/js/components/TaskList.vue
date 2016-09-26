@@ -104,7 +104,7 @@
     </div>
 
 </template>
-<style>
+<style scoped>
     section#task-list-container {
         margin-bottom:36px;
     }
@@ -151,6 +151,11 @@
     }
     .picker--opened .picker__holder {
         min-width: 250px;
+    }
+    i.icon-star-empty3, i.icon-star-full2 {
+        color:green;
+        font-size: 2.3em;
+        line-height: 46px;
     }
     .table>tbody>tr>td.check {
         padding: 12px 2px;
@@ -254,7 +259,8 @@
                 }).length);
             },
             taskListPrefix: function() {
-                if (this.taskList.listType == 'scheduled' && this.taskList.listName !== 'Inbox')
+                let scheduled = ['Today', 'Tomorrow', 'This Week', 'Next Week', 'Future'];
+                if (scheduled.indexOf(this.taskList.listName) !== -1)
                         return 'Due ';
                 if (this.taskList.listType == 'tag' && this.taskList.listName.charAt(0) !== '@')
                         return '#';

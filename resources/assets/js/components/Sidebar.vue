@@ -8,7 +8,8 @@
                     <ul class="navigation navigation-main navigation-accordion">
 
                         <li class="">
-                            <a id="inbox" v-link="{ name: 'tasks.list', params: { id: 'inbox' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected"><i class=" icon-inbox-alt"></i> <span class="inbox-link">Inbox</span><span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="task-counts badge badge-primary bg-blue-tdm border-blue-tdm">{{ sharedState.inbox.tasks.length }}</span></a>
+                            <a id="inbox" v-link="{ name: 'tasks.list', params: { id: 'inbox' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected"><i class="icon-inbox-alt"></i> <span class="inbox-link">Inbox</span><span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="task-counts badge badge-primary bg-blue-tdm border-blue-tdm">{{ sharedState.inbox.tasks.length }}</span></a>
+                            <a id="next" v-link="{ name: 'tasks.list', params: { id: 'next' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected"><i class="icon-star-full2"></i> <span class="next-link">Next</span><span v-if="sharedState.next.tasks.length" id="task-count-next" class="task-counts badge badge-primary bg-blue-tdm border-blue-tdm">{{ sharedState.next.tasks.length }}</span></a>
                         </li>
 
                         <!-- Scheduled Tasks -->

@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth','web']], function () {
     Route::delete('tasks/{task}', 'TasksController@destroy');
 
     Route::get('tasklists/inbox', 'TasksController@getInbox');
+    Route::get('tasklists/next', 'TasksController@getNext');
     Route::get('tasklists/today', 'TasksController@getTasksDueToday');
     Route::get('tasklists/tomorrow', 'TasksController@getTasksDueTomorrow');
     Route::get('tasklists/this-week', 'TasksController@getTasksDueThisWeek');

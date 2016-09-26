@@ -31,6 +31,13 @@ export let repo = {
         });
     },
 
+    // Fetches tasks and task count flagged as next
+    fetchNext: function(callback) {
+        Vue.http.get('/tasklists/next').then(function (response) {
+            callback(response.json());
+        });
+    },
+
     // Fetches counts for each scheduled task list (Today, Next Week, etc.)
     // and stores the result it in global state object
     fetchScheduledTaskCounts: function(callback) {

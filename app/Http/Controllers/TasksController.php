@@ -89,7 +89,6 @@ class TasksController extends Controller
         ]);
     }
 
-
     /**
      * @param TaskService $taskService
      * @param Request     $request
@@ -101,6 +100,16 @@ class TasksController extends Controller
         return $this->getTaskListResponse('Inbox', $taskService->getInbox($request->get('with-completed')));
     }
 
+    /**
+     * @param TaskService $taskService
+     * @param Request     $request
+     *
+     * @return mixed
+     */
+    public function getNext(TaskService $taskService, Request $request)
+    {
+        return $this->getTaskListResponse('Next', $taskService->getNext($request->get('with-completed')));
+    }
 
     /**
      * @param TaskService $taskService

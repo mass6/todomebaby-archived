@@ -16,6 +16,7 @@ export let service = {
     },
     refreshSidebarData: function() {
         this.fetchInbox();
+        this.fetchNext();
         this.fetchProjects();
         this.fetchContexts();
         this.fetchScheduledTaskCounts();
@@ -46,6 +47,14 @@ export let service = {
     fetchInbox: function() {
         repo.fetchInbox(function (response) {
             store.state.inbox = response;
+        });
+    },
+
+    // Fetches tasks and task count flagged as next from the repository
+    // and stores the result in the global state object
+    fetchNext: function() {
+        repo.fetchNext(function (response) {
+            store.state.next = response;
         });
     },
 

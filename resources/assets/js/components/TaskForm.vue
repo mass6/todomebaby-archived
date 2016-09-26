@@ -112,7 +112,7 @@
 
     </div>
 </template>
-<style>
+<style scoped>
     .expand-transition {
         transition: all .6s ease;
         overflow: hidden;

@@ -6,6 +6,9 @@ export let store = {
         inbox: {
             tasks: []
         },
+        next: {
+            tasks: []
+        },
         scheduledTaskCounts: {},
         previousRoute: {},
         defaultRoute: {

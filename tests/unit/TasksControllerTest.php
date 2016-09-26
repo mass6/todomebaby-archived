@@ -100,6 +100,22 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
+    public function testGetNext()
+    {
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getNext')->once()->with(true)->andReturn(collect(['tasks']));
+        $controller = new TasksController;
+        $response = $controller->getNext($this->service, $mRequest);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals('Next', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
+    }
+
+    /**
+     * @test
+     */
     public function testGetTasksDueToday()
     {
         $mRequest = m::mock('Illuminate\Http\Request');
