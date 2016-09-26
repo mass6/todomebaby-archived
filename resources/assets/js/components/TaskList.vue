@@ -254,7 +254,7 @@
                 }).length);
             },
             taskListPrefix: function() {
-                if (this.taskList.listType == 'scheduled')
+                if (this.taskList.listType == 'scheduled' && this.taskList.listName !== 'Inbox')
                         return 'Due ';
                 if (this.taskList.listType == 'tag' && this.taskList.listName.charAt(0) !== '@')
                         return '#';
