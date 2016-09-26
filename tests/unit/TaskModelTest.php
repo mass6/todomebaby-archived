@@ -153,7 +153,6 @@ class TaskModelTest extends TestCase
      * It associates a task to a project
      *
      * @test
-     * @group current
      */
     public function it_associates_task_to_project()
     {
