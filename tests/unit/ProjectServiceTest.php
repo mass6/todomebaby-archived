@@ -57,6 +57,20 @@ class ProjectServiceTest extends TestCase
         $this->assertEquals($project->id, $foundProject->id);
         $this->assertEquals($project->name, $foundProject->name);
     }
+    /**
+     * Service retrieves a project by slug
+     *
+     * @test
+     */
+    public function it_retrieves_a_project_by_slug()
+    {
+        $project = $this->generateUserProjects($this->user, 1);
+        $foundProject = $this->projectService->findBySlug($project->slug);
+
+        $this->assertInstanceOf(Project::class, $foundProject);
+        $this->assertEquals($project->id, $foundProject->id);
+        $this->assertEquals($project->slug, $foundProject->slug);
+    }
 
     /**
      * Service retrieves all active projects
@@ -114,6 +128,7 @@ class ProjectServiceTest extends TestCase
 
         $this->assertInstanceOf(Project::class, $project);
         $this->assertEquals('Project One', $project->name);
+        $this->assertEquals('project-one', $project->slug);
         $this->assertEquals('project description', $project->description);
         $this->assertEquals(Carbon::tomorrow()->toDateString(), $project->due_date);
     }
@@ -142,6 +157,7 @@ class ProjectServiceTest extends TestCase
         $this->projectService->updateProject($project, $newData);
 
         $this->assertEquals('Updated Name', $project->name);
+        $this->assertEquals('updated-name', $project->slug);
         $this->assertEquals('New description', $project->description);
         $this->assertEquals(Carbon::tomorrow()->toDateString(), $project->due_date);
     }
@@ -182,7 +198,6 @@ class ProjectServiceTest extends TestCase
         $overrides['active'] = $active;
         $overrides['user_id'] = $user->id;
         $projects = factory(Project::class, $amount)->create($overrides);
-        //$amount > 1 ? $user->projects()->saveMany($projects) : $user->projects()->save($projects);
 
         return $projects;
     }
