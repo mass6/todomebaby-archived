@@ -6,7 +6,7 @@
         <ul>
             <a v-link="{ name: 'projects.create' }" id="add-project" class="add-project pull-right" alt="Add Project" @click="hideMobileSidebar"><i class="icon-plus-circle2"></i></a>
             <li v-for="project in sharedState.projects">
-                <a v-link="{ name: 'projects.show', params: { id: project.id }, replace: true, exact: true }" class="project-link" v-link-active @click.stop="taskListSelected">
+                <a v-link="{ name: 'projects.show', params: { id: project.slug }, replace: true, exact: true }" class="project-link" v-link-active @click.stop="taskListSelected">
                     {{ project.name }}<span id="project-{{project.id}}-task-count" class="badge badge-primary bg-blue-tdm border-blue-tdm" v-if="project.taskCount">{{ project.taskCount }}</span>
                 </a>
             </li>

@@ -324,7 +324,7 @@
                 })[0];
             },
             getTasksByProject: function(project) {
-                this.$route.router.go({name: 'projects.show', params:{id: project.id}});
+                this.$route.router.go({name: 'projects.show', params:{id: project.slug}});
             },
             getTasksByTag: function(tag) {
                 this.$route.router.go({name: 'tags.show', params:{id: tag.slug}});

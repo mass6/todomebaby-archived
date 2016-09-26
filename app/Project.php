@@ -43,6 +43,16 @@ class Project extends Model
     }
 
     /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
      * Returns all tasks associated with current project
      *
      * @param bool $withCompleted
