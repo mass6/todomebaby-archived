@@ -1,7 +1,6 @@
 <?php
 
 use App\Project;
-use App\Services\ProjectService;
 use App\Services\TaskService;
 use App\Tag;
 use App\Task;
@@ -10,8 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class TaskServiceTest extends TestCase
 {
@@ -351,8 +348,10 @@ class TaskServiceTest extends TestCase
         $tags = $savedTask->tags;
         $this->assertCount(2, $tags);
         $this->assertEquals('@foo', $tags[0]->name);
+        $this->assertEquals('context-foo', $tags[0]->slug);
         $this->assertEquals(true, $tags[0]->is_context);
         $this->assertEquals('bar', $tags[1]->name);
+        $this->assertEquals('bar', $tags[1]->slug);
         $this->assertEquals(false, $tags[1]->is_context);
     }
 
@@ -572,7 +571,10 @@ class TaskServiceTest extends TestCase
         $amount > 1 ? $user->tasks()->saveMany($tasks) : $user->tasks()->save($tasks);
 
         $tagModels = collect($tags)->map(function($tag) use ($user) {
-            return factory(Tag::class)->create(['name'=> $tag, 'user_id'=>$user->id]);
+            return factory(Tag::class)->create([
+                'name'=> $tag,
+                'user_id'=>$user->id
+            ]);
         });
 
         $tasks->each(function($task) use ($tagModels) {
