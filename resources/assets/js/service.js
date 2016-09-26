@@ -74,7 +74,7 @@ export let service = {
     // Deletes a existing task from the DB
     deleteTask: function(task, callback) {
         repo.deleteTask(task,  function (response) {
-            store.refreshSidebarData();
+            service.refreshSidebarData();
             callback(response);
         });
     },
