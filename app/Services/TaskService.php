@@ -108,6 +108,20 @@ class TaskService
      *
      * @return mixed
      */
+    public function getInbox($withCompleted = false)
+    {
+        return $this->task
+            ->whereNull('project_id')
+            ->taskList($withCompleted)
+            ->get();
+    }
+
+
+    /**
+     * @param bool $withCompleted
+     *
+     * @return mixed
+     */
     public function getTasksDueToday($withCompleted = false)
     {
         return $this->task

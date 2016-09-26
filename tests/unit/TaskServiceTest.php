@@ -77,6 +77,26 @@ class TaskServiceTest extends TestCase
     }
 
     /**
+     * Service retrieves tasks in the inbox
+     *
+     * @test
+     */
+    public function it_retrieves_tasks_in_the_inbox()
+    {
+        $tasks = $this->generateUserTasks($this->user, 2);
+
+        $inboxTasks = $this->taskService->getInbox();
+        $this->assertCount(2, $inboxTasks);
+        $titles = $inboxTasks->pluck('title')->all();
+
+        $this->assertArrayHasKey('project', $inboxTasks->first()->toArray());
+        $this->assertArrayHasKey('tags', $inboxTasks->first()->toArray());
+        $this->assertTrue(in_array($tasks[0]->title, $titles));
+        $this->assertTrue(in_array($tasks[1]->title, $titles));
+
+    }
+
+    /**
      * Service retrieves all tasks due today
      *
      * @test

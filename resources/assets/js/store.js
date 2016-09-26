@@ -3,6 +3,9 @@ export let store = {
     state: {
         projects: [],
         contexts: [],
+        inbox: {
+            tasks: []
+        },
         scheduledTaskCounts: {},
         previousRoute: {},
         defaultRoute: {

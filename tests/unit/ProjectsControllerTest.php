@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectsController;
+use App\Project;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -29,15 +30,17 @@ class ProjectsControllerTest extends TestCase
 
     /**
      * @test
+     * @group current
      */
     public function testShow()
     {
-        $this->service->shouldReceive('findById')->with(1)->andReturn('project');
+        $mProject = m::mock('App\Project');
+        $mProject->shouldReceive('toArray')->once()->andReturn(['project']);
         $controller = new ProjectsController;
-        $response = $controller->show(1, $this->service);
+        $response = $controller->show($mProject);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals('project', $response->getData());
+        $this->assertInternalType('array', $response->getData());
     }
 
     /**

@@ -15,6 +15,7 @@ export let service = {
         this.refreshSidebarData();
     },
     refreshSidebarData: function() {
+        this.fetchInbox();
         this.fetchProjects();
         this.fetchContexts();
         this.fetchScheduledTaskCounts();
@@ -37,6 +38,14 @@ export let service = {
         repo.fetchTask(taskId,  function (response) {
             store.state.task = response;
             callback(response);
+        });
+    },
+
+    // Fetches tasks and task count not assigned to any project from the repository
+    // and stores the result in the global state object
+    fetchInbox: function() {
+        repo.fetchInbox(function (response) {
+            store.state.inbox = response;
         });
     },
 

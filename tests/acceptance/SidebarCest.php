@@ -15,6 +15,36 @@ class SidebarCest
     }
 
     // tests
+
+    public function it_displays_links_to_inbox(AcceptanceTester $I)
+    {
+        // given I have 2 active projects and 1 inactive project
+        $I->wantToTest('I can see links to the inbox in sidebar');
+        $I->am('Registered User');
+
+        // when I am at the webapp home page
+        $I->loginAsARegisteredUser();
+
+        // then I should only see links to each active project
+        $I->waitForText('Inbox',4, 'span.inbox-link');
+    }
+
+    public function it_displays_open_task_counts_for_the_inbox(AcceptanceTester $I)
+    {
+        // given I have 3 open tasks, 2 of which are not assigned to any project
+        $I->wantToTest('I can see task counts for the inbox');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $tasks = $I->haveTasks($user, 2);
+
+        // when I am at the webapp home page
+        $I->login($user->email);
+
+        // then I should see open task counts next to each active project
+        $I->waitForText('Inbox',4, 'span.inbox-link');
+        $I->waitForText(2, 4,'#task-count-inbox');
+    }
+
     public function it_displays_links_to_all_active_projects(AcceptanceTester $I)
     {
         // given I have 2 active projects and 1 inactive project
@@ -31,6 +61,7 @@ class SidebarCest
         $I->see($projects[1]->name, 'a.project-link');
         $I->dontSee($projects[2]->name. 'a.project-link');
     }
+
 
     public function it_displays_open_task_counts_for_each_projects(AcceptanceTester $I)
     {

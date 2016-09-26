@@ -16,14 +16,13 @@ class ProjectsController extends Controller
 {
 
     /**
-     * @param             $id
-     * @param ProjectService $projectService
+     * @param Project $project
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id, ProjectService $projectService)
+    public function show(Project $project)
     {
-        return response()->json($projectService->findById($id));
+        return response()->json($project);
     }
 
 

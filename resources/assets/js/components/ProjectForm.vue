@@ -109,7 +109,7 @@
                 }
             },
             goToProjectTasks: function(newProject) {
-                this.$route.router.go({name: 'projects.show', params: {id: newProject.id}});
+                this.$route.router.go({name: 'projects.show', params: {id: newProject.slug}});
             },
             cancel: function() {
                 this.resetProjectForm();

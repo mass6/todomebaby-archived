@@ -61,13 +61,11 @@ class ProjectFormCest
 
         // Verify changes
         $I->waitForText('Updated Name', 4, '.project-link' );
-        $I->click('Updated Name');
-        $I->waitForElement('span.project-edit',4);
-        $I->click('span.project-edit');
-        $I->waitForText('Edit Project', 4);
-        $I->seeInField('Name', 'Updated Name');
-        $I->seeInField('Description', 'New Description');
-        $I->seeInField('Due Date', Carbon::today()->toDateString());
+        $I->seeRecord('projects', [
+            'name' => 'Updated Name',
+            'description' => 'New Description',
+            'due_date' => Carbon::today()->toDateString(),
+        ]);
     }
 
 

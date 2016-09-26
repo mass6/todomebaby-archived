@@ -24,6 +24,13 @@ export let repo = {
         });
     },
 
+    // Fetches tasks and task count not assigned to any project
+    fetchInbox: function(callback) {
+        Vue.http.get('/tasklists/inbox').then(function (response) {
+            callback(response.json());
+        });
+    },
+
     // Fetches counts for each scheduled task list (Today, Next Week, etc.)
     // and stores the result it in global state object
     fetchScheduledTaskCounts: function(callback) {
@@ -83,14 +90,14 @@ export let repo = {
 
     // Updates an existing project to the DB
     updateProject: function(project, callback) {
-        Vue.http.patch('/projects/' + project.id, project).then(function (response) {
+        Vue.http.patch('/projects/' + project.slug, project).then(function (response) {
             callback(response.json());
         });
     },
 
     // Deletes a project from the DB
     deleteProject: function(project, callback) {
-        Vue.http.delete('/projects/' + project.id).then(function (response) {
+        Vue.http.delete('/projects/' + project.slug).then(function (response) {
             callback(response.json());
         });
     },

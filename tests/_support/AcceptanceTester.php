@@ -70,11 +70,16 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function haveProjects($user, $amount = 3)
     {
-        return factory(Project::class, $amount)
-            ->make()
-            ->each(function ($p) use ($user) {
-                $user->projects()->save($p);
-            });
+        $projects = factory(Project::class, $amount)->make();
+
+        if ($amount === 1) {
+            $user->projects()->save($projects);
+            return $projects;
+        }
+
+        return $projects->each(function ($p) use ($user) {
+            $user->projects()->save($p);
+        });
 
     }
 
