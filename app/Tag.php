@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Libraries\Slugger;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -39,6 +40,15 @@ class Tag extends Model
         'is_context' => 'boolean',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically saved slugged version of the name attribute.
+        static::saving(function ($model) {
+            $model->slug = Slugger::slug($model->name);
+        });
+    }
 
     /**
      * Tag can belong to many tasks

@@ -11,6 +11,7 @@
 |
 */
 
+use App\Libraries\Slugger;
 use Carbon\Carbon;
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
@@ -41,9 +42,9 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
     ];
 });
 $factory->define(App\Tag::class, function (Faker\Generator $faker) {
-
+    $name = $faker->word;
     return [
-        'name' => $faker->word,
-        'is_context' => false,
+        'name' => $name,
+        'is_context' => substr(trim($name), 0, 1) == '@' ?: false,
     ];
 });

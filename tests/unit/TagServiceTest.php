@@ -1,5 +1,6 @@
 <?php
 
+use App\Libraries\Slugger;
 use App\Services\TagService;
 use App\Tag;
 use App\Task;
@@ -66,21 +67,9 @@ class TagServiceTest extends TestCase
      */
     public function testGetTagSuggestions()
     {
-        Tag::create([
-            'name' => '@foo',
-            'user_id' => $this->user->id,
-            'is_context' => true,
-        ]);
-        Tag::create([
-            'name' => 'bar',
-            'user_id' => $this->user->id,
-            'is_context' => false,
-        ]);
-        Tag::create([
-            'name' => 'baz',
-            'user_id' => $this->user->id,
-            'is_context' => false,
-        ]);
+        factory(Tag::class)->create(['user_id' => $this->user->id, 'name' => '@foo']);
+        factory(Tag::class)->create(['user_id' => $this->user->id, 'name' => 'bar']);
+        factory(Tag::class)->create(['user_id' => $this->user->id, 'name' => 'baz']);
 
         $contextSuggestions = $this->tagService->getSuggestions('@f');
         $tagSuggestions = $this->tagService->getSuggestions('ba');
@@ -112,10 +101,9 @@ class TagServiceTest extends TestCase
         $amount > 1 ? $user->tasks()->saveMany($tasks) : $user->tasks()->save($tasks);
 
         $tagModels = collect($tags)->map(function($tag) use ($user) {
-            return Tag::firstOrCreate([
+            return factory(Tag::class)->create([
                 'name' => $tag,
                 'user_id' => $user->id,
-                'is_context' => substr($tag,0,1) === '@' ?: false,
             ]);
         });
 
