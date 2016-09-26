@@ -40,6 +40,16 @@ class Tag extends Model
         'is_context' => 'boolean',
     ];
 
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     protected static function boot()
     {
         parent::boot();

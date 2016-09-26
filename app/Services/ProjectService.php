@@ -64,6 +64,16 @@ class ProjectService
     }
 
     /**
+     * @param $slug
+     *
+     * @return mixed
+     */
+    public function findBySlug($slug)
+    {
+        return Project::where('slug', $slug)->first();
+    }
+
+    /**
      * @return mixed
      */
     public function getActiveProjects()

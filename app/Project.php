@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Libraries\Slugger;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,8 +27,30 @@ class Project extends Model
     /**
      * @var array
      */
-    protected $fillable = [ 'user_id', 'name', 'description', 'due_date', 'active' ];
+    protected $fillable = [ 'user_id', 'name', 'slug', 'description', 'due_date', 'active' ];
 
+    /**
+     *
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically saved slugged version of the name attribute.
+        static::saving(function ($model) {
+            $model->slug = Slugger::slug($model->name);
+        });
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     /**
      * Returns all tasks associated with current project
