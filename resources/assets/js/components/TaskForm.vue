@@ -231,12 +231,12 @@
                     this.expandForm();
                     window.scrollTo(0, 0);
                 }
-                this.$nextTick(function(){
-                    this.initiliazePlugins();
-                });
             },
             expandForm: function() {
                 this.editMode = true;
+                this.$nextTick(function(){
+                    this.initiliazePlugins();
+                });
             },
             cancelForm: function() {
                 this.deactivateForm();
