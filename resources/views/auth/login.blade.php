@@ -117,6 +117,7 @@
 </div>
 <!-- /page container -->
 
+@include('analytics')
 <!-- Core JS files -->
 <script type="text/javascript" src="/js/core/libraries/jquery.min.js"></script>
 <!-- /core JS files -->

@@ -71,6 +71,8 @@
 
     @yield('content')
 
+    @include('analytics')
+
     <!-- Scripts -->
     <script src="/js/app.js"></script>
 </body>

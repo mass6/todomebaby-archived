@@ -136,5 +136,7 @@
 </div>
 <!-- /page container -->
 
+@include('analytics')
+
 </body>
 </html>
