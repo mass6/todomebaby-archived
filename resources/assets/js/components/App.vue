@@ -13,6 +13,14 @@
         },
         ready: function(){
             service.initialize();
+            this.health();
+        },
+        methods: {
+            health: function () {
+                window.setInterval(function () {
+                    Vue.http.get('/health');
+                }, 15000);
+            }
         },
         events: {
             listChanged: function() {

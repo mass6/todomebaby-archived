@@ -28,7 +28,11 @@ require('vue-resource');
 Vue.http.interceptors.push((request, next) => {
     request.headers['X-CSRF-TOKEN'] = Laravel.csrfToken;
 
-    next();
+    next((response) => {
+        if (response.status == 401) {
+            window.location.href = "/login";
+        }
+    });
 });
 
 /**

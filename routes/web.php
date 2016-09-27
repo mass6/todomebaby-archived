@@ -37,6 +37,10 @@ Route::get('/web/{vue?}', ['middleware' => 'auth', function () {
 }])->where('vue', '[\/\w\.-]*');
 
 Route::group(['middleware' => ['auth','web']], function () {
+    // Keep session alive, called by client every 15 seconds
+    Route::get('/health', function() {
+        return response(null, 200);
+    });
 
     Route::post('tasks', 'TasksController@store');
     Route::get('tasks/scheduled', 'TasksController@getScheduledTaskCounts');
