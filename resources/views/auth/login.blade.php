@@ -13,6 +13,7 @@
     <link href="/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/theme.css" rel="stylesheet" type="text/css">
+    <link href="/css/adminplus/custom.css" rel="stylesheet" type="text/css">
     <!-- /global stylesheets -->
 
 </head>
@@ -22,7 +23,7 @@
 <!-- Main navbar -->
 <div class="navbar navbar-inverse">
     <div class="navbar-header">
-        <a class="navbar-brand" href="index.html"><img src="/images/logo.png" alt=""></a>
+        <a class="navbar-brand" href="index.html"><img src="/images/tdm-nav-logo.png" alt="">TodoMeBaby</a>
 
         <ul class="nav navbar-nav pull-right visible-xs-block">
             <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
@@ -59,7 +60,7 @@
                     {!! csrf_field() !!}
                     <div class="panel panel-body login-form">
                         <div class="text-center">
-                            <div class="border-slate-300 text-slate-300"><img src="images/check-circle-outlined.png" width="100"></div>
+                            <div class="border-slate-300 text-slate-300"><img src="images/tdm-logo.png" width="100"></div>
                             <h5 class="content-group">Login to your account <small class="display-block">Enter your credentials below</small></h5>
                         </div>
 
@@ -88,7 +89,7 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block">Sign in <i class="icon-circle-right2 position-right"></i></button>
+                            <button type="submit" class="btn bg-danger-700 btn-block">Sign in <i class="icon-circle-right2 position-right"></i></button>
                         </div>
 
                         <div class="text-center">

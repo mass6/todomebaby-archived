@@ -1,0 +1,305 @@
+body {
+    background-color: #fafafa;
+    font-family: Raleway,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.bg-primary {
+    background-color: #d80000 !important;
+}
+
+/* Auth Pages */
+.navbar.navbar-inverse {
+    background-color: #D80000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+.navbar-inverse .navbar-brand {
+    font-size: 16px;
+    font-weight: 500;
+}
+.navbar-brand > img {
+    display:inline-block;
+    margin-right: 5px;
+    margin-top: -3px;
+}
+.navbar {
+    height: 46px;
+    line-height: 46px;
+}
+.ls-top-navbar-xs-up {
+    top: 46px !important;
+}
+
+div#main-content {
+    background-color: #ffffff;
+
+}
+
+h3.list-heading {
+    margin-bottom: 20px;
+    font-size: 1.45rem;
+    color: #ba0000;
+}
+
+
+.sidebar.sidebar-left {
+    left: 50px;
+}
+.si-si-3 {
+    width: 280px;
+}
+
+@media (min-width: 768px) {
+    .si-l3-md-up > .layout-content, .si-l3-md-up >
+    .st-container > .st-pusher > .st-content > .layout-content {
+        margin-left: 340px; }
+}
+
+
+.layout-content > .container-fluid {
+    max-width: 680px;
+    /* background-color: #fff; */
+}
+.container-fluid {
+    margin-left: 25px;
+    padding-left: 0;
+}
+
+
+
+
+.sidebar-submenu {
+    display: block;
+    padding-left: 24px;
+}
+
+.sidebar-light .sidebar-menu-button:not(:only-child):before {
+    color: rgba(0, 0, 0, 0.24);
+}
+.sidebar-menu-button:not(:only-child):before {
+    content: none;
+    display: none;
+}
+
+.sidebar-divider {
+    border-bottom: 1px solid #ddd;
+    margin: 2px 18px;
+}
+ul.nav.nav-pills {
+    margin-left: 18px;
+    margin-top: 5px;
+}
+.card-block.tab-content {
+    padding: .5rem;
+}
+.nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover, .nav-pills .nav-item.open .nav-link, .nav-pills .nav-item.open .nav-link:focus, .nav-pills .nav-item.open .nav-link:hover {
+    color: #EF5350;
+    cursor: default;
+    background:none;
+    border-bottom: 1px solid #EF5350;
+}
+.nav-pills .nav-item {
+    margin-right: 8px;
+}
+.nav-pills .nav-link {
+    padding: 0.5em .1rem .1rem;
+    border-radius: 0;
+}
+a.project-link.sidebar-menu-button.new-project {
+    color: #ef413e;
+    font-weight: 300;
+}
+.submenu-item span.sidebar-menu-label {
+    margin-top: 6px;
+}
+
+.card .card-title {
+    font-size: 14px;
+}
+.card-title a {
+    color: #745c5c;
+}
+.radio-media-left {
+    vertical-align: top;
+    padding-right: 0;
+    padding-top: .18rem;
+}
+
+.media-tags {
+    padding-left: 40px;
+}
+.list-group-item {
+    padding: .5rem .2rem .5rem .6rem;
+}
+.task-flags {
+    min-width: 112px;
+    text-align: right;
+}
+.text-right {
+    text-align: right;
+    float: right;
+}
+.task-flags .project-link {
+    padding-right: .7rem;
+}
+.radio-icon {
+    width: 24px;
+    font-size: 16px;
+}
+
+.task-date {
+    font-size: .7rem;
+    color: #6a6a6a;
+}
+
+.next-flag {
+    font-size: 1.5rem;
+    text-align: center;
+    color:#ffda0b;
+}
+.next-flag-empty {
+    color:#c7c7c7;
+}
+.context-tags {
+    color: #c40a2e;
+}
+.navbar-brand {
+    font-size: 1.3rem;
+    font-weight: 300;
+}
+.navbar-brand .logo {
+    height:32px;
+}
+
+
+.input-select {
+    height: 44px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input[type="text"].form-control {
+        line-height: 2.25rem; }
+
+    input[type="text"].input-sm,
+    .input-group-sm input[type="text"].form-control {
+        line-height: 1.8625rem; }
+
+    input[type="text"].input-lg,
+    .input-group-lg input[type="text"].form-control {
+        line-height: 3.16667rem; }
+}
+ul.list-unstyled li {
+    list-style-type: none;
+}
+
+
+
+
+
+.form-control {
+    width: 100%;
+}
+
+
+.material-icons.radio-complete {
+    font-size: 60px;
+}
+.input-group-addon.addon-sm {
+    padding: 5px;
+}
+
+.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom,
+.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-right.datepicker-orient-bottom,
+.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-top,
+.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-right.datepicker-orient-top {
+    background-color: #fff;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    font-size: .8rem;
+}
+
+.datepicker-days {
+    min-height: 270px;
+}
+
+.datepicker table tr th {
+    font-weight: 300;
+}
+.datepicker .datepicker-switch {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.datepicker .datepicker-days tfoot tr {
+
+}
+
+.datepicker .datepicker-days tfoot tr .today {
+    position: absolute;
+    left: 90px;
+    font-weight: 500;
+    bottom: 5px;
+}
+
+.datepicker .datepicker-days tfoot tr .clear {
+    position: absolute;
+    left: 150px;
+    font-weight: 500;
+    bottom: 5px;
+}
+
+/* Priority Dropdown */
+.priority-flag {
+    font-size: 1rem;
+    text-align: center
+}
+.dropdown-menu.priority-dropdown-menu {
+    top: 30px;
+    right: 12px;
+
+}
+.priority-dropdown-menu .dropdown-item.active, .priority-dropdown-menu .dropdown-item.active:focus, .priority-dropdown-menu .dropdown-item.active:hover {
+    background-color: #eaeaea;
+    color: #000000;
+}
+
+
+/* Button Grey */
+
+.btn-grey-outline {
+    color: #777777;
+    background-image: none;
+    background-color: transparent;
+    border-color: #777777; }
+.btn-grey-outline:focus, .btn-grey-outline.focus, .btn-grey-outline:active, .btn-grey-outline.active,
+.open > .btn-grey-outline.dropdown-toggle {
+    color: #fff;
+    background-color: #777777;
+    border-color: #777777; }
+.btn-grey-outline:hover {
+    color: #fff;
+    background-color: #777777;
+    border-color: #777777; }
+.btn-grey-outline.disabled:focus, .btn-grey-outline.disabled.focus, .btn-grey-outline:disabled:focus, .btn-grey-outline:disabled.focus {
+    border-color: #bababa; }
+.btn-grey-outline.disabled:hover, .btn-grey-outline:disabled:hover {
+    border-color: #bababa; }
+
+
+#toggle-show-completed {
+    margin: 5px 0;
+}
+
+.material-icons.md-16 {
+    font-size: 16px;
+}
+.material-icons, .md-icon-text {
+    vertical-align: middle; }
+
+ /* Helpers */
+
+ .truncated {
+     display: -webkit-box;
+     -webkit-line-clamp: 1;
+     -webkit-box-orient: vertical;
+ }

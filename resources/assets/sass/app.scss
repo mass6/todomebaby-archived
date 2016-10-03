@@ -1,9 +1,11 @@
-
-// Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // Variables
-@import "variables";
+@import './variables';
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// AdminPlus Lite
+@import 'adminplus/sass/style';
+
+// Bootstrap Layout
+@import 'bootstrap-layout/src/sass/style';
+
+// Bootstrap Layout Scrollable
+@import 'bootstrap-layout-scrollable/src/sass/style';

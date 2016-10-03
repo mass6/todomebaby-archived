@@ -1,111 +1,47 @@
 <template>
-    <div class="sidebar sidebar-main bg-blue-800">
-        <div class="sidebar-content">
 
-            <!-- Main navigation -->
-            <div class="sidebar-category sidebar-category-visible">
-                <div class="category-content no-padding">
-                    <ul class="navigation navigation-main navigation-accordion">
 
-                        <li class="">
-                            <a id="inbox" v-link="{ name: 'tasks.list', params: { id: 'inbox' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected"><i class="icon-inbox-alt"></i> <span class="inbox-link">Inbox</span><span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="task-counts badge badge-primary bg-blue-tdm border-blue-tdm">{{ sharedState.inbox.tasks.length }}</span></a>
-                            <a id="next" v-link="{ name: 'tasks.list', params: { id: 'next' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected"><i class="icon-star-full2"></i> <span class="next-link">Next</span><span v-if="sharedState.next.tasks.length" id="task-count-next" class="task-counts badge badge-primary bg-blue-tdm border-blue-tdm">{{ sharedState.next.tasks.length }}</span></a>
-                        </li>
+    <div class="sidebar sidebar-left si-si-3 sidebar-visible-md-up sidebar-light ls-top-navbar-xs-up sidebar-transparent-md" id="sidebarLeft" data-scrollable>
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a id="inbox" v-link="{ name: 'tasks.list', params: { id: 'inbox' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected" class="sidebar-menu-button">
+                    <i class="sidebar-menu-icon material-icons">home</i> Inbox
+                    <span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="sidebar-menu-label label label-primary">{{ sharedState.inbox.tasks.length }}</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a id="next" v-link="{ name: 'tasks.list', params: { id: 'next' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected" class="sidebar-menu-button">
+                    <i class="sidebar-menu-icon material-icons">star</i> Next
+                    <span v-if="sharedState.next.tasks.length" id="task-count-next" class="sidebar-menu-label label label-primary">{{ sharedState.next.tasks.length }}</span>
+                </a>
+            </li>
 
-                        <!-- Scheduled Tasks -->
-                        <scheduled></scheduled>
-                        <!-- /scheduled tasks -->
+            <scheduled></scheduled>
 
-                        <!-- Projects -->
-                        <projects></projects>
-                        <!-- /projects -->
+            <projects></projects>
 
-                        <!-- Contexts -->
-                        <contexts></contexts>
-                        <!-- /contexts -->
-
-                    </ul>
-                </div>
-            </div>
-            <!-- /main navigation -->
-
-        </div>
+        </ul>
     </div>
+
+
 </template>
 <style>
-    .navigation {
-        padding-top:0;
+    .sidebar-light .sidebar-menu-icon {
+        color: rgba(38, 38, 38, 0.68);
     }
-    .navigation .navigation-header {
-        color:#ffffff;
-        font-size:14px;
-        font-weight: 600;
+    .sidebar-light .sidebar-menu-button {
+        color: rgba(0, 0, 0, 0.76);
     }
-    .navigation > li > ul li:first-child {
-         padding-top: 0;
-    }
-    .navigation > li > a {
-        color: #ffffff;
-        font-weight: 300;
-        background-color: #066fae;
-    }
-    .navigation > li ul li a {
-        line-height: 12px;
-        min-height: 0;
-        padding-left: 36px;
-    }
-    .navigation li a:focus {
-        background-color: #4CAF50;
-    }
-    .navigation-main > li > a:focus {
-        background-color: #066fae;
-    }
-    .v-link-active { background-color: #4CAF50;}
-    .navigation > li > a:hover {
-        cursor: default;
-    }
-    .navigation > li ul {
-        background-color: #0277BD;
-    }
-    span.period-link, a.project-link, a.context-link {
-        font-size: 12px;
-        font-weight: 300;
-        color: #ffffff !important;
-    }
-    span.task-counts {
-        margin-top: -3px;
-    }
-    a.add-project {
-        margin-top: -32px;
-        margin-right: 6px;
-    }
-    @media (min-width: 769px) {
-        /* Override */
-        .sidebar-separate .sidebar-category {
-            background-color: #0277BD;  /* Override */
-            border-radius: 3px;
-            margin-bottom: 20px;
-        }
-        /* Override */
-        .sidebar-xs .sidebar-main .navigation > li > a > span {
-            background-color: #066fae; /* Override */
-            border: 1px solid #066fae; /* Override */
-        }
-        /* Override */
-        .sidebar-xs .sidebar-main .navigation > nli:hover > a > spa {
-            background-color: #055D92; /* Override */
-        }
-        /* Override */
-        .sidebar-xs .sidebar-main .navigation > li > ul {
-            background-color: #0277BD; /* Override */
-        }
+    a.project-link.sidebar-menu-button, a.context-link.sidebar-menu-button {
+        line-height: 30px;
+        overflow: hidden;
+        padding-right: 35px;
     }
 </style>
 <script>
     import { store } from '../store'
     import Scheduled from './Scheduled.vue'
     import Projects from './Projects.vue'
-    import Contexts from './Contexts.vue'
     export default{
         data(){
             return{
@@ -114,8 +50,7 @@
         },
         components:{
             'scheduled':Scheduled,
-            'projects':Projects,
-            'contexts':Contexts
+            'projects':Projects
         },
         methods: {
             hideMobileSidebar: function() {

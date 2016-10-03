@@ -1,107 +1,144 @@
 <template>
 
-    <!-- Simple panel -->
-    <div class="panel panel-flat app-panel">
 
-        <div class="panel-heading">
-            <h2 class="panel-title list-heading"><span v-show="showListName">{{ taskListPrefix }}{{ taskList.listName }}<small v-if="taskList.listType == 'project'">
-                <span class="project-edit clickable label label-default" @click.stop.prevent="editProject">edit</span></small></span>&nbsp;</h2>
-        </div>
 
-        <div class="panel-body">
-
-            <taskform :task="selectedTask" v-bind:task-list="taskList"></taskform>
-            <br/>
-
-            <section id="task-list-container" v-show="showListName">
-
-                <!--  Open Tasks List -->
-                <div id="open-tasks" class="table-responsive">
-                    <table class="table tasks-list tasks-list-open table-lg" v-show="displayTaskList">
-                        <thead v-show="!taskListEmpty">
-                            <tr class="border-double">
-                                <th colspan="2">Task</th>
-                                <th>Priority</th>
-                                <th>Due Date</th>
-                                <th>Next</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-if="taskListEmpty"><td>Way to go!  You have no open tasks in this list.</td></tr>
-                        <tr class="task-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete">
-                            <!-- Complete Box -->
-                            <td class="check-complete" id="task-complete-{{ task.id }}"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)"></i></td>
-                            <!-- /complete box -->
-
-                            <!-- Task Title -->
-                            <td class="task-title" id="task-title-selection-{{ task.id }}">
-                                <div>
-                                    <a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }} </a>
-                                    <span v-if="task.project" class="project-link" data-project="{{task.project_id}}" @click="getTasksByProject(task.project)">({{ task.project.name}})</span><br/>
-                                    <!-- Tags Block -->
-                                    <div class="tag-block">
-                                        <a href="javascript:void(0)" v-for="tag in task.tags" class="tag-selectable text-teal-700" @click.stop.prevent="getTasksByTag(tag)"> {{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </a>
-                                    </div>
-                                    <!-- /tags block -->
-                                </div>
-                            </td>
-                            <!-- / task title-->
-
-                            <td>
-                                <div class="btn-group">
-                                    <a href="#" class="label dropdown-toggle"
-                                       :class="{ 'label-danger': task.priority == 'high', 'label-primary': task.priority == 'medium', 'label-success': task.priority == 'low' }"
-                                       data-toggle="dropdown">
-                                        {{ task.priority ? task.priority.toUpperCase(): ''}}
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li :class="{ 'active': task.priority == 'high'}"><a href="#" @click.prevent="setPriority(task, 'high')"><span class="status-mark position-left bg-danger"></span> High</a></li>
-                                        <li :class="{ 'active': task.priority == 'medium'}"><a href="#" @click.prevent="setPriority(task, 'medium')"><span class="status-mark position-left bg-primary"></span> Medium</a></li>
-                                        <li :class="{ 'active': task.priority == 'low'}"><a href="#" @click.prevent="setPriority(task, 'low')"><span class="status-mark position-left bg-success"></span> Low</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-group input-group-transparent bordered-date">
-                                    <div class="input-group-addon"><i class="icon-calendar3 position-left"></i></div>
-                                    <input v-model="task.due_date" id="task-{{task.id}}-due-date" data-task="{{task | json}}" type="text" class="form-control datepicker" v-bind:class="{ 'text-danger': isPastDue(task) }">
-                                </div>
-                            </td>
-                            <td><i class="task-next" :class="{ 'icon-star-empty3': task.next == false, 'icon-star-full2': task.next == true}" @click="toggleNext(task)"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <br/>
-
-                <button class="btn btn-xs bg-blue-700 text-white button-complete" @click="toggleCompletedList">{{ !withCompletedTasks ? 'Show Completed Tasks' : 'Hide Completed Tasks' }}</button>
-
-                <!--  Completed Tasks List -->
-                <div id="completed-tasks" class="table-responsive">
-                    <table class="table tasks-list tasks-list-complete table-xs" v-show="withCompletedTasks">
-                        <tbody>
-                        <tr v-show="displayCompletedTasks && ! hasCompletedTasks"><td>No completed tasks in this list</td></tr>
-                        <tr class="task-item row-complete" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-show="task.complete">
-                            <!-- Complete Box -->
-                            <td class="check-complete" id="task-complete-{{ task.id }}-completed"><i class="blue" :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}" id="toggle-complete-{{ task.id }}-completed" @click="toggleComplete(task)"></i></td>
-                            <!-- /complete box -->
-
-                            <!-- Task Title -->
-                            <td class="task-title" id="task-title-selection-{{ task.id }}-completed">
-                                <a href="javascript:void(0)" class="task-selectable task-title line-through" @click="selectTask(task)">{{ task.title }} </a>
-                                <span v-if="task.project" class="project-link" >({{ task.project.name}})</span><br/>
-                                <p class="completed-at">Completed {{ completedAt(task.completed_at) }}</p>
-                            </td>
-                            <!-- / task title-->
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="list-heading"><span v-show="showListName">{{ taskListPrefix }}{{ service.truncateText(taskList.listName, 40) }}</span><small v-if="taskList.listType == 'project'">
+                <span class="project-edit clickable label label-primary-outline" @click.stop.prevent="editProject"  v-show="showListName">edit</span></small>&nbsp;</h3>
         </div>
     </div>
+
+    <taskform :task="selectedTask" v-bind:task-list="taskList"></taskform>
+
+    <!-- Task List -->
+
+    <div class="row">
+
+        <div class="card m-x-2 task-list">
+            <ul class="list-group list-group-fit">
+
+
+                <li v-for="task in taskList.tasks" track-by="id" class="list-group-item" id="task-row-{{ task.id }}" :class="{ 'row-active': task.id == selectedTask.id, 'row-complete': task.complete == true}" v-if="!task.complete">
+                    <div class="media">
+                        <div id="task-complete-{{ task.id }}" class="radio-media-left media-left media-middle">
+                            <i class="radio-icon material-icons md-18 clickable" id="toggle-complete-{{ task.id }}" @click="toggleComplete(task)">
+                                {{ task.complete == false ? 'radio_button_unchecked' : 'radio_button_checked' }}
+                            </i>
+                        </div>
+                        <div id="task-title-selection-{{ task.id }}" class="media-body media-middle">
+                            <h4 class="card-title m-b-0"><a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }}</a></h4>
+                            <small><span v-for="tag in task.tags" class="clickable" v-bind:class="{ 'text-danger': tag.is_context, 'text-muted': ! tag.is_context }" @click.stop.prevent="getTasksByTag(tag)">{{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </span></small>
+                        </div>
+                        <div class="media-right media-middle task-flags">
+
+                            <!-- Due Date-->
+                            <span class="task-date clickable datepicker" id="task-{{task.id}}-due-date" data-task="{{task.id}}" >
+                                <span v-if="task.due_date" v-bind:class="{ 'text-danger': isPastDue(task) }">{{ task.due_date | shortDate }}</span>
+                                <i v-else class="material-icons md-16 text-muted">
+                                    event
+                                </i>
+                            </span>
+                            <!-- /due date-->
+
+                            <!-- Priority -->
+                            <a class="nav-link active p-a-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false">
+                                <i class="tasklist-icon material-icons priority-flag" v-bind:class="priorityClass(task)">network_cell</i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-list priority-dropdown-menu" aria-labelledby="Preview">
+                                <a class="dropdown-item" v-bind:class="{ 'active' : task.priority == 'low'}" href="Javascript:void (0)" @click.prevent="setPriority(task, 'low')"><i class="material-icons priority-flag text-success">network_cell</i> <span class="icon-text">Low</span></a>
+                                <a class="dropdown-item" v-bind:class="{ 'active' : task.priority == 'medium'}" href="Javascript:void (0)" @click.prevent="setPriority(task, 'medium')"><i class="material-icons priority-flag text-warning">network_cell</i> <span class="icon-text">Medium</span></a>
+                                <a class="dropdown-item" v-bind:class="{ 'active' : task.priority == 'high'}" href="Javascript:void (0)" @click.prevent="setPriority(task, 'high')"><i class="material-icons priority-flag text-danger">network_cell</i> <span class="icon-text">High</span></a>
+                            </div>
+                            <!-- /priority -->
+
+                            <!-- Next -->
+                            <i class="tasklist-icon material-icons text-danger clickable" @click="toggleNext(task)">{{ task.next ? 'star' : 'star_border' }}</i>
+                            <!-- /next-->
+
+                            <div v-if="task.project" style="width:100px" class="text-muted text-right project-link" >
+                                <small data-project="{{task.project_id}}" class="truncated clickable" @click="getTasksByProject(task.project)">{{ task.project.name}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li v-if="taskListEmpty" class="list-group-item">Way to go!  You have no open tasks in this list.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- / task list -->
+
+
+    <!-- Completed tasks -->
+
+
+
+    <div id="toggle-show-completed" class="row">
+        <div class="form-group col-md-12">
+            <button class="btn btn-sm" v-bind:class="showCompletedClass" @click="toggleCompletedList">
+                {{ !withCompletedTasks ? 'Show Completed Tasks' : 'Hide Completed Tasks' }}
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="card m-x-2 task-list task-list-completed" v-show="withCompletedTasks">
+        <ul class="list-group list-group-fit">
+            <li class="list-group-item" v-for="task in taskList.tasks" track-by="id" id="task-row-{{ task.id }}-completed" :class="{ 'row-active': task.id == selectedTask.id}" v-if="task.complete">
+                <div class="media">
+                    <div id="task-complete-{{ task.id }}-completed" class="radio-media-left media-left media-middle">
+                        <i class="radio-icon material-icons md-18 clickable text-muted" id="toggle-complete-{{ task.id }}-completed" @click="toggleComplete(task)">
+                            {{ task.complete == false ? 'radio_button_unchecked' : 'radio_button_checked' }}
+                        </i>
+                    </div>
+                    <div id="task-title-selection-{{ task.id }}-completed" class="media-body media-middle">
+                        <h4 class="card-title m-b-0"><a href="javascript:void(0)" class="text-muted task-selectable task-title" @click="selectTask(task)">{{ task.title }}</a></h4>
+                        <span class="completed-at">Completed {{ completedAt(task.completed_at) }}</span>
+                    </div>
+                    <div class="media-right media-middle task-flags">
+
+                        <!-- Due Date-->
+                        <span class="task-date clickable datepicker" id="task-{{task.id}}-due-date-completed" data-task="{{task.id}}" >
+                            <span v-if="task.due_date">{{ task.due_date | shortDate }}</span>
+                            <i v-else class="material-icons md-16 text-muted">
+                                event
+                            </i>
+                        </span>
+                        <!-- /due date-->
+
+                        <!-- Priority -->
+                        <a class="nav-link active p-a-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false">
+                            <i class="tasklist-icon material-icons priority-flag" v-bind:class="priorityClass(task)">network_cell</i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-list priority-dropdown-menu" aria-labelledby="Preview">
+                            <a class="dropdown-item" v-bind:class="{ 'active' : task.priority == 'low'}" href="Javascript:void (0)" @click.prevent="setPriority(task, 'low')"><i class="material-icons priority-flag text-success">network_cell</i> <span class="icon-text">Low</span></a>
+                            <a class="dropdown-item" v-bind:class="{ 'active' : task.priority == 'medium'}" href="Javascript:void (0)" @click.prevent="setPriority(task, 'medium')"><i class="material-icons priority-flag text-warning">network_cell</i> <span class="icon-text">Medium</span></a>
+                            <a class="dropdown-item" v-bind:class="{ 'active' : task.priority == 'high'}" href="Javascript:void (0)" @click.prevent="setPriority(task, 'high')"><i class="material-icons priority-flag text-danger">network_cell</i> <span class="icon-text">High</span></a>
+                        </div>
+                        <!-- /priority -->
+
+                        <!-- Next -->
+                        <i class="tasklist-icon material-icons next-flag clickable" @click="toggleNext(task)">{{ task.next ? 'star' : 'star_border' }}</i>
+                        <!-- /next-->
+
+                        <div v-if="task.project" style="width:100px" class="text-muted text-right project-link" >
+                            <small data-project="{{task.project_id}}" class="truncated clickable" @click="getTasksByProject(task.project)">{{ task.project.name}}</small>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li v-show="displayCompletedTasks && ! hasCompletedTasks" class="list-group-item">No completed tasks in this list</li>
+        </ul>
+    </div>
+
+
+
+
+    <!-- /completed tasks -->
+
 
 </template>
 <style scoped>
@@ -166,12 +203,33 @@
         /*border:none;*/
         /*overflow-x: visible;*/
     /*}*/
+    .card.task-list.task-list-completed li.list-group-item {
+        background-color: #efebeb;
+        border-radius: 6px;
+    }
+    .card.task-list.task-list-completed li.list-group-item h4 {
+        text-decoration: line-through;
+    }
     .table-striped>tbody>tr.task-item, .table>tbody>tr.task-item {
         border-left: 6px solid white;
     }
-    .table-striped>tbody>tr.task-item.row-active, .table>tbody>tr.task-item.row-active {
-        background-color: #F9F9F9;
-        border-left: 6px solid #055D92;
+    .card.task-list, .card.task-list li {
+        border: none;
+        box-shadow: none;
+    }
+    .card.task-list li {
+        border-bottom: 1px solid #eceeef;
+        margin: 1px 0;
+    }
+    li.list-group-item.row-active {
+        border-left: 4px solid #ba0000;
+        margin-left: -4px;
+        background-color: #FDFAFA;
+    }
+    li.list-group-item.row-active {
+        border-left: 4px solid #ba0000;
+        margin-left: -4px;
+        background-color: #FDFAFA;
     }
     .button-complete {
         margin-bottom:10px;
@@ -194,6 +252,7 @@
     .completed-at {
         margin-top: 5px;
         font-style: italic;
+        font-size: .65rem;
     }
     .fade-transition {
         transition: opacity .5s ease;
@@ -207,6 +266,7 @@
         transition-delay: .25s;
     }
     .task-selectable.task-title {font-size:1.1em;color: #042a4a;}
+    a.task-selectable.task-title {text-decoration: none;}
     .task-selectable.task-title:hover {
         border-bottom: 1px dashed #427ef5;
         display: inline;
@@ -221,6 +281,26 @@
     span.project-link:hover {
         cursor: pointer;
     }
+    .tasklist-icon {
+        vertical-align: middle;
+        width: 18px;
+        font-size: 18px;
+        display: inline-block;
+        line-height: normal;
+        position: relative;
+    }
+    .clickable {
+        cursor: pointer;
+    }
+    .label-primary-outline {
+        background-color: #ffffff;
+        border: 1px solid #EF5350;
+        color: #EF5350;
+    }
+    .label-primary-outline[href]:focus, .label-primary-outline[href]:hover {
+        background-color: #EF5350;
+        color: #ffffff;
+    }
 </style>
 <script>
 
@@ -232,6 +312,7 @@
         data(){
             return {
                 sharedState: store.state,
+                service: service,
                 repo: repo,
                 taskList: {
                     listName: '',
@@ -264,6 +345,9 @@
                         return 'Due ';
                 if (this.taskList.listType == 'tag' && this.taskList.listName.charAt(0) !== '@')
                         return '#';
+            },
+            showCompletedClass: function() {
+                return this.withCompletedTasks == true ? 'btn-primary' : 'btn-primary-outline';
             }
         },
         components: {
@@ -338,14 +422,18 @@
             initializeDueDatePickers: function() {
                 var that = this;
                 $(".datepicker").datepicker({
-                    showOtherMonths: true,
-                    selectOtherMonths: true,
-                    dateFormat: "yy-mm-dd",
-                    onSelect: function (date, picker) {
-                        let task = JSON.parse(this.getAttribute('data-task'));
-                        task.due_date = date;
-                        that.updateTask(task);
-                    }
+                    format: "yyyy-mm-dd",
+                    todayHighlight: true,
+                    todayBtn: 'linked',
+                    clearBtn: true,
+                    calendarWeeks: true,
+                    weekStart: 1,
+                    autoclose: true
+                }).on('changeDate', function(e) {
+                    let taskId = this.getAttribute('data-task');
+                    let task = that.getTaskById(taskId);
+                    task.due_date = e.format('yyyy-mm-dd');
+                    that.updateTask(task);
                 });
             },
             selectTask: function(task) {
@@ -376,7 +464,7 @@
             updateTask: function (task) {
                 var that = this;
                 service.saveTask(task, function(){
-                    that.refreshTaskList();
+//                    that.refreshTaskList();
                 });
             },
             setListName: function(name) {
@@ -408,6 +496,20 @@
                 } else {
                     return timestamp;
                 }
+            },
+            priorityClass: function(task) {
+                let classes = {
+                    low: 'text-success',
+                    medium: 'text-warning',
+                    high: 'text-danger'
+                };
+                return classes[task.priority];
+            }
+        },
+        filters: {
+            shortDate: function(date) {
+                if (date == null) {return;}
+                return moment(date, "YYYY-MM-DD").format('DD MMM');
             }
         },
         events: {

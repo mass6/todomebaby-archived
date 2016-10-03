@@ -10,7 +10,9 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-
+Route::get('test', function () {
+    return view('adminplus');
+});
 //Route::get('/home', 'HomeController@index');
 Route::get('/', function () {
     return redirect('/web');
@@ -33,7 +35,7 @@ $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::get('/web/{vue?}', ['middleware' => 'auth', function () {
-    return view('webapp');
+    return view('taskmanager');
 }])->where('vue', '[\/\w\.-]*');
 
 Route::group(['middleware' => ['auth','web']], function () {

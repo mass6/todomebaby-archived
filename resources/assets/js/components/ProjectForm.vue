@@ -2,8 +2,10 @@
     <!-- Simple panel -->
     <div class="panel panel-flat app-panel">
 
-        <div class="panel-heading">
-            <h6 class="panel-title list-heading">{{ isEditing() ? 'Edit Project' : 'New Project' }}&nbsp;</h6>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="list-heading">{{ isEditing() ? 'Edit Project' : 'New Project' }}</h3>
+            </div>
         </div>
 
         <div class="panel-body">
@@ -19,7 +21,6 @@
                         </div>
                     </div>
                 </div>
-                <br/>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -32,19 +33,18 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6 m-b-1">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="icon-calendar3"></i></span>
-                            <input v-model="project.due_date" id="project-due-date" type="text" class="form-control pickadate" placeholder="Due Date">
+                            <input v-model="project.due_date" id="project-due-date" type="text" class="form-control datepicker" placeholder="Due Date">
                         </div>
                     </div>
                 </div>
-                <br/>
 
-                <div>
-                    <button type="submit" class="btn btn-primary" @click="saveProject(project)">Save Project <i class="icon-checkmark3 position-right"></i></button>
-                    <button class="btn bg-grey-300" @click="cancel">Cancel </button>
-                    <button v-if="project.id" type="button" class="btn btn-danger btn-sm" id="delete-project-button" @click="deleteProject(project)">Delete <i class="icon-bin position-right"></i></button>
+                <div class="form-group m-t-1">
+                    <button type="submit" class="btn btn-success-outline btn-sm" @click="saveProject(project)">Save Project <i class="icon-checkmark3 position-right"></i></button>
+                    <button class="btn btn-grey-outline btn-sm" @click="cancel">Cancel </button>
+                    <button v-if="project.id" type="button" class="btn btn-primary-outline btn-sm" id="delete-project-button" @click="deleteProject(project)">Delete <i class="icon-bin position-right"></i></button>
                 </div>
 
             </div>
@@ -94,11 +94,19 @@
                 return this.$route.name == 'projects.edit';
             },
             initializeDueDatePicker: function() {
-                let $input = $('#project-due-date').pickadate({format: 'yyyy-mm-dd'});
-                let picker = $input.pickadate('picker');
-                if (picker.get() !== '' && this.task.due_date !== 'undefined') {
-                    picker.set('select', picker.get(), { format: 'yyyy-mm-dd' });
-                }
+                let $input = $('#project-due-date').datepicker({
+                    format: "yyyy-mm-dd",
+                    todayHighlight: true,
+                    todayBtn: 'linked',
+                    clearBtn: true,
+                    calendarWeeks: true,
+                    weekStart: 1,
+                    autoclose: true
+                });
+//                let picker = $input.datepicker('picker');
+//                if (picker.get() !== '' && this.task.due_date !== 'undefined') {
+//                    picker.set('select', picker.get(), { format: 'yyyy-mm-dd' });
+//                }
             },
             saveProject: function(project) {
                 if (project.name.length) {

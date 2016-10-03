@@ -1,43 +1,51 @@
 <template>
-    <div id="task-form-container">
-        <!-- Grid -->
 
-        <div class="form-group form-control input-group-facade" :class="{'margin-left-45': task.id }">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <i class="blue large inline-control"
-                       :class="{ 'icon-checkbox-unchecked2': task.complete == false, 'icon-checkbox-checked2': task.complete == true}"
-                       id="task-complete"
-                       @click="markComplete(task)"
-                       v-if="task.id"
-                    ></i>
-                    <input v-model="task.title" id="task-title" name="task-title" type="text" class="inline-control transparent-input input-xlg" v-bind:style="{ marginLeft: task.id ? '20px' : 0 }" placeholder="Add a task" v-on:keyup.enter="saveTask" @focus="activateForm">
-                    <i class="pull-right task-next" :class="taskClassNext" data-popup="tooltip" title="Mark as Next" data-placement="top" @click="task.next = !task.next" v-if="editMode"><a href="javascript:void(0)" id="task-next">&nbsp;</a></i>
-                </div>
+
+
+    <div id="task-form">
+
+        <div class="m-b-1">
+            <div class="input-group" style="width:100%; display:table;">
+                    <span class="input-group-addon addon-sm addon-transparent">
+                        <i class="sidebar-menu-icon material-icons md-24 text-danger" @click="markComplete(task)" v-if="task.id">{{ task.complete == true ? 'check_box' : 'check_box_outline_blank' }}</i>
+                    </span>
+                <input v-model="task.title" id="task-title" name="task-title" type="text" class="form-control" v-bind:class="{'p-l-0': task.id}" placeholder="Add a task..." v-on:keyup.enter="saveTask" @focus="activateForm"/>
+                    <span class="input-group-addon addon-sm addon-transparent">
+                        <i class="sidebar-menu-icon material-icons md-24 text-danger" @click="task.next = !task.next">{{ task.next == true ? 'star' : 'star_border' }}</i>
+                    </span>
             </div>
         </div>
 
         <section v-if="editMode" transition="expand">
 
-            <div class="form-group" v-if="task.id">
-
-            </div>
-
-
-            <!-- Due Date -->
             <div class="row">
 
-                <div class="col-md-6">
-
+                <!-- Due Date -->
+                <div id="task-due-date-div" class="col-md-6">
+                    <label for="task-due-date">Due Date</label>
                     <div class="input-group">
-                        <span class="input-group-addon"><i class="icon-calendar3"></i></span>
-                        <input v-model="task.due_date" id="task-due-date" name="task-due-date" type="text" class="form-control pickadate" placeholder="Date due">
+                        <span class="input-group-addon addon-sm"><i class="sidebar-menu-icon material-icons">date_range</i></span>
+                        <input v-model="task.due_date" id="task-due-date" name="task-due-date" type="text" class="form-control input-sm datepicker" placeholder="Due Date">
                     </div>
 
                 </div>
+                <!-- / due date -->
+
+                <!-- Priority -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="task-priority">Priority</label>
+                        <select v-model="task.priority" id="task-priority" name="task-priority" class="form-control input-select">
+                            <option value="low" v-bind:selected="! task.priority">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                </div>
+                <!-- / priority -->
 
             </div>
-            <br/>
             <!-- /due date-->
 
             <!-- Tags -->
@@ -46,7 +54,7 @@
                     <!-- Using typeahead -->
                     <div class="form-group">
                         <label for="task-tagsinput">Tags</label>
-                        <input v-model="task.tagsinput" id="task-tagsinput" name="task-tagsinput" type="text" class="form-control tokenfield-typeahead" value="">
+                        <input v-model="task.tagsinput" id="task-tagsinput" name="task-tagsinput" type="text" class="form-control tokenfield-typeahead input-sm" value="">
                     </div>
                     <!-- /using typeahead -->
 
@@ -59,7 +67,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="task-project">Project</label>
-                        <select v-model="task.project_id" id="task-project" name="task-project" class="form-control">
+                        <select v-model="task.project_id" id="task-project" name="task-project" class="form-control input-select">
                             <option value> -- None -- </option>
                             <option v-for="project in sharedState.projects" :value="project.id" v-bind:selected="project.slug == taskList.listId">
                                 {{ project.name }}
@@ -68,49 +76,32 @@
                     </div>
                 </div>
             </div>
-            <br/>
             <!-- /project -->
 
-            <!-- Priority -->
-            <div class="row">
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="task-priority">Priority</label>
-                        <select v-model="task.priority" id="task-priority" name="task-priority" class="form-control">
-                            <option value="LOW" selected>Low</option>
-                            <option value="MED">Medium</option>
-                            <option value="HGH">High</option>
-                        </select>
-                    </div>
-
-                </div>
-            </div>
-            <br/>
-            <!-- /priority -->
 
             <!-- Details -->
             <div class="row">
                 <div class="col-md-12">
-
-
                     <div class="form-group">
                         <textarea v-model="task.details" id="task-details" name="task-details" rows="4" cols="4" class="form-control" placeholder="Task Details"></textarea>
                     </div>
-                    <!-- /vertical form -->
-
                 </div>
             </div>
             <!-- /details -->
 
-            <div>
-                <button type="submit" id="save-task-button" class="btn btn-primary" v-bind:class="{ 'disabled': !task.title.length }" @click.stop.prevent="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
-                <button class="btn bg-grey-300" @click="cancelForm">Cancel </button>
-                <button v-if="task.id" type="button" class="btn btn-danger btn-sm" id="delete-task-button" @click="deleteTask(task)">Delete <i class="icon-bin position-right"></i></button>
+            <div class="row form-actions m-y-1">
+                <div class="col-md-12">
+                    <button type="submit" id="save-task-button" class="btn btn-success-outline btn-sm" v-bind:class="{ 'disabled': !task.title.length }" @click.stop.prevent="saveTask">Save Task <i class="icon-checkmark3 position-right"></i></button>
+                    <button class="btn btn-grey-outline btn-sm" @click="cancelForm">Cancel </button>
+                    <button v-if="task.id" type="button" class="btn btn-primary-outline btn-sm" id="delete-task-button" @click="deleteTask(task)">Delete <i class="icon-bin position-right"></i></button>
+                </div>
             </div>
         </section>
-
     </div>
+
+
+
+
 </template>
 <style scoped>
     .expand-transition {
@@ -123,48 +114,68 @@
         height: 0;
         opacity: 0;
     }
+    @media (min-width: 768px) {
+        .layout-content.simplebar {
+            margin-left: 370px !important;
+        }
+        div#task-form {
+            /*margin-bottom: 30px;*/
+            padding: 20px;
+        }
+    }
+    input#task-title {
+        display: table-cell;
+        border-right: none;
+        border-left: none;
+        background-color: #FDFAFA;
+    }
+    input#task-title:focus {
+        border-color: #eceeef;
+    }
     i#task-complete {
         color: #055D92;
         font-size: 2.5em;
         margin-left: -55px;
     }
-
+    span.input-group-addon.addon-sm.addon-transparent {
+        background: #FDFAFA;
+    }
     i.icon-star-empty3, i.icon-star-full2 {
         color:green;
         font-size: 2.3em;
         line-height: 46px;
     }
-    .form-control.input-group-facade {
-        padding:0;
-        width:auto;
-        height: 46px;
-        border: 1px solid green;
-    }
-    .transparent-input {
-        border:none;
-        background: none;
-        min-height: 33px;
-    }
-    #task-title {
-        width:80%;
-        padding-left: 5px;
-        margin-top: 2px;
-    }
-    #task-title::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        color: #4caf50;
-    }
-    #task-title:-moz-placeholder { /* Firefox 18- */
-        color: #4caf50;
-    }
-    #task-title::-moz-placeholder {  /* Firefox 19+ */
-        color: #4caf50;
-    }
-    #task-title:-ms-input-placeholder {
-        color: #4caf50;
-    }
-    .task-next {
-        cursor: pointer;
-    }
+    /*.form-control.input-group-facade {*/
+        /*padding:0;*/
+        /*width:auto;*/
+        /*height: 46px;*/
+        /*border: 1px solid green;*/
+    /*}*/
+    /*.transparent-input {*/
+        /*border:none;*/
+        /*background: none;*/
+        /*min-height: 33px;*/
+    /*}*/
+    /*#task-title {*/
+        /*width:80%;*/
+        /*padding-left: 5px;*/
+        /*margin-top: 2px;*/
+    /*}*/
+    /*#task-title::-webkit-input-placeholder { !* Chrome/Opera/Safari *!*/
+        /*color: #4caf50;*/
+    /*}*/
+    /*#task-title:-moz-placeholder { !* Firefox 18- *!*/
+        /*color: #4caf50;*/
+    /*}*/
+    /*#task-title::-moz-placeholder {  !* Firefox 19+ *!*/
+        /*color: #4caf50;*/
+    /*}*/
+    /*#task-title:-ms-input-placeholder {*/
+        /*color: #4caf50;*/
+    /*}*/
+    /*.task-next {*/
+        /*cursor: pointer;*/
+    /*}*/
     .tokenfield .token-input {
         width: 240px!important;
         min-width: 60px;

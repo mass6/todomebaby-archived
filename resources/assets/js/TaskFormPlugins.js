@@ -13,6 +13,19 @@ export let taskFormPlugins = {
             }
         }
     },
+    initDatePicker: function (taskList) {
+        $(".datepicker").datepicker({
+            format: "yyyy-mm-dd",
+            container: '#task-due-date-div',
+            zIndexOffset: 1000,
+            todayHighlight: true,
+            todayBtn: 'linked',
+            clearBtn: true,
+            calendarWeeks: true,
+            weekStart: 1,
+            autoclose: true
+        });
+    },
     initToolTips: function() {
         $('[data-popup="tooltip"]').tooltip({
             template: '<div class="tooltip"><div class="bg-teal"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div></div>'
@@ -55,14 +68,14 @@ export let taskFormPlugins = {
         // Add class when token is created
         $('.tokenfield-typeahead').on('tokenfield:createdtoken', function (e) {
             if (e.attrs.value.charAt(0) === '@') {
-                $(e.relatedTarget).addClass('bg-success')
-            } else {
                 $(e.relatedTarget).addClass('bg-primary')
+            } else {
+                $(e.relatedTarget).addClass('bg-inverse')
             }
         });
     },
     init: function(taskList) {
-        this.initiDueDatePicker(taskList);
+        this.initDatePicker(taskList);
         this.initToolTips();
         this.initTagsInput();
     }
