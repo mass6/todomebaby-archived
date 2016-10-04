@@ -54,7 +54,7 @@
         },
         methods: {
             hideMobileSidebar: function() {
-                $('body').toggleClass('sidebar-mobile-main').removeClass('sidebar-mobile-secondary sidebar-mobile-opposite sidebar-mobile-detached');
+                $('#sidebarLeft').removeClass('sidebar-visible sidebar-transition');
             },
             taskListSelected: function () {
                 this.$dispatch('taskListWasSelected');
