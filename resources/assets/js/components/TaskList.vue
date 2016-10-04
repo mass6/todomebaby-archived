@@ -15,7 +15,7 @@
 
     <div class="row">
 
-        <div class="card m-x-2 task-list">
+        <div class="card task-list">
             <ul class="list-group list-group-fit">
 
 
@@ -212,6 +212,12 @@
     }
     .table-striped>tbody>tr.task-item, .table>tbody>tr.task-item {
         border-left: 6px solid white;
+    }
+    @media (min-width: 768px) {
+        .card.task-list, .card.task-list li {
+            margin-right: 1.5rem !important;
+            margin-left: 1.5rem !important;
+        }
     }
     .card.task-list, .card.task-list li {
         border: none;

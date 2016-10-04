@@ -127,6 +127,7 @@
         display: table-cell;
         border-right: none;
         border-left: none;
+        padding-left: 0;
         background-color: #FDFAFA;
     }
     input#task-title:focus {
