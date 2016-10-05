@@ -24,6 +24,13 @@ export let repo = {
         });
     },
 
+    // Fetches all open tasks and task counts
+    fetchAllTasks: function(callback) {
+        Vue.http.get('/tasklists/all').then(function (response) {
+            callback(response.json());
+        });
+    },
+
     // Fetches tasks and task count not assigned to any project
     fetchInbox: function(callback) {
         Vue.http.get('/tasklists/inbox').then(function (response) {

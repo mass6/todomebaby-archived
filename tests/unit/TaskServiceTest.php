@@ -68,12 +68,16 @@ class TaskServiceTest extends TestCase
      */
     public function it_retrieves_all_open_tasks()
     {
-        $this->tasks = $this->generateUserTasks();
+        $tasks = $this->generateUserTasks($this->user, 2);
 
-        $this->tasks->last()->toggleComplete();
-        $currentTasks = $this->taskService->getOpenTasks();
+        $allTasks = $this->taskService->getAllTasks();
+        $this->assertCount(2, $allTasks);
+        $titles = $allTasks->pluck('title')->all();
 
-        $this->assertCount(4, $currentTasks);
+        $this->assertArrayHasKey('project', $allTasks->first()->toArray());
+        $this->assertArrayHasKey('tags', $allTasks->first()->toArray());
+        $this->assertTrue(in_array($tasks[0]->title, $titles));
+        $this->assertTrue(in_array($tasks[1]->title, $titles));
     }
 
     /**

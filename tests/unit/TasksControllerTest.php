@@ -84,6 +84,22 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
+    public function testGetAllTasks()
+    {
+        $mRequest = m::mock('Illuminate\Http\Request');
+        $mRequest->shouldReceive('get')->once()->with('with-completed')->andReturn(true);
+        $this->service->shouldReceive('getAllTasks')->once()->with(true)->andReturn(collect(['tasks']));
+        $controller = new TasksController;
+        $response = $controller->getAllTasks($this->service, $mRequest);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals('All Tasks', $response->getData()->listName);
+        $this->assertEquals(['tasks'], $response->getData()->tasks);
+    }
+
+    /**
+     * @test
+     */
     public function testGetInbox()
     {
         $mRequest = m::mock('Illuminate\Http\Request');

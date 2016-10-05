@@ -6,6 +6,9 @@ export let store = {
         inbox: {
             tasks: []
         },
+        allTasks: {
+            tasks: []
+        },
         next: {
             tasks: []
         },

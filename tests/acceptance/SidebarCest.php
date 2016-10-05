@@ -74,6 +74,35 @@ class SidebarCest
         $I->waitForText('2', 4,'#task-count-next');
     }
 
+    public function it_displays_a_link_to_all_open_tasks(AcceptanceTester $I)
+    {
+        // given I have 2 active projects and 1 inactive project
+        $I->wantToTest('I can see a link to all open tasks in sidebar');
+        $I->am('Registered User');
+
+        // when I am at the webapp home page
+        $I->loginAsARegisteredUser();
+
+        // then I should only see links to each active project
+        $I->waitForText('All',4, '#all-tasks');
+    }
+
+    public function it_displays_task_counts_for_all_open_tasks(AcceptanceTester $I)
+    {
+        // given I have 3 open tasks, 2 of which are not assigned to any project
+        $I->wantToTest('I can see task counts for all open tasks');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $I->haveTasks($user, 2, null, ['completed' => false]);
+
+        // when I am at the webapp home page
+        $I->login($user->email);
+
+        // then I should see open task counts next to each active project
+        $I->waitForText('All',4, '#all-tasks');
+        $I->waitForText('2', 4,'#task-count-all');
+    }
+
     public function it_displays_links_to_all_active_projects(AcceptanceTester $I)
     {
         // given I have 2 active projects and 1 inactive project

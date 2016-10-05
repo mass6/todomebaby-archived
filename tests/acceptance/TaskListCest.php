@@ -21,33 +21,26 @@ class TaskListCest
 
     /**
      * @param AcceptanceTester $I
-     * @group today
      */
-    public function it_displays_the_specified_task_data(AcceptanceTester $I)
+    public function it_displays_all_open_tasks(AcceptanceTester $I)
     {
-        $I->wantToTest('Task list displays all specified task data');
+        // Given I have two open tasks
+        $I->wantTo('View all open tasks');
         $I->am('Registered User');
         $user = $I->haveAnAccount();
-        $project = $I->haveAProject($user, 'Project One');
-        $tags = $I->haveTasksWithTags(1, $user, ['@foo', 'bar'], $project, ['priority' => 'high'])->first()->tags;
-        putenv('DISABLE_GLOBAL_SCOPES=true');
-        $task = Task::with('project', 'tags')->withoutGlobalScopes()->first();
+        $tasks = $I->haveTasks($user, 2, null, ['completed' => false]);
 
+        // when I log in
         $I->login($user->email);
-
-        $I->click('Later');
-        $I->waitForText('Later',4, '.list-heading');
-        $I->waitForText($task->title, 4);
-        $I->see('Project One', '.project-link');
-        //$I->see($task->priority, 'a.dropdown-toggle');
-        $I->seeElement('i.priority-flag.text-danger');
-        $I->see($tags[0]->name, '.tag-selectable');
-        $I->see('#' . $tags[1]->name, '.tag-selectable');
+        $I->click('#all-tasks');
+        $I->waitForText('All Tasks',4, '.list-heading');
+        $I->waitForText($tasks->first()->title, 4);
+        $I->see($tasks[0]->title);
+        $I->see($tasks[1]->title);
     }
 
     /**
      * @param AcceptanceTester $I
-     * @group today
      */
     public function it_displays_tasks_due_today(AcceptanceTester $I)
     {
@@ -65,7 +58,6 @@ class TaskListCest
         $I->see($tasks[1]->title);
         $I->dontSee($tasks[2]->title);
     }
-
 
     /**
      * @param AcceptanceTester $I
@@ -95,6 +87,8 @@ class TaskListCest
         $I->dontSee($tasks[3]->title);
         $I->dontSee($tasks[4]->title);
     }
+
+
     /**
      * @param AcceptanceTester $I
      */
@@ -167,7 +161,6 @@ class TaskListCest
         $I->dontSee($tasks[2]->title);
         $I->dontSee($tasks[3]->title);
     }
-
     /**
      * @param AcceptanceTester $I
      */
@@ -216,5 +209,30 @@ class TaskListCest
         $I->see($tasks[0]->title);
         $I->see($tasks[1]->title);
         $I->see($tasks[2]->title);
+    }
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    public function it_displays_the_specified_task_data(AcceptanceTester $I)
+    {
+        $I->wantToTest('Task list displays all specified task data');
+        $I->am('Registered User');
+        $user = $I->haveAnAccount();
+        $project = $I->haveAProject($user, 'Project One');
+        $tags = $I->haveTasksWithTags(1, $user, ['@foo', 'bar'], $project, ['priority' => 'high'])->first()->tags;
+        putenv('DISABLE_GLOBAL_SCOPES=true');
+        $task = Task::with('project', 'tags')->withoutGlobalScopes()->first();
+
+        $I->login($user->email);
+
+        $I->click('Later');
+        $I->waitForText('Later',4, '.list-heading');
+        $I->waitForText($task->title, 4);
+        $I->see('Project One', '.project-link');
+        //$I->see($task->priority, 'a.dropdown-toggle');
+        $I->seeElement('i.priority-flag.text-danger');
+        $I->see($tags[0]->name, '.tag-selectable');
+        $I->see('#' . $tags[1]->name, '.tag-selectable');
     }
 }

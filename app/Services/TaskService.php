@@ -94,11 +94,18 @@ class TaskService
     }
 
     /**
+     * Retrieve all open tasks
+     *
+     * @param bool $withCompleted
+     *
      * @return mixed
      */
-    public function getOpenTasks()
+    public function getAllTasks($withCompleted = false)
     {
-        return $this->task->open()->get();
+        return $this->task
+            ->open()
+            ->taskList($withCompleted)
+            ->get();
     }
 
     /**

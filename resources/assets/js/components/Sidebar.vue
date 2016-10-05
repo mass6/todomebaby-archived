@@ -10,6 +10,12 @@
                 </a>
             </li>
             <li class="sidebar-menu-item" v-link-active>
+                <a id="all-tasks" v-link="{ name: 'tasks.list', activeClass: 'active', params: { id: 'all' }, replace: true, exact: true }" @click.stop="taskListSelected" class="sidebar-menu-button">
+                    <i class="sidebar-menu-icon material-icons">home</i> All
+                    <span v-if="sharedState.allTasks.tasks.length" id="task-count-all" class="sidebar-menu-label label label-primary">{{ sharedState.allTasks.tasks.length }}</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item" v-link-active>
                 <a id="inbox" v-link="{ name: 'tasks.list', activeClass: 'active', params: { id: 'inbox' }, replace: true, exact: true }" @click.stop="taskListSelected" class="sidebar-menu-button">
                     <i class="sidebar-menu-icon material-icons">inbox</i> Inbox
                     <span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="sidebar-menu-label label label-primary">{{ sharedState.inbox.tasks.length }}</span>

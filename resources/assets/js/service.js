@@ -15,6 +15,7 @@ export let service = {
         this.refreshSidebarData();
     },
     refreshSidebarData: function() {
+        this.fetchAllTasks();
         this.fetchInbox();
         this.fetchNext();
         this.fetchProjects();
@@ -39,6 +40,14 @@ export let service = {
         repo.fetchTask(taskId,  function (response) {
             store.state.task = response;
             callback(response);
+        });
+    },
+
+    // Fetches all open tasks and task counts from the repository
+    // and stores the result in the global state object
+    fetchAllTasks: function() {
+        repo.fetchAllTasks(function (response) {
+            store.state.allTasks = response;
         });
     },
 

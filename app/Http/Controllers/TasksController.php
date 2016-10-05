@@ -95,6 +95,17 @@ class TasksController extends Controller
      *
      * @return mixed
      */
+    public function getAllTasks(TaskService $taskService, Request $request)
+    {
+        return $this->getTaskListResponse('All Tasks', $taskService->getAllTasks($request->get('with-completed')));
+    }
+
+    /**
+     * @param TaskService $taskService
+     * @param Request     $request
+     *
+     * @return mixed
+     */
     public function getInbox(TaskService $taskService, Request $request)
     {
         return $this->getTaskListResponse('Inbox', $taskService->getInbox($request->get('with-completed')));
