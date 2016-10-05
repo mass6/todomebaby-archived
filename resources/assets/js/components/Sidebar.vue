@@ -4,15 +4,15 @@
     <div class="sidebar sidebar-left si-si-3 sidebar-visible-md-up sidebar-light ls-top-navbar-xs-up sidebar-transparent-md" id="sidebarLeft" data-scrollable>
         <ul class="sidebar-menu">
             <li class="sidebar-menu-item" v-link-active>
-                <a id="inbox" v-link="{ name: 'tasks.list', activeClass: 'active', params: { id: 'inbox' }, replace: true, exact: true }" @click.stop="taskListSelected" class="sidebar-menu-button">
-                    <i class="sidebar-menu-icon material-icons">inbox</i> Inbox
-                    <span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="sidebar-menu-label label label-primary">{{ sharedState.inbox.tasks.length }}</span>
-                </a>
-            </li>
-            <li class="sidebar-menu-item" v-link-active>
                 <a id="next" v-link="{ name: 'tasks.list', activeClass: 'active', params: { id: 'next' }, replace: true, exact: true }" v-link-active @click.stop="taskListSelected" class="sidebar-menu-button">
                     <i class="sidebar-menu-icon material-icons">star</i> Next
                     <span v-if="sharedState.next.tasks.length" id="task-count-next" class="sidebar-menu-label label label-primary">{{ sharedState.next.tasks.length }}</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item" v-link-active>
+                <a id="inbox" v-link="{ name: 'tasks.list', activeClass: 'active', params: { id: 'inbox' }, replace: true, exact: true }" @click.stop="taskListSelected" class="sidebar-menu-button">
+                    <i class="sidebar-menu-icon material-icons">inbox</i> Inbox
+                    <span v-if="sharedState.inbox.tasks.length" id="task-count-inbox" class="sidebar-menu-label label label-primary">{{ sharedState.inbox.tasks.length }}</span>
                 </a>
             </li>
 

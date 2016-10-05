@@ -69,7 +69,7 @@ router.map({
 });
 // Any invalid route will redirect to home
 router.redirect({
-    '*': '/lists/today'
+    '*': '/lists/next'
 });
 
 // save previous route for rerouting back to previous viewed task list

@@ -10,10 +10,9 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-Route::get('test', function () {
-    return view('adminplus');
+Route::get('/home', function () {
+    return redirect('/web');
 });
-//Route::get('/home', 'HomeController@index');
 Route::get('/', function () {
     return redirect('/web');
 });
