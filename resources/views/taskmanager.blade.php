@@ -37,7 +37,7 @@
     <button class="navbar-toggler pull-xs-left hidden-md-up" type="button" data-toggle="sidebar" data-target="#sidebarLeft"><span class="material-icons">menu</span></button>
 
     <!-- Brand -->
-    <a href="index.html" class="navbar-brand first-child-md"><img class="logo" src="./images/tdm-nav-logo.png"/></a>
+    <a href="/web" class="navbar-brand first-child-md"><img class="logo" src="./images/tdm-nav-logo.png"/></a>
 
 
     <!-- Menu -->

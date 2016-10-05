@@ -14,8 +14,8 @@
             <div class="card-block tab-content">
                 <div class="tab-pane active" id="projects-tab">
                     <ul class="list-unstyled">
-                        <li v-for="project in sharedState.projects" class="submenu-item">
-                            <a v-link="{ name: 'projects.show', params: { id: project.slug }, replace: true, exact: true }" class="sidebar-menu-button project-link" v-link-active @click.stop="taskListSelected">
+                        <li v-for="project in sharedState.projects" class="submenu-item" v-link-active>
+                            <a v-link="{ name: 'projects.show', activeClass: 'active', params: { id: project.slug }, replace: true, exact: true }" class="sidebar-menu-button project-link" @click.stop="taskListSelected">
                                 {{ service.truncateText(project.name, 30) }}
                                 <span id="project-{{project.id}}-task-count" class="sidebar-menu-label label label-primary" v-if="project.taskCount">{{ project.taskCount }}</span>
                             </a>
@@ -28,8 +28,8 @@
                 </div>
                 <div class="tab-pane" id="contexts-tab">
                     <ul class="list-unstyled">
-                        <li v-for="context in sharedState.contexts" class="submenu-item">
-                            <a v-link="{ name: 'tags.show', params: { id: context.slug }, replace: true, exact: true }" class="sidebar-menu-button context-link" v-link-active @click.stop="taskListSelected">
+                        <li v-for="context in sharedState.contexts" class="submenu-item" v-link-active>
+                            <a v-link="{ name: 'tags.show', activeClass: 'active', params: { id: context.slug }, replace: true, exact: true }" class="sidebar-menu-button context-link" @click.stop="taskListSelected">
                                 {{ context.name.length < 22 ? context.name : context.name.substring(0,25) + '...' }}
                                 <span id="context-{{context.id}}-task-count" class="sidebar-menu-label label label-primary" v-if="context.taskCount">{{ context.taskCount }}</span>
                             </a>
