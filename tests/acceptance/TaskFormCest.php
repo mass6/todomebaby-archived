@@ -33,8 +33,8 @@ class TaskFormCest
         $I->fillField('task-title', 'New task title');
         // Due Date
         $I->click('#task-due-date');
-        $I->waitForElement('.picker__button--today', 4);
-        $I->click('.picker__button--today');
+        $I->waitForElement('th.today', 4);
+        $I->click('th.today');
         // Tags
         $I->fillField('Tags', '@foo, bar,');
         // Project

@@ -28,7 +28,7 @@
                         </div>
                         <div id="task-title-selection-{{ task.id }}" class="media-body media-middle">
                             <h4 class="card-title m-b-0"><a href="javascript:void(0)" class="task-selectable task-title" @click="selectTask(task)">{{ task.title }}</a></h4>
-                            <small><span v-for="tag in task.tags" class="clickable" v-bind:class="{ 'text-danger': tag.is_context, 'text-muted': ! tag.is_context }" @click.stop.prevent="getTasksByTag(tag)">{{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </span></small>
+                            <small><a v-for="tag in task.tags" class="tag-selectable clickable" v-bind:class="{ 'text-danger': tag.is_context, 'text-muted': ! tag.is_context }" @click.stop.prevent="getTasksByTag(tag)">{{ ! tag.is_context ? '#' : '' }}{{ tag.name }} </a></small>
                         </div>
                         <div class="media-right media-middle task-flags">
 
@@ -277,7 +277,7 @@
         border-bottom: 1px dashed #427ef5;
         display: inline;
     }
-    .tag-selectable:hover {cursor: pointer;}
+    .tag-selectable:hover {cursor: pointer;text-decoration: none;}
     .tag-block {margin-top: 5px;margin-left:8px;font-size: .85em;}
     div.tag-block > span.tag-selectable {margin-right: 2px;}
     span.project-link {

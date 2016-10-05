@@ -21,7 +21,7 @@
                             </a>
                         </li>
                         <li class="submenu-item">
-                            <a v-link="{ name: 'projects.create' }" class="sidebar-menu-button project-link new-project" >+ New Project
+                            <a id="add-project" v-link="{ name: 'projects.create' }" class="sidebar-menu-button project-link add-project" >+ New Project
                             </a>
                         </li>
                     </ul>
@@ -41,7 +41,10 @@
     </li>
 </template>
 <style>
-
+    a.project-link.sidebar-menu-button.add-project {
+        color: #ef413e;
+        font-weight: 300;
+    }
 </style>
 <script>
     import { store } from '../store'

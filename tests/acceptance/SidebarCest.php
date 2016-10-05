@@ -26,7 +26,7 @@ class SidebarCest
         $I->loginAsARegisteredUser();
 
         // then I should only see links to each active project
-        $I->waitForText('Inbox',4, 'span.inbox-link');
+        $I->waitForText('Inbox',4, '#inbox');
     }
 
     public function it_displays_open_task_counts_for_the_inbox(AcceptanceTester $I)
@@ -41,7 +41,7 @@ class SidebarCest
         $I->login($user->email);
 
         // then I should see open task counts next to each active project
-        $I->waitForText('Inbox',4, 'span.inbox-link');
+        $I->waitForText('Inbox',4, '#inbox');
         $I->waitForText('2', 4,'#task-count-inbox');
     }
 
@@ -55,7 +55,7 @@ class SidebarCest
         $I->loginAsARegisteredUser();
 
         // then I should only see links to each active project
-        $I->waitForText('Next',4, 'span.next-link');
+        $I->waitForText('Next',4, '#next');
     }
 
     public function it_displays_open_task_counts_for_next_tasks(AcceptanceTester $I)
@@ -70,7 +70,7 @@ class SidebarCest
         $I->login($user->email);
 
         // then I should see open task counts next to each active project
-        $I->waitForText('Next',4, 'span.next-link');
+        $I->waitForText('Next',4, '#next');
         $I->waitForText('2', 4,'#task-count-next');
     }
 
@@ -128,6 +128,8 @@ class SidebarCest
         $I->login($user->email);
 
         // then I should only see links to each active project
+        $I->waitForText('Contexts');
+        $I->click('Contexts');
         $I->waitForText('@foo', 4, 'a.context-link');
     }
 
@@ -145,6 +147,8 @@ class SidebarCest
         $I->login($user->email);
 
         // then I should see open task counts next to @foo context
+        $I->waitForText('Contexts');
+        $I->click('Contexts');
         $I->waitForText('@foo', 4, 'a.context-link');
         $I->see(2, '#context-' . $tasks->first()->tags->first()->id . '-task-count');
     }
@@ -268,7 +272,7 @@ class SidebarCest
         $I->click($tasks[2]->title);
         $I->waitForElement('#task-form-container', 4);
         $I->click('#task-due-date');
-        $I->click('Today');
+        $I->click('th.today');
         $I->click('Save Task');
 
         // then I see that the todays count is 3, and tomorrow's count is no longer visible

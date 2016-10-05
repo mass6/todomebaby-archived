@@ -55,8 +55,8 @@ class ProjectFormCest
         $I->fillField('Name', 'Updated Name');
         $I->fillField('Description', 'New Description');
         $I->click('#project-due-date');
-        $I->waitForElement('.picker__button--today', 4);
-        $I->click('.picker__button--today');
+        $I->waitForElement('th.today', 4);
+        $I->click('th.today');
         $I->click('Save Project');
 
         // Verify changes

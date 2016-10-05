@@ -103,10 +103,6 @@ ul.nav.nav-pills {
     padding: 0.5em .1rem .1rem;
     border-radius: 0;
 }
-a.project-link.sidebar-menu-button.new-project {
-    color: #ef413e;
-    font-weight: 300;
-}
 .submenu-item span.sidebar-menu-label {
     margin-top: 6px;
 }
