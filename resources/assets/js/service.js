@@ -46,7 +46,7 @@ export let service = {
     // Fetches all open tasks and task counts from the repository
     // and stores the result in the global state object
     fetchAllTasks: function() {
-        repo.fetchAllTasks(function (response) {
+        this.fetchTaskList('all', null, false, function (response) {
             store.state.allTasks = response;
         });
     },
@@ -54,7 +54,7 @@ export let service = {
     // Fetches tasks and task count not assigned to any project from the repository
     // and stores the result in the global state object
     fetchInbox: function() {
-        repo.fetchInbox(function (response) {
+        this.fetchTaskList('inbox', null, false, function (response) {
             store.state.inbox = response;
         });
     },
@@ -62,7 +62,7 @@ export let service = {
     // Fetches tasks and task count flagged as next from the repository
     // and stores the result in the global state object
     fetchNext: function() {
-        repo.fetchNext(function (response) {
+        this.fetchTaskList('next', null, false, function (response) {
             store.state.next = response;
         });
     },

@@ -24,27 +24,6 @@ export let repo = {
         });
     },
 
-    // Fetches all open tasks and task counts
-    fetchAllTasks: function(callback) {
-        Vue.http.get('/tasklists/all').then(function (response) {
-            callback(response.json());
-        });
-    },
-
-    // Fetches tasks and task count not assigned to any project
-    fetchInbox: function(callback) {
-        Vue.http.get('/tasklists/inbox').then(function (response) {
-            callback(response.json());
-        });
-    },
-
-    // Fetches tasks and task count flagged as next
-    fetchNext: function(callback) {
-        Vue.http.get('/tasklists/next').then(function (response) {
-            callback(response.json());
-        });
-    },
-
     // Fetches counts for each scheduled task list (Today, Next Week, etc.)
     // and stores the result it in global state object
     fetchScheduledTaskCounts: function(callback) {
@@ -143,15 +122,13 @@ export let repo = {
         if (completed == true) {
             queryString = '?with-completed=true';
         }
-
-        if (listType == 'scheduled') {
-            return '/tasklists/' + id + queryString;
-        }
         if (listType == 'project') {
             return '/projects/' + id + '/tasks' + queryString;
         }
         if (listType == 'tag') {
             return '/tags/' + id + '/tasks' + queryString;
         }
+
+        return '/tasklists/' + id + queryString;
     }
 };
