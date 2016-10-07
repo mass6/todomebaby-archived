@@ -125,7 +125,6 @@ class TaskListCest
         $task = $I->haveTasks($user, 1, null, ['due_date' => Carbon::today()->endOfWeek()->addDays(1)->toDateString()])->first();
 
         $I->login($user->email, 'secret');
-        $I->waitForText('Today',4, '.list-heading');
         $I->dontSee($task->title);
 
         $I->click('Next Week');
