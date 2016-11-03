@@ -1,3 +1,3 @@
 # Todomebaby #
 
-Project and Task management application
+Project and Task management SPA for testing out Vue.js routing
